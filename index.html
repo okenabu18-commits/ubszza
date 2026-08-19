@@ -1,0 +1,1188 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ABUZZY_dev</title>
+
+<meta name="description" content="ABUZZY_dev — Roblox Creator, Web Developer and Creative Developer.">
+
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="apple-touch-icon" href="/logo.png">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh;
+    font-family:'Inter',sans-serif;
+    color:#fff;
+    background:#03040a;
+    overflow-x:hidden;
+}
+
+/* ================= BACKGROUND ================= */
+
+body::before{
+    content:"";
+    position:fixed;
+    width:600px;
+    height:600px;
+    top:-250px;
+    left:-220px;
+    background:#00e5ff;
+    opacity:.13;
+    filter:blur(130px);
+    border-radius:50%;
+    animation:orb1 10s ease-in-out infinite alternate;
+    pointer-events:none;
+}
+
+body::after{
+    content:"";
+    position:fixed;
+    width:600px;
+    height:600px;
+    right:-250px;
+    bottom:-250px;
+    background:#7c3aed;
+    opacity:.15;
+    filter:blur(140px);
+    border-radius:50%;
+    animation:orb2 12s ease-in-out infinite alternate;
+    pointer-events:none;
+}
+
+@keyframes orb1{
+    to{
+        transform:translate(100px,80px) scale(1.2);
+    }
+}
+
+@keyframes orb2{
+    to{
+        transform:translate(-100px,-80px) scale(1.15);
+    }
+}
+
+.grid{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    opacity:.12;
+    background-image:
+        linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);
+    background-size:50px 50px;
+    mask-image:linear-gradient(to bottom,black,transparent);
+}
+
+/* ================= NAVBAR ================= */
+
+.navbar{
+    position:fixed;
+    top:18px;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(920px,calc(100% - 30px));
+    padding:12px 16px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    background:rgba(10,12,22,.68);
+    border:1px solid rgba(255,255,255,.1);
+    backdrop-filter:blur(20px);
+
+    border-radius:18px;
+    z-index:100;
+    box-shadow:0 15px 50px rgba(0,0,0,.3);
+}
+
+.logo{
+    font-size:18px;
+    font-weight:800;
+    letter-spacing:-.5px;
+}
+
+.logo span{
+    color:#00e5ff;
+}
+
+.nav-links{
+    display:flex;
+    gap:6px;
+}
+
+.nav-links a{
+    color:#aab3c5;
+    text-decoration:none;
+    font-size:13px;
+    padding:9px 12px;
+    border-radius:10px;
+    transition:.3s;
+}
+
+.nav-links a:hover{
+    color:#fff;
+    background:rgba(255,255,255,.07);
+}
+
+.languages{
+    display:flex;
+    gap:4px;
+}
+
+.lang{
+    border:0;
+    background:transparent;
+    color:#7f899b;
+    cursor:pointer;
+    padding:7px 8px;
+    border-radius:8px;
+    font-size:11px;
+    font-weight:700;
+    transition:.3s;
+}
+
+.lang.active,
+.lang:hover{
+    color:#00e5ff;
+    background:rgba(0,229,255,.08);
+}
+
+/* ================= HERO ================= */
+
+.hero{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:120px 20px 70px;
+    position:relative;
+}
+
+.hero-content{
+    width:min(900px,100%);
+    text-align:center;
+    animation:heroIn 1s ease both;
+}
+
+@keyframes heroIn{
+    from{
+        opacity:0;
+        transform:translateY(35px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.status{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 13px;
+    border:1px solid rgba(0,229,255,.2);
+    background:rgba(0,229,255,.06);
+    border-radius:100px;
+    color:#b8f7ff;
+    font-size:12px;
+    margin-bottom:25px;
+}
+
+.status-dot{
+    width:7px;
+    height:7px;
+    background:#22c55e;
+    border-radius:50%;
+    box-shadow:0 0 12px #22c55e;
+}
+
+.hero h1{
+    font-size:clamp(48px,10vw,100px);
+    line-height:.95;
+    letter-spacing:-6px;
+    font-weight:800;
+    background:linear-gradient(120deg,#fff,#8cefff,#a78bfa,#fff);
+    background-size:250%;
+    -webkit-background-clip:text;
+    color:transparent;
+    animation:textGradient 6s ease infinite;
+}
+
+@keyframes textGradient{
+    0%,100%{background-position:0%}
+    50%{background-position:100%}
+}
+
+.hero h2{
+    margin-top:20px;
+    color:#aab3c5;
+    font-size:clamp(17px,3vw,25px);
+    font-weight:500;
+}
+
+.hero p{
+    max-width:650px;
+    margin:22px auto 30px;
+    color:#727c91;
+    line-height:1.8;
+    font-size:15px;
+}
+
+.buttons{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    text-decoration:none;
+    padding:13px 20px;
+    border-radius:13px;
+    font-size:13px;
+    font-weight:700;
+    transition:.3s;
+}
+
+.btn-primary{
+    color:#001014;
+    background:#00e5ff;
+    box-shadow:0 0 25px rgba(0,229,255,.25);
+}
+
+.btn-primary:hover{
+    transform:translateY(-4px);
+    box-shadow:0 0 40px rgba(0,229,255,.5);
+}
+
+.btn-secondary{
+    color:#fff;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1);
+}
+
+.btn-secondary:hover{
+    transform:translateY(-4px);
+    background:rgba(255,255,255,.1);
+}
+
+/* ================= SECTIONS ================= */
+
+section{
+    width:min(950px,calc(100% - 30px));
+    margin:0 auto;
+    padding:100px 0;
+}
+
+.section-title{
+    margin-bottom:35px;
+}
+
+.section-title small{
+    color:#00e5ff;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:3px;
+}
+
+.section-title h2{
+    font-size:40px;
+    margin-top:8px;
+    letter-spacing:-2px;
+}
+
+/* ================= CARDS ================= */
+
+.glass{
+    background:rgba(255,255,255,.035);
+    border:1px solid rgba(255,255,255,.09);
+    backdrop-filter:blur(20px);
+    border-radius:24px;
+}
+
+/* ================= ABOUT ================= */
+
+.about-card{
+    padding:35px;
+}
+
+.about-card p{
+    color:#8993a7;
+    line-height:1.9;
+    font-size:15px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin-top:25px;
+}
+
+.stat{
+    padding:22px 10px;
+    text-align:center;
+    background:rgba(255,255,255,.035);
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:16px;
+}
+
+.stat strong{
+    display:block;
+    color:#fff;
+    font-size:25px;
+}
+
+.stat span{
+    color:#687286;
+    font-size:10px;
+}
+
+/* ================= SKILLS ================= */
+
+.skills{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:13px;
+}
+
+.skill{
+    padding:25px;
+    transition:.35s;
+}
+
+.skill:hover{
+    transform:translateY(-7px);
+    border-color:rgba(0,229,255,.3);
+    box-shadow:0 15px 40px rgba(0,0,0,.25);
+}
+
+.skill i{
+    color:#00e5ff;
+    font-size:24px;
+    margin-bottom:18px;
+}
+
+.skill h3{
+    font-size:15px;
+    margin-bottom:7px;
+}
+
+.skill p{
+    color:#687286;
+    font-size:12px;
+    line-height:1.6;
+}
+
+/* ================= ROBLOX ================= */
+
+.project{
+    padding:35px;
+    position:relative;
+    overflow:hidden;
+}
+
+.project::before{
+    content:"";
+    position:absolute;
+    width:250px;
+    height:250px;
+    right:-80px;
+    top:-80px;
+    background:#7c3aed;
+    opacity:.15;
+    filter:blur(80px);
+    border-radius:50%;
+}
+
+.project-icon{
+    width:65px;
+    height:65px;
+    display:grid;
+    place-items:center;
+    border-radius:18px;
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.1);
+    margin-bottom:25px;
+}
+
+.project-icon i{
+    font-size:28px;
+}
+
+.project small{
+    color:#00e5ff;
+    font-weight:800;
+    letter-spacing:2px;
+}
+
+.project h3{
+    font-size:34px;
+    margin:8px 0 12px;
+}
+
+.project p{
+    max-width:600px;
+    color:#778196;
+    line-height:1.8;
+    margin-bottom:25px;
+}
+
+.project-buttons{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+/* ================= SOCIALS ================= */
+
+.socials{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:13px;
+}
+
+.social{
+    padding:22px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    color:#fff;
+    text-decoration:none;
+    transition:.35s;
+}
+
+.social:hover{
+    transform:translateY(-5px);
+    border-color:rgba(0,229,255,.25);
+    background:rgba(0,229,255,.045);
+}
+
+.social-icon{
+    width:46px;
+    height:46px;
+    display:grid;
+    place-items:center;
+    border-radius:13px;
+    background:rgba(255,255,255,.06);
+    font-size:19px;
+}
+
+.social-info strong{
+    display:block;
+    font-size:14px;
+}
+
+.social-info span{
+    color:#687286;
+    font-size:11px;
+}
+
+/* ================= FOOTER ================= */
+
+footer{
+    text-align:center;
+    padding:70px 20px 35px;
+    border-top:1px solid rgba(255,255,255,.06);
+}
+
+footer strong{
+    font-size:20px;
+}
+
+footer strong span{
+    color:#00e5ff;
+}
+
+footer p{
+    margin:10px 0;
+    color:#596376;
+    font-size:12px;
+}
+
+/* ================= REVEAL ================= */
+
+.reveal{
+    opacity:0;
+    transform:translateY(30px);
+    transition:opacity .8s ease,transform .8s ease;
+}
+
+.reveal.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:700px){
+
+    .navbar{
+        top:10px;
+    }
+
+    .nav-links{
+        display:none;
+    }
+
+    .hero h1{
+        letter-spacing:-3px;
+    }
+
+    .hero p{
+        font-size:13px;
+    }
+
+    section{
+        padding:70px 0;
+    }
+
+    .section-title h2{
+        font-size:32px;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .skills{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .socials{
+        grid-template-columns:1fr;
+    }
+
+    .project{
+        padding:25px;
+    }
+}
+
+@media(max-width:430px){
+
+    .languages{
+        display:none;
+    }
+
+    .hero{
+        padding-top:100px;
+    }
+
+    .hero h1{
+        font-size:51px;
+    }
+
+    .skills{
+        grid-template-columns:1fr;
+    }
+
+    .about-card{
+        padding:25px;
+    }
+
+    .stats strong{
+        font-size:21px;
+    }
+
+    .btn{
+        width:100%;
+        text-align:center;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="grid"></div>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+       ABUZZY<span>_dev</span>
+    </div>
+
+    <div class="nav-links">
+        <a href="#home" data-i18n="navHome">HOME</a>
+        <a href="#about" data-i18n="navAbout">ABOUT</a>
+        <a href="#skills" data-i18n="navSkills">SKILLS</a>
+        <a href="#projects" data-i18n="navProjects">PROJECTS</a>
+        <a href="#contact" data-i18n="navContact">CONTACT</a>
+    </div>
+
+    <div class="languages">
+        <button class="lang active" data-lang="uz">UZ</button>
+        <button class="lang" data-lang="en">EN</button>
+        <button class="lang" data-lang="ru">RU</button>
+    </div>
+
+</nav>
+
+
+<!-- ================= HERO ================= -->
+
+<main>
+
+<section class="hero" id="home">
+
+<div class="hero-content">
+
+    <div class="status">
+        <span class="status-dot"></span>
+        <span data-i18n="status">AVAILABLE FOR PROJECTS</span>
+    </div>
+
+    <h1>ABUZZY<span>_dev</span></h1>
+
+    <h2 data-i18n="heroTitle">
+        Developer • Roblox Creator • Web Developer
+    </h2>
+
+    <p data-i18n="heroText">
+        Men kreativ g‘oyalarni real loyihalarga aylantiradigan
+        developer-man. Roblox, web development va zamonaviy UI/UX
+        bilan shug‘ullanaman.
+    </p>
+
+    <div class="buttons">
+
+        <a href="#projects" class="btn btn-primary" data-i18n="projectsBtn">
+            VIEW PROJECTS
+        </a>
+
+        <a href="#contact" class="btn btn-secondary" data-i18n="contactBtn">
+            CONNECT
+        </a>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- ================= ABOUT ================= -->
+
+<section id="about" class="reveal">
+
+<div class="section-title">
+    <small data-i18n="aboutSmall">WHO I AM</small>
+    <h2 data-i18n="aboutTitle">About Me</h2>
+</div>
+
+<div class="glass about-card">
+
+<p data-i18n="aboutText">
+    Men yangi g‘oyalarni real loyihalarga aylantirishni
+    yoqtiraman. Roblox Studio, web development, UI/UX va
+    game systems bilan ishlayman.
+</p>
+
+<div class="stats">
+
+<div class="stat">
+    <strong>15+</strong>
+    <span>GITHUB REPOS</span>
+</div>
+
+<div class="stat">
+    <strong>1</strong>
+    <span>ROBLOX GAME</span>
+</div>
+
+<div class="stat">
+    <strong>3</strong>
+    <span>LANGUAGES</span>
+</div>
+
+<div class="stat">
+    <strong>∞</strong>
+    <span>IDEAS</span>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= SKILLS ================= -->
+
+<section id="skills" class="reveal">
+
+<div class="section-title">
+    <small>WHAT I DO</small>
+    <h2 data-i18n="skillsTitle">Skills</h2>
+</div>
+
+<div class="skills">
+
+<div class="glass skill">
+    <i class="fa-solid fa-gamepad"></i>
+    <h3>Roblox Studio</h3>
+    <p data-i18n="skillRoblox">Roblox games and gameplay systems.</p>
+</div>
+
+<div class="glass skill">
+    <i class="fa-solid fa-code"></i>
+    <h3>Web Development</h3>
+    <p data-i18n="skillWeb">Modern websites and interactive experiences.</p>
+</div>
+
+<div class="glass skill">
+    <i class="fa-solid fa-palette"></i>
+    <h3>UI / UX</h3>
+    <p data-i18n="skillUi">Clean, modern and responsive interfaces.</p>
+</div>
+
+<div class="glass skill">
+    <i class="fa-solid fa-gears"></i>
+    <h3>Game Systems</h3>
+    <p data-i18n="skillSystems">Gameplay mechanics and custom systems.</p>
+</div>
+
+<div class="glass skill">
+    <i class="fa-brands fa-js"></i>
+    <h3>JavaScript</h3>
+    <p data-i18n="skillJs">Interactive frontend functionality.</p>
+</div>
+
+<div class="glass skill">
+    <i class="fa-solid fa-lightbulb"></i>
+    <h3>Creative Development</h3>
+    <p data-i18n="skillCreative">Turning ideas into real digital projects.</p>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= PROJECT ================= -->
+
+<section id="projects" class="reveal">
+
+<div class="section-title">
+    <small>FEATURED PROJECT</small>
+    <h2 data-i18n="projectsTitle">My Project</h2>
+</div>
+
+<div class="glass project">
+
+<div class="project-icon">
+    <i class="icon-logo-r"></i>
+</div>
+
+<small>ROBLOX</small>
+
+<h3>ABUZZY</h3>
+
+<p data-i18n="gameText">
+    ABUZZY — ABUZZY_dev tomonidan yaratilgan Roblox game.
+    O‘yinni sinab ko‘ring va Roblox Community'ga qo‘shiling.
+</p>
+
+<div class="project-buttons">
+
+<a
+href="https://www.roblox.com/games/108520005363467/Abuzzy"
+target="_blank"
+rel="noopener noreferrer"
+class="btn btn-primary"
+>
+<i class="fa-brands fa-roblox"></i>
+<span data-i18n="playGame">PLAY GAME</span>
+</a>
+
+<a
+href="https://www.roblox.com/communities/483115864/NOVOY-BOLLA#!/about"
+target="_blank"
+rel="noopener noreferrer"
+class="btn btn-secondary"
+>
+<i class="fa-brands fa-roblox"></i>
+<span data-i18n="community">COMMUNITY</span>
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= SOCIAL ================= -->
+
+<section id="contact" class="reveal">
+
+<div class="section-title">
+    <small>FIND ME ONLINE</small>
+    <h2 data-i18n="contactTitle">Connect With Me</h2>
+</div>
+
+<div class="socials">
+
+<a class="glass social"
+href="https://instagram.com/dev_roro"
+target="_blank"
+rel="noopener noreferrer">
+
+<div class="social-icon">
+    <i class="fa-brands fa-instagram"></i>
+</div>
+
+<div class="social-info">
+    <strong>Instagram</strong>
+    <span>@dev_roro</span>
+</div>
+
+</a>
+
+
+<a class="glass social"
+href="https://github.com/okenabu18-commits"
+target="_blank"
+rel="noopener noreferrer">
+
+<div class="social-icon">
+    <i class="fa-brands fa-github"></i>
+</div>
+
+<div class="social-info">
+    <strong>GitHub</strong>
+    <span>okenabu18-commits</span>
+</div>
+
+</a>
+
+
+<a class="glass social"
+href="https://discord.gg/kKJcYU6sX"
+target="_blank"
+rel="noopener noreferrer">
+
+<div class="social-icon">
+    <i class="fa-brands fa-discord"></i>
+</div>
+
+<div class="social-info">
+    <strong>Discord</strong>
+    <span>ABUZZY_dev</span>
+</div>
+
+</a>
+
+
+<div class="glass social">
+
+<div class="social-icon">
+    <i class="fa-brands fa-telegram"></i>
+</div>
+
+<div class="social-info">
+    <strong>Telegram</strong>
+    <span>ABUZZY_DEV</span>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+<strong>ABUZZY<span>_dev</span></strong>
+
+<p data-i18n="footerText">
+    Kod bilan g‘oyalarni real loyihalarga aylantiraman.
+</p>
+
+<p>© 2026 ABUZZY_dev</p>
+
+</footer>
+
+
+<script>
+
+/* ================= TRANSLATIONS ================= */
+
+const translations = {
+
+uz:{
+    status:"YANGI LOYIHALAR UCHUN OCHIQ",
+    navHome:"HOME",
+    navAbout:"ABOUT",
+    navSkills:"SKILLS",
+    navProjects:"PROJECTS",
+    navContact:"CONTACT",
+
+    heroTitle:"Developer • Roblox Creator • Web Developer",
+    heroText:"Men kreativ g‘oyalarni real loyihalarga aylantiradigan developer-man. Roblox, web development va zamonaviy UI/UX bilan shug‘ullanaman.",
+
+    projectsBtn:"LOYIHALAR",
+    contactBtn:"BOG‘LANISH",
+
+    aboutSmall:"MEN HAQIMDA",
+    aboutTitle:"Men haqimda",
+    aboutText:"Men yangi g‘oyalarni real loyihalarga aylantirishni yoqtiraman. Roblox Studio, web development, UI/UX va game systems bilan ishlayman.",
+
+    skillsTitle:"Ko‘nikmalar",
+    skillRoblox:"Roblox games va gameplay systems.",
+    skillWeb:"Zamonaviy web saytlar va interactive experiences.",
+    skillUi:"Toza, zamonaviy va responsive interfeyslar.",
+    skillSystems:"Gameplay mechanics va custom systems.",
+    skillJs:"Interactive frontend functionality.",
+    skillCreative:"G‘oyalarni real digital loyihalarga aylantirish.",
+
+    projectsTitle:"Loyiham",
+    gameText:"ABUZZY — ABUZZY_DEV tomonidan yaratilgan Roblox game. O‘yinni sinab ko‘ring va Roblox Community'ga qo‘shiling.",
+    playGame:"O‘YINNI OCHISH",
+    community:"COMMUNITY",
+
+    contactTitle:"Men bilan bog‘laning",
+    footerText:"Kod bilan g‘oyalarni real loyihalarga aylantiraman."
+},
+
+en:{
+    status:"AVAILABLE FOR NEW PROJECTS",
+    navHome:"HOME",
+    navAbout:"ABOUT",
+    navSkills:"SKILLS",
+    navProjects:"PROJECTS",
+    navContact:"CONTACT",
+
+    heroTitle:"Developer • Roblox Creator • Web Developer",
+    heroText:"I'm a creative developer turning ideas into real projects. I work with Roblox, web development and modern UI/UX.",
+
+    projectsBtn:"VIEW PROJECTS",
+    contactBtn:"CONNECT",
+
+    aboutSmall:"WHO I AM",
+    aboutTitle:"About Me",
+    aboutText:"I enjoy turning new ideas into real projects. I work with Roblox Studio, web development, UI/UX and game systems.",
+
+    skillsTitle:"Skills",
+    skillRoblox:"Roblox games and gameplay systems.",
+    skillWeb:"Modern websites and interactive experiences.",
+    skillUi:"Clean, modern and responsive interfaces.",
+    skillSystems:"Gameplay mechanics and custom systems.",
+    skillJs:"Interactive frontend functionality.",
+    skillCreative:"Turning ideas into real digital projects.",
+
+    projectsTitle:"My Project",
+    gameText:"ABUZZY is a Roblox game created by ABUZZY_DEV. Play the game and join the Roblox Community.",
+    playGame:"PLAY GAME",
+    community:"COMMUNITY",
+
+    contactTitle:"Connect With Me",
+    footerText:"Turning ideas into real projects through code."
+},
+
+ru:{
+    status:"ОТКРЫТ ДЛЯ НОВЫХ ПРОЕКТОВ",
+    navHome:"ГЛАВНАЯ",
+    navAbout:"ОБО МНЕ",
+    navSkills:"НАВЫКИ",
+    navProjects:"ПРОЕКТЫ",
+    navContact:"КОНТАКТЫ",
+
+    heroTitle:"Developer • Roblox Creator • Web Developer",
+    heroText:"Я креативный разработчик, превращающий идеи в реальные проекты. Работаю с Roblox, веб-разработкой и современным UI/UX.",
+
+    projectsBtn:"ПРОЕКТЫ",
+    contactBtn:"СВЯЗАТЬСЯ",
+
+    aboutSmall:"КТО Я",
+    aboutTitle:"Обо мне",
+    aboutText:"Мне нравится превращать новые идеи в реальные проекты. Я работаю с Roblox Studio, веб-разработкой, UI/UX и игровыми системами.",
+
+    skillsTitle:"Навыки",
+    skillRoblox:"Roblox-игры и игровые системы.",
+    skillWeb:"Современные сайты и интерактивные проекты.",
+    skillUi:"Чистые, современные и адаптивные интерфейсы.",
+    skillSystems:"Игровые механики и кастомные системы.",
+    skillJs:"Интерактивная frontend-функциональность.",
+    skillCreative:"Превращение идей в реальные digital-проекты.",
+
+    projectsTitle:"Мой проект",
+    gameText:"ABUZZY — Roblox-игра, созданная ABUZZY_DEV. Попробуйте игру и присоединяйтесь к Roblox Community.",
+    playGame:"ИГРАТЬ",
+    community:"СООБЩЕСТВО",
+
+    contactTitle:"Связаться со мной",
+    footerText:"Превращаю идеи в реальные проекты с помощью кода."
+}
+
+};
+
+
+/* ================= LANGUAGE ================= */
+
+function setLanguage(lang){
+
+    const data = translations[lang];
+
+    document.querySelectorAll("[data-i18n]").forEach(element => {
+
+        const key = element.dataset.i18n;
+
+        if(data[key]){
+            element.style.opacity = "0";
+
+            setTimeout(() => {
+                element.textContent = data[key];
+                element.style.opacity = "1";
+            },120);
+        }
+
+    });
+
+    document.querySelectorAll(".lang").forEach(button => {
+        button.classList.toggle(
+            "active",
+            button.dataset.lang === lang
+        );
+    });
+
+    document.documentElement.lang = lang;
+
+    localStorage.setItem("abuzzy-language",lang);
+}
+
+
+/* Language buttons */
+
+document.querySelectorAll(".lang").forEach(button => {
+
+    button.addEventListener("click",() => {
+        setLanguage(button.dataset.lang);
+    });
+
+});
+
+
+/* ================= AUTO LANGUAGE ================= */
+
+const savedLanguage =
+    localStorage.getItem("abuzzy-language");
+
+if(savedLanguage && translations[savedLanguage]){
+
+    setLanguage(savedLanguage);
+
+}else{
+
+    const browserLanguage =
+        navigator.language.toLowerCase();
+
+    if(browserLanguage.startsWith("ru")){
+        setLanguage("ru");
+    }
+    else if(browserLanguage.startsWith("en")){
+        setLanguage("en");
+    }
+    else{
+        setLanguage("uz");
+    }
+
+}
+
+
+/* ================= SCROLL REVEAL ================= */
+
+const observer = new IntersectionObserver(
+
+(entries) => {
+
+    entries.forEach(entry => {
+
+        if(entry.isIntersecting){
+            entry.target.classList.add("show");
+        }
+
+    });
+
+},
+
+{
+    threshold:.122
+}
+
+);
+
+document.querySelectorAll(".reveal").forEach(element => {
+    observer.observe(element);
+});
+
+
+/* ================= MOUSE GLOW ================= */
+
+const glow = document.createElement("div");
+
+glow.style.position = "fixed";
+glow.style.width = "180px";
+glow.style.height = "180px";
+glow.style.borderRadius = "50%";
+glow.style.pointerEvents = "none";
+glow.style.zIndex = "1";
+glow.style.background =
+"radial-gradient(circle,rgba(0,229,255,.08),transparent 70%)";
+glow.style.transform = "translate(-50%,-50%)";
+
+document.body.appendChild(glow);
+
+document.addEventListener("mousemove",(event)=>{
+
+    glow.style.left = event.clientX + "px";
+    glow.style.top = event.clientY + "px";
+
+});
+
+
+/* ================= DISABLE IMAGE DRAG ================= */
+
+document.querySelectorAll("img").forEach(img => {
+
+    img.addEventListener("dragstart",e => {
+        e.preventDefault();
+    });
+
+});
+
+</script>
+
+</body>
+</html>
