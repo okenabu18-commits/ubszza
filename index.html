@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ABUZZY</title>
-
-<meta name="description"
-content="ABUZZY — Roblox Creator & Developer">
+<title>ABUZZY_DEV</title>
 
 <link rel="icon" type="image/png" href="/logo.png">
-<link rel="apple-touch-icon" href="/logo.png">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
 <style>
 
 *{
@@ -19,101 +19,143 @@ content="ABUZZY — Roblox Creator & Developer">
     box-sizing:border-box;
 }
 
+html{
+    scroll-behavior:smooth;
+}
+
 body{
     min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
+    padding:45px 15px;
     font-family:Arial,sans-serif;
-    background:#03060b;
     color:white;
-    overflow:hidden;
+    background:#020409;
+    overflow-y:auto;
+    overflow-x:hidden;
 }
 
-/* Background */
+/* ================= BACKGROUND ================= */
 
-body::before,
-body::after{
-    content:"";
+.bg{
     position:fixed;
-    width:300px;
-    height:300px;
+    inset:0;
+    z-index:-2;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 15% 15%,rgba(0,229,255,.12),transparent 30%),
+        radial-gradient(circle at 85% 85%,rgba(124,58,237,.14),transparent 30%),
+        #020409;
+}
+
+.bg::before{
+    content:"";
+    position:absolute;
+    width:450px;
+    height:450px;
     border-radius:50%;
-    filter:blur(100px);
-    opacity:.25;
-    animation:float 8s infinite alternate ease-in-out;
-}
-
-body::before{
     background:#00e5ff;
-    top:-120px;
-    left:-100px;
+    opacity:.08;
+    filter:blur(110px);
+    top:-180px;
+    left:-150px;
+    animation:orb1 9s ease-in-out infinite alternate;
 }
 
-body::after{
-    background:#7c3aed;
-    right:-100px;
-    bottom:-120px;
+.bg::after{
+    content:"";
+    position:absolute;
+    width:450px;
+    height:450px;
+    border-radius:50%;
+    background:#8b5cf6;
+    opacity:.1;
+    filter:blur(110px);
+    right:-150px;
+    bottom:-180px;
+    animation:orb2 10s ease-in-out infinite alternate;
 }
 
-@keyframes float{
+@keyframes orb1{
     to{
-        transform:translate(50px,40px) scale(1.2);
+        transform:translate(100px,120px) scale(1.2);
     }
 }
 
-/* Card */
+@keyframes orb2{
+    to{
+        transform:translate(-100px,-100px) scale(1.2);
+    }
+}
+
+/* ================= CARD ================= */
+
+.container{
+    width:100%;
+    max-width:450px;
+    margin:auto;
+}
 
 .card{
-    width:100%;
-    max-width:430px;
     padding:35px 25px;
     text-align:center;
 
     background:rgba(255,255,255,.045);
     border:1px solid rgba(255,255,255,.1);
-    border-radius:25px;
+
+    border-radius:28px;
 
     backdrop-filter:blur(20px);
 
     box-shadow:
-        0 20px 80px rgba(0,0,0,.5),
-        0 0 40px rgba(0,229,255,.08);
+        0 25px 80px rgba(0,0,0,.55),
+        0 0 50px rgba(0,229,255,.06);
 
-    animation:show .8s ease;
+    animation:cardIn .8s ease;
 }
 
-@keyframes show{
+@keyframes cardIn{
     from{
         opacity:0;
-        transform:translateY(25px) scale(.97);
+        transform:translateY(30px) scale(.96);
     }
+
     to{
         opacity:1;
         transform:translateY(0) scale(1);
     }
 }
 
-/* Avatar */
+/* ================= LOGO ================= */
 
 .avatar{
-    width:100px;
-    height:100px;
-    border-radius:50%;
+    width:105px;
+    height:105px;
     object-fit:cover;
+
+    border-radius:50%;
 
     border:3px solid #00e5ff;
 
-    box-shadow:0 0 30px rgba(0,229,255,.4);
+    box-shadow:
+        0 0 20px rgba(0,229,255,.3),
+        0 0 50px rgba(0,229,255,.12);
 
-    margin-bottom:18px;
+    animation:pulse 2.5s ease-in-out infinite;
 }
 
-/* Name */
+@keyframes pulse{
+    50%{
+        box-shadow:
+            0 0 35px rgba(0,229,255,.55),
+            0 0 70px rgba(0,229,255,.15);
+    }
+}
+
+/* ================= NAME ================= */
 
 h1{
+    margin-top:20px;
     font-size:32px;
+    font-weight:800;
     letter-spacing:-1px;
 }
 
@@ -121,121 +163,324 @@ h1 span{
     color:#00e5ff;
 }
 
-/* Status */
+/* ================= ROLE ================= */
+
+.role{
+    margin-top:10px;
+    color:#8d99ad;
+    font-size:13px;
+}
+
+/* ================= STATUS ================= */
 
 .status{
     display:inline-flex;
     align-items:center;
     gap:7px;
 
-    margin:12px 0 18px;
+    margin:17px 0;
+
     padding:7px 12px;
 
     border-radius:50px;
 
-    background:rgba(34,197,94,.08);
-    border:1px solid rgba(34,197,94,.2);
-
     color:#86efac;
-    font-size:11px;
-}
-
-.dot{
-    width:7px;
-    height:7px;
-    background:#22c55e;
-    border-radius:50%;
-    box-shadow:0 0 10px #22c55e;
-}
-
-/* Description */
-
-p{
-    color:#8d98aa;
-    font-size:14px;
-    line-height:1.7;
-    margin-bottom:24px;
-}
-
-/* Links */
-
-.links{
-    display:grid;
-    gap:10px;
-}
-
-.links a{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:10px;
-
-    padding:13px;
-
-    border-radius:13px;
-
-    color:white;
-    text-decoration:none;
-
-    background:rgba(255,255,255,.055);
-    border:1px solid rgba(255,255,255,.08);
-
-    font-size:14px;
-    font-weight:600;
-
-    transition:.3s;
-}
-
-.links a:hover{
-    transform:translateY(-3px);
-    background:#00e5ff;
-    color:#001014;
-
-    box-shadow:0 8px 30px rgba(0,229,255,.25);
-}
-
-/* Language */
-
-.languages{
-    display:flex;
-    justify-content:center;
-    gap:5px;
-    margin-top:20px;
-}
-
-.languages button{
-    border:0;
-    background:transparent;
-    color:#657084;
-    cursor:pointer;
-
-    padding:6px 9px;
-    border-radius:8px;
+    background:rgba(34,197,94,.07);
+    border:1px solid rgba(34,197,94,.2);
 
     font-size:10px;
     font-weight:bold;
 }
 
-.languages button.active,
-.languages button:hover{
-    color:#00e5ff;
-    background:rgba(0,229,255,.08);
+.dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#22c55e;
+    box-shadow:0 0 12px #22c55e;
 }
+
+/* ================= ABOUT ================= */
+
+.about{
+    color:#7f899c;
+    font-size:14px;
+    line-height:1.75;
+    margin-bottom:25px;
+}
+
+/* ================= LINKS ================= */
+
+.links{
+    display:grid;
+    gap:12px;
+}
+
+/* BUTTON */
+
+.links a{
+
+    position:relative;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    gap:12px;
+
+    min-height:54px;
+
+    padding:14px 18px;
+
+    border-radius:15px;
+
+    color:#fff;
+    text-decoration:none;
+
+    background:
+        linear-gradient(
+            120deg,
+            rgba(255,255,255,.055),
+            rgba(255,255,255,.025)
+        );
+
+    border:1px solid rgba(255,255,255,.09);
+
+    overflow:hidden;
+
+    transition:
+        transform .35s cubic-bezier(.2,.8,.2,1),
+        background .35s,
+        border-color .35s,
+        box-shadow .35s;
+}
+
+/* moving shine */
+
+.links a::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:-120%;
+
+    width:80%;
+    height:100%;
+
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.13),
+        transparent
+    );
+
+    transform:skewX(-20deg);
+
+    transition:.6s;
+}
+
+/* ICON */
+
+.links a i{
+
+    position:relative;
+    z-index:2;
+
+    width:25px;
+
+    font-size:21px;
+
+    color:#00e5ff;
+
+    transition:
+        transform .4s,
+        color .3s;
+}
+
+/* TEXT */
+
+.links a span{
+    position:relative;
+    z-index:2;
+
+    font-size:14px;
+    font-weight:700;
+}
+
+/* ARROW */
+
+.arrow{
+
+    position:absolute;
+
+    right:18px;
+
+    opacity:.3;
+
+    transition:.35s;
+}
+
+/* ================= HOVER ================= */
+
+.links a:hover{
+
+    transform:
+        translateY(-5px)
+        scale(1.025);
+
+    background:
+        linear-gradient(
+            120deg,
+            rgba(0,229,255,.12),
+            rgba(124,58,237,.08)
+        );
+
+    border-color:rgba(0,229,255,.35);
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,.3),
+        0 0 25px rgba(0,229,255,.13);
+}
+
+.links a:hover::before{
+    left:140%;
+}
+
+.links a:hover i{
+
+    transform:
+        scale(1.18)
+        rotate(-7deg);
+
+    color:#fff;
+
+    text-shadow:
+        0 0 15px #00e5ff;
+}
+
+.links a:hover .arrow{
+
+    opacity:1;
+
+    transform:translateX(5px);
+
+    color:#00e5ff;
+}
+
+/* ================= SPECIAL COLORS ================= */
+
+.links a.instagram:hover{
+    border-color:rgba(236,72,153,.45);
+    box-shadow:0 0 30px rgba(236,72,153,.12);
+}
+
+.links a.github:hover{
+    border-color:rgba(255,255,255,.3);
+}
+
+.links a.discord:hover{
+    border-color:rgba(88,101,242,.5);
+    box-shadow:0 0 30px rgba(88,101,242,.15);
+}
+
+.links a.roblox:hover{
+    border-color:rgba(255,255,255,.35);
+}
+
+/* ================= DIVIDER ================= */
+
+.divider{
+    height:1px;
+    background:rgba(255,255,255,.07);
+    margin:25px 0;
+}
+
+/* ================= LANGUAGE ================= */
+
+.languages{
+    display:flex;
+    justify-content:center;
+    gap:5px;
+}
+
+.languages button{
+
+    border:0;
+
+    padding:7px 10px;
+
+    border-radius:8px;
+
+    background:transparent;
+
+    color:#626d80;
+
+    cursor:pointer;
+
+    font-size:10px;
+    font-weight:800;
+
+    transition:.25s;
+}
+
+.languages button:hover,
+.languages button.active{
+
+    color:#00e5ff;
+
+    background:rgba(0,229,255,.08);
+
+    transform:translateY(-2px);
+}
+
+/* ================= FOOTER ================= */
 
 footer{
-    margin-top:20px;
-    color:#4f596b;
+
+    text-align:center;
+
+    margin-top:22px;
+
+    color:#4d5769;
+
     font-size:10px;
+
 }
 
-@media(max-width:450px){
+/* ================= MOBILE ================= */
+
+@media(max-width:480px){
+
+    body{
+        padding:25px 12px;
+    }
 
     .card{
-        padding:30px 20px;
+        padding:30px 18px;
     }
 
     h1{
         font-size:28px;
+    }
+
+    .avatar{
+        width:90px;
+        height:90px;
+    }
+
+}
+
+/* ================= REDUCE MOTION ================= */
+
+@media(prefers-reduced-motion:reduce){
+
+    *,
+    *::before,
+    *::after{
+        animation:none!important;
+        transition:none!important;
     }
 
 }
@@ -245,68 +490,139 @@ footer{
 
 <body>
 
+<div class="bg"></div>
+
+<div class="container">
+
 <div class="card">
 
-    <!-- Agar rasm ishlatmoqchi bo'lsang:
-    <img src="abuzzy.png" class="avatar">
-    -->
+    <img
+        src="/logo.png"
+        class="avatar"
+        alt="ABUZZY_DEV"
+    >
 
-    <div style="
-        width:100px;
-        height:100px;
-        margin:0 auto 18px;
-        display:grid;
-        place-items:center;
-        border-radius:50%;
-        border:3px solid #00e5ff;
-        color:#00e5ff;
-        font-size:38px;
-        font-weight:800;
-        box-shadow:0 0 30px rgba(0,229,255,.4); 
-    ">
-       <img src="/logo.png" class="avatar">
+    <h1>
+        ABUZZY<span>_DEV</span>
+    </h1>
+
+    <div class="role">
+        Developer • Roblox Creator • Web Developer
     </div>
-
-    <h1>ABUZZY<span></span></h1>
 
     <div class="status">
         <span class="dot"></span>
         <span id="status">ONLINE</span>
     </div>
 
-    <p id="about">
-        Roblox Creator & Developer.
-        I build games, websites and creative digital experiences.
+    <p class="about" id="about">
+        Men Roblox o‘yinlari, web loyihalar va
+        kreativ digital experiences yarataman.
     </p>
 
-  <div class="links">
 
-    <a href="https://instagram.com/dev_roro" target="_blank">
-        <i class="fab fa-instagram"></i>
-        Instagram
-    </a>
+    <!-- ================= LINKS ================= -->
 
-    <a href="https://github.com/okenabu18-commits" target="_blank">
-        <i class="fab fa-github"></i>
-        Github
-    </a>
+    <div class="links">
 
-    <a href="https://discord.gg/kKJcYU6sX" target="_blank">
-        <i class="fab fa-discord"></i>
-        Discord
-    </a>
+        <a
+            class="roblox"
+            href="https://www.roblox.com/games/108520005363467/Abuzzy"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            <i class="fas fa-gamepad"></i>
+            <span id="roblox">Roblox Game</span>
+            <i class="fas fa-arrow-right arrow"></i>
+        </a>
 
-    <a href="#" target="_blank">
-        <i class="fab fa-telegram"></i>
-        Telegram
-    </a>
 
-    <a href="https://www.roblox.com/games/108520005363467/Abuzzy" target="_blank">
-        <i class="fas fa-gamepad"></i>
-        Roblox
-    </a>
+        <a
+            class="github"
+            href="https://github.com/okenabu18-commits"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            <i class="fab fa-github"></i>
+            <span>GitHub</span>
+            <i class="fas fa-arrow-right arrow"></i>
+        </a>
 
-</div>
+
+        <a
+            class="instagram"
+            href="https://instagram.com/dev_roro"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            <i class="fab fa-instagram"></i>
+            <span>Instagram</span>
+            <i class="fas fa-arrow-right arrow"></i>
+        </a>
+
+
+        <a
+            class="discord"
+            href="https://discord.gg/kKJcYU6sX"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            <i class="fab fa-discord"></i>
+            <span>Discord</span>
+            <i class="fas fa-arrow-right arrow"></i>
+        </a>
+
+
+        <a
+            href="#"
+            onclick="return false;"
+        >
+            <i class="fab fa-telegram"></i>
+            <span>Telegram — ABUZZY_DEV</span>
+        </a>
+
+
+        <a
+            class="roblox"
+            href="https://www.roblox.com/communities/483115864/NOVOY-BOLLA#!/about"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            <i class="fas fa-users"></i>
+            <span id="community">Roblox Community</span>
+            <i class="fas fa-arrow-right arrow"></i>
+        </a>
+
+    </div>
+
+
+    <div class="divider"></div>
+
+
+    <!-- ================= LANGUAGES ================= -->
+
+    <div class="languages">
+
+        <button
+            class="active"
+            onclick="changeLang('uz',this)"
+        >
+            UZ
+        </button>
+
+        <button
+            onclick="changeLang('en',this)"
+        >
+            EN
+        </button>
+
+        <button
+            onclick="changeLang('ru',this)"
+        >
+            RU
+        </button>
+
+    </div>
 
 
     <footer>
@@ -315,6 +631,113 @@ footer{
 
 </div>
 
+</div>
+
+
+<script>
+
+/* ================= LANGUAGE SYSTEM ================= */
+
+const translations = {
+
+    uz:{
+        status:"ONLINE",
+
+        about:
+        "Men Roblox o‘yinlari, web loyihalar va kreativ digital experiences yarataman.",
+
+        roblox:
+        "Roblox Game",
+
+        community:
+        "Roblox Community"
+    },
+
+    en:{
+        status:"ONLINE",
+
+        about:
+        "I create Roblox games, web projects and creative digital experiences.",
+
+        roblox:
+        "Roblox Game",
+
+        community:
+        "Roblox Community"
+    },
+
+    ru:{
+        status:"ОНЛАЙН",
+
+        about:
+        "Я создаю Roblox-игры, веб-проекты и креативные цифровые продукты.",
+
+        roblox:
+        "Roblox Игра",
+
+        community:
+        "Roblox Сообщество"
+    }
+
+};
+
+
+function changeLang(language,button){
+
+    const data = translations[language];
+
+    document.getElementById("status").textContent =
+        data.status;
+
+    document.getElementById("about").textContent =
+        data.about;
+
+    document.getElementById("roblox").textContent =
+        data.roblox;
+
+    document.getElementById("community").textContent =
+        data.community;
+
+
+    document
+        .querySelectorAll(".languages button")
+        .forEach(btn => {
+            btn.classList.remove("active");
+        });
+
+    button.classList.add("active");
+
+    localStorage.setItem(
+        "abuzzy_language",
+        language
+    );
+}
+
+
+/* ================= SAVED LANGUAGE ================= */
+
+const savedLanguage =
+    localStorage.getItem("abuzzy_language");
+
+if(savedLanguage && translations[savedLanguage]){
+
+    const buttons =
+        document.querySelectorAll(".languages button");
+
+    const index =
+        ["uz","en","ru"].indexOf(savedLanguage);
+
+    if(buttons[index]){
+        changeLang(
+            savedLanguage,
+            buttons[index]
+        );
+    }
+
+}
+
+</script>
 
 </body>
 </html>
+
