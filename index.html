@@ -14,11 +14,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
 }
 
 body{
@@ -26,54 +27,81 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    padding:25px;
-    background:
-        radial-gradient(circle at 15% 20%, rgba(59,130,246,.15), transparent 35%),
-        radial-gradient(circle at 85% 80%, rgba(168,85,247,.12), transparent 35%),
-        #080b12;
-    overflow-x:hidden;
+    padding:30px 18px;
+    overflow:hidden;
+
+    font-family:'Inter',sans-serif;
+    background:#050505;
+    color:white;
 }
 
-/* Background grid */
+/* ===== AMBIENT LIGHT ===== */
+
 body::before{
     content:"";
     position:fixed;
-    inset:0;
-    background-image:
-        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-    background-size:45px 45px;
-    mask-image:linear-gradient(to bottom, black, transparent);
+    width:650px;
+    height:650px;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+
+    background:
+        conic-gradient(
+            from 0deg,
+            transparent,
+            rgba(255,255,255,.06),
+            transparent,
+            rgba(255,255,255,.03),
+            transparent
+        );
+
+    filter:blur(70px);
+    animation:ambient 12s linear infinite;
     pointer-events:none;
 }
 
-/* Main Card */
+@keyframes ambient{
+    to{
+        transform:translate(-50%,-50%) rotate(360deg);
+    }
+}
+
+/* ===== CARD ===== */
+
 .card{
     position:relative;
     width:100%;
-    max-width:460px;
-    padding:42px 32px;
-    text-align:center;
-    z-index:2;
+    max-width:440px;
+    padding:45px 30px 30px;
 
-    background:rgba(15,18,28,.82);
-    border:1px solid rgba(255,255,255,.09);
-    border-radius:30px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.09),
+            rgba(255,255,255,.025) 45%,
+            rgba(255,255,255,.01)
+        );
+
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:34px;
+
+    backdrop-filter:blur(30px);
+    -webkit-backdrop-filter:blur(30px);
 
     box-shadow:
-        0 30px 80px rgba(0,0,0,.5),
-        inset 0 1px 0 rgba(255,255,255,.05);
+        0 40px 100px rgba(0,0,0,.7),
+        inset 0 1px 0 rgba(255,255,255,.12);
 
-    backdrop-filter:blur(25px);
-    -webkit-backdrop-filter:blur(25px);
+    overflow:hidden;
 
-    animation:cardIn .8s ease;
+    animation:cardAppear .9s cubic-bezier(.2,.8,.2,1);
 }
 
-@keyframes cardIn{
+@keyframes cardAppear{
     from{
         opacity:0;
-        transform:translateY(30px) scale(.96);
+        transform:translateY(35px) scale(.94);
     }
     to{
         opacity:1;
@@ -81,210 +109,314 @@ body::before{
     }
 }
 
-/* Avatar */
-.avatar{
-    width:115px;
-    height:115px;
-    border-radius:50%;
-    object-fit:cover;
+/* top shine */
 
-    border:3px solid rgba(255,255,255,.15);
+.card::before{
+    content:"";
+    position:absolute;
+    width:240px;
+    height:240px;
+
+    top:-150px;
+    left:50%;
+    transform:translateX(-50%);
+
+    background:white;
+    opacity:.08;
+    filter:blur(80px);
+    border-radius:50%;
+}
+
+/* ===== PROFILE ===== */
+
+.avatar{
+    position:relative;
+    width:118px;
+    height:118px;
+
+    display:block;
+    margin:auto;
+
+    object-fit:cover;
+    border-radius:50%;
+
+    border:2px solid rgba(255,255,255,.25);
 
     box-shadow:
         0 0 0 8px rgba(255,255,255,.025),
-        0 15px 40px rgba(0,0,0,.5);
+        0 20px 50px rgba(0,0,0,.6);
 
-    transition:.4s ease;
+    transition:.5s cubic-bezier(.2,.8,.2,1);
 }
 
 .avatar:hover{
-    transform:scale(1.06) rotate(2deg);
+    transform:scale(1.08) rotate(-3deg);
+
     box-shadow:
-        0 0 0 8px rgba(255,255,255,.04),
-        0 20px 50px rgba(59,130,246,.25);
+        0 0 0 10px rgba(255,255,255,.04),
+        0 25px 70px rgba(255,255,255,.08);
 }
 
-/* Name */
+/* online indicator */
+
+.avatar::after{
+    content:"";
+}
+
+/* ===== NAME ===== */
+
 h1{
-    margin:22px 0 8px;
-    color:#fff;
-    font-size:38px;
-    font-weight:700;
-    letter-spacing:-1px;
+    margin-top:24px;
+
+    font-size:40px;
+    font-weight:800;
+    letter-spacing:-1.8px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #8f8f8f
+        );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
 }
 
-/* Description */
-p{
-    max-width:350px;
-    margin:0 auto 30px;
+/* ===== DESCRIPTION ===== */
 
-    color:#8f9aaa;
+p{
+    margin:12px auto 30px;
+
+    max-width:340px;
+
+    color:#888;
     font-size:14px;
     line-height:1.8;
 }
 
-/* Social buttons */
+/* ===== SOCIAL ===== */
+
 .social{
     display:grid;
     gap:12px;
 }
 
-/* Button */
+/* ===== BUTTON ===== */
+
 .social a{
     position:relative;
+
     display:flex;
     align-items:center;
     justify-content:center;
-    gap:12px;
+    gap:13px;
 
-    padding:16px 18px;
+    min-height:58px;
+    padding:15px 20px;
 
-    color:#e8edf5;
+    color:#ddd;
     text-decoration:none;
 
     font-size:15px;
     font-weight:600;
 
-    background:rgba(255,255,255,.035);
-    border:1px solid rgba(255,255,255,.075);
-    border-radius:16px;
+    background:
+        linear-gradient(
+            120deg,
+            rgba(255,255,255,.055),
+            rgba(255,255,255,.018)
+        );
+
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
 
     overflow:hidden;
+
     transition:
-        transform .25s ease,
-        background .25s ease,
-        border .25s ease,
-        box-shadow .25s ease;
+        transform .35s cubic-bezier(.2,.8,.2,1),
+        border-color .35s,
+        background .35s,
+        box-shadow .35s;
 }
 
-/* Shine effect */
+/* moving highlight */
+
 .social a::before{
     content:"";
+
     position:absolute;
-    top:0;
-    left:-120%;
-    width:80%;
-    height:100%;
+    width:120px;
+    height:200%;
+
+    top:-50%;
+    left:-160px;
 
     background:linear-gradient(
         90deg,
         transparent,
-        rgba(255,255,255,.08),
+        rgba(255,255,255,.12),
         transparent
     );
 
-    transform:skewX(-20deg);
-    transition:.6s;
+    transform:rotate(20deg);
+
+    transition:.7s;
 }
 
 .social a:hover::before{
-    left:140%;
+    left:120%;
 }
 
-/* Hover */
-.social a:hover{
-    transform:translateY(-3px);
+/* bottom light */
 
-    background:rgba(255,255,255,.075);
-    border-color:rgba(255,255,255,.16);
+.social a::after{
+    content:"";
+
+    position:absolute;
+    left:15%;
+    right:15%;
+    bottom:-15px;
+
+    height:20px;
+
+    background:white;
+    opacity:0;
+
+    filter:blur(20px);
+    transition:.35s;
+}
+
+/* hover */
+
+.social a:hover{
+    transform:translateY(-4px);
+
+    color:#fff;
+
+    background:
+        linear-gradient(
+            120deg,
+            rgba(255,255,255,.11),
+            rgba(255,255,255,.035)
+        );
+
+    border-color:rgba(255,255,255,.2);
 
     box-shadow:
-        0 12px 30px rgba(0,0,0,.25);
+        0 15px 35px rgba(0,0,0,.35);
 }
 
-/* Icons */
+.social a:hover::after{
+    opacity:.12;
+}
+
+/* icons */
+
 .social a i{
-    position:relative;
-    z-index:1;
     font-size:20px;
-    color:#aeb8c8;
-    transition:.25s;
+    color:#777;
+
+    transition:.35s;
 }
 
-.social a span{
-    position:relative;
-    z-index:1;
-}
-
-/* Icon hover */
 .social a:hover i{
     color:#fff;
-    transform:scale(1.12);
+    transform:scale(1.18);
 }
 
-/* Different platform hover accents */
+/* ===== SPECIAL BUTTON EFFECTS ===== */
+
 .social a:nth-child(1):hover{
-    border-color:rgba(255,255,255,.25);
+    box-shadow:
+        0 15px 35px rgba(255,255,255,.08);
 }
 
 .social a:nth-child(2):hover{
-    border-color:rgba(29,161,242,.4);
+    box-shadow:
+        0 15px 35px rgba(0,150,255,.10);
 }
 
 .social a:nth-child(3):hover{
-    border-color:rgba(225,48,108,.4);
+    box-shadow:
+        0 15px 35px rgba(255,50,120,.10);
 }
 
 .social a:nth-child(4):hover{
-    border-color:rgba(88,101,242,.4);
+    box-shadow:
+        0 15px 35px rgba(100,80,255,.12);
 }
 
-/* Mobile */
+/* ===== FOOTER ===== */
+
+.card::after{
+    content:"";
+    position:absolute;
+
+    left:50%;
+    bottom:12px;
+
+    width:35px;
+    height:3px;
+
+    transform:translateX(-50%);
+
+    border-radius:20px;
+
+    background:rgba(255,255,255,.15);
+}
+
+/* ===== MOBILE ===== */
+
 @media(max-width:480px){
 
     body{
-        padding:16px;
-        align-items:center;
+        padding:15px;
+        overflow-y:auto;
     }
 
     .card{
-        padding:34px 20px;
-        border-radius:25px;
+        padding:38px 20px 30px;
+        border-radius:28px;
     }
 
     .avatar{
-        width:100px;
-        height:100px;
+        width:105px;
+        height:105px;
     }
 
     h1{
         font-size:32px;
+        letter-spacing:-1px;
     }
 
     p{
         font-size:13px;
-        margin-bottom:25px;
-    }
-
-    .social{
-        gap:10px;
+        margin-bottom:24px;
     }
 
     .social a{
-        padding:15px;
-        font-size:15px;
-        border-radius:14px;
-    }
-
-    .social a:active{
-        transform:scale(.97);
+        min-height:55px;
+        font-size:14px;
+        border-radius:16px;
     }
 }
 
-/* Very small phones */
+/* ===== SMALL PHONE ===== */
+
 @media(max-width:350px){
 
     .card{
-        padding:28px 16px;
-    }
-
-    h1{
-        font-size:28px;
+        padding:30px 15px;
     }
 
     .avatar{
         width:90px;
         height:90px;
+    }
+
+    h1{
+        font-size:28px;
     }
 }
 </style>
@@ -294,7 +426,7 @@ p{
 
 <div class="card">
 
-<img src="/images/logo.png" class="avatar" alt="Abuzzy">
+<img src="/logo.png" class="avatar" alt="Abuzzy">
 
 <h1>Abuzzy</h1>
 
