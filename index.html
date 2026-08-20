@@ -1,20 +1,21 @@
+# ABUZZY_DEV — Small Personal Website
+
+```html
 <!DOCTYPE html>
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Abuzzy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="icon" type="image/png" sizes="32x32" href="/logo.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/logo.png">
-<link rel="apple-touch-icon" href="logo.png">
+<title>ABUZZY_DEV</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<meta name="description"
+content="ABUZZY_DEV — Roblox Creator & Developer">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<link rel="icon"
+href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%2203080d%22/><text x=%2250%22 y=%2268%22 text-anchor=%22middle%22 font-size=%2255%22 font-family=%22Arial%22 font-weight=%22900%22 fill=%2200e5ff%22>A</text></svg>">
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 *{
     margin:0;
@@ -27,81 +28,70 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    padding:30px 18px;
-    overflow:hidden;
-
-    font-family:'Inter',sans-serif;
-    background:#050505;
+    padding:20px;
+    font-family:Arial,sans-serif;
+    background:#03060b;
     color:white;
+    overflow:hidden;
 }
 
-/* ===== AMBIENT LIGHT ===== */
+/* Background */
 
-body::before{
+body::before,
+body::after{
     content:"";
     position:fixed;
-    width:650px;
-    height:650px;
-    left:50%;
-    top:50%;
-    transform:translate(-50%,-50%);
-
-    background:
-        conic-gradient(
-            from 0deg,
-            transparent,
-            rgba(255,255,255,.06),
-            transparent,
-            rgba(255,255,255,.03),
-            transparent
-        );
-
-    filter:blur(70px);
-    animation:ambient 12s linear infinite;
-    pointer-events:none;
+    width:300px;
+    height:300px;
+    border-radius:50%;
+    filter:blur(100px);
+    opacity:.25;
+    animation:float 8s infinite alternate ease-in-out;
 }
 
-@keyframes ambient{
+body::before{
+    background:#00e5ff;
+    top:-120px;
+    left:-100px;
+}
+
+body::after{
+    background:#7c3aed;
+    right:-100px;
+    bottom:-120px;
+}
+
+@keyframes float{
     to{
-        transform:translate(-50%,-50%) rotate(360deg);
+        transform:translate(50px,40px) scale(1.2);
     }
 }
 
-/* ===== CARD ===== */
+/* Card */
 
 .card{
-    position:relative;
     width:100%;
-    max-width:440px;
-    padding:45px 30px 30px;
+    max-width:430px;
+    padding:35px 25px;
+    text-align:center;
 
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.09),
-            rgba(255,255,255,.025) 45%,
-            rgba(255,255,255,.01)
-        );
+    background:rgba(255,255,255,.045);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:25px;
 
-    border:1px solid rgba(255,255,255,.12);
-    border-radius:34px;
-
-    backdrop-filter:blur(30px);
-    -webkit-backdrop-filter:blur(30px);
+    backdrop-filter:blur(20px);
 
     box-shadow:
-        0 40px 100px rgba(0,0,0,.7),
-        inset 0 1px 0 rgba(255,255,255,.12);
+        0 20px 80px rgba(0,0,0,.5),
+        0 0 40px rgba(0,229,255,.08);
 
-    overflow:hidden;
-
-    animation:cardAppear .9s cubic-bezier(.2,.8,.2,1);
+    animation:show .8s ease;
 }
 
-@keyframes cardAppear{
+@keyframes show{
     from{
         opacity:0;
-        transform:translateY(35px) scale(.94);
+        transform:translateY(25px) scale(.97);
     }
     to{
         opacity:1;
@@ -109,316 +99,151 @@ body::before{
     }
 }
 
-/* top shine */
-
-.card::before{
-    content:"";
-    position:absolute;
-    width:240px;
-    height:240px;
-
-    top:-150px;
-    left:50%;
-    transform:translateX(-50%);
-
-    background:white;
-    opacity:.08;
-    filter:blur(80px);
-    border-radius:50%;
-}
-
-/* ===== PROFILE ===== */
+/* Avatar */
 
 .avatar{
-    position:relative;
-    width:118px;
-    height:118px;
-
-    display:block;
-    margin:auto;
-
-    object-fit:cover;
+    width:100px;
+    height:100px;
     border-radius:50%;
+    object-fit:cover;
 
-    border:2px solid rgba(255,255,255,.25);
+    border:3px solid #00e5ff;
 
-    box-shadow:
-        0 0 0 8px rgba(255,255,255,.025),
-        0 20px 50px rgba(0,0,0,.6);
+    box-shadow:0 0 30px rgba(0,229,255,.4);
 
-    transition:.5s cubic-bezier(.2,.8,.2,1);
+    margin-bottom:18px;
 }
 
-.avatar:hover{
-    transform:scale(1.08) rotate(-3deg);
-
-    box-shadow:
-        0 0 0 10px rgba(255,255,255,.04),
-        0 25px 70px rgba(255,255,255,.08);
-}
-
-/* online indicator */
-
-.avatar::after{
-    content:"";
-}
-
-/* ===== NAME ===== */
+/* Name */
 
 h1{
-    margin-top:24px;
-
-    font-size:40px;
-    font-weight:800;
-    letter-spacing:-1.8px;
-
-    background:
-        linear-gradient(
-            180deg,
-            #ffffff,
-            #8f8f8f
-        );
-
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
+    font-size:32px;
+    letter-spacing:-1px;
 }
 
-/* ===== DESCRIPTION ===== */
+h1 span{
+    color:#00e5ff;
+}
+
+/* Status */
+
+.status{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+
+    margin:12px 0 18px;
+    padding:7px 12px;
+
+    border-radius:50px;
+
+    background:rgba(34,197,94,.08);
+    border:1px solid rgba(34,197,94,.2);
+
+    color:#86efac;
+    font-size:11px;
+}
+
+.dot{
+    width:7px;
+    height:7px;
+    background:#22c55e;
+    border-radius:50%;
+    box-shadow:0 0 10px #22c55e;
+}
+
+/* Description */
 
 p{
-    margin:12px auto 30px;
-
-    max-width:340px;
-
-    color:#888;
+    color:#8d98aa;
     font-size:14px;
-    line-height:1.8;
+    line-height:1.7;
+    margin-bottom:24px;
 }
 
-/* ===== SOCIAL ===== */
+/* Links */
 
-.social{
+.links{
     display:grid;
-    gap:12px;
+    gap:10px;
 }
 
-/* ===== BUTTON ===== */
-
-.social a{
-    position:relative;
-
+.links a{
     display:flex;
     align-items:center;
     justify-content:center;
-    gap:13px;
+    gap:10px;
 
-    min-height:58px;
-    padding:15px 20px;
+    padding:13px;
 
-    color:#ddd;
+    border-radius:13px;
+
+    color:white;
     text-decoration:none;
 
-    font-size:15px;
+    background:rgba(255,255,255,.055);
+    border:1px solid rgba(255,255,255,.08);
+
+    font-size:14px;
     font-weight:600;
 
-    background:
-        linear-gradient(
-            120deg,
-            rgba(255,255,255,.055),
-            rgba(255,255,255,.018)
-        );
-
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:18px;
-
-    overflow:hidden;
-
-    transition:
-        transform .35s cubic-bezier(.2,.8,.2,1),
-        border-color .35s,
-        background .35s,
-        box-shadow .35s;
+    transition:.3s;
 }
 
-/* moving highlight */
+.links a:hover{
+    transform:translateY(-3px);
+    background:#00e5ff;
+    color:#001014;
 
-.social a::before{
-    content:"";
-
-    position:absolute;
-    width:120px;
-    height:200%;
-
-    top:-50%;
-    left:-160px;
-
-    background:linear-gradient(
-        90deg,
-        transparent,
-        rgba(255,255,255,.12),
-        transparent
-    );
-
-    transform:rotate(20deg);
-
-    transition:.7s;
+    box-shadow:0 8px 30px rgba(0,229,255,.25);
 }
 
-.social a:hover::before{
-    left:120%;
+/* Language */
+
+.languages{
+    display:flex;
+    justify-content:center;
+    gap:5px;
+    margin-top:20px;
 }
 
-/* bottom light */
+.languages button{
+    border:0;
+    background:transparent;
+    color:#657084;
+    cursor:pointer;
 
-.social a::after{
-    content:"";
+    padding:6px 9px;
+    border-radius:8px;
 
-    position:absolute;
-    left:15%;
-    right:15%;
-    bottom:-15px;
-
-    height:20px;
-
-    background:white;
-    opacity:0;
-
-    filter:blur(20px);
-    transition:.35s;
+    font-size:10px;
+    font-weight:bold;
 }
 
-/* hover */
-
-.social a:hover{
-    transform:translateY(-4px);
-
-    color:#fff;
-
-    background:
-        linear-gradient(
-            120deg,
-            rgba(255,255,255,.11),
-            rgba(255,255,255,.035)
-        );
-
-    border-color:rgba(255,255,255,.2);
-
-    box-shadow:
-        0 15px 35px rgba(0,0,0,.35);
+.languages button.active,
+.languages button:hover{
+    color:#00e5ff;
+    background:rgba(0,229,255,.08);
 }
 
-.social a:hover::after{
-    opacity:.12;
+footer{
+    margin-top:20px;
+    color:#4f596b;
+    font-size:10px;
 }
 
-/* icons */
-
-.social a i{
-    font-size:20px;
-    color:#777;
-
-    transition:.35s;
-}
-
-.social a:hover i{
-    color:#fff;
-    transform:scale(1.18);
-}
-
-/* ===== SPECIAL BUTTON EFFECTS ===== */
-
-.social a:nth-child(1):hover{
-    box-shadow:
-        0 15px 35px rgba(255,255,255,.08);
-}
-
-.social a:nth-child(2):hover{
-    box-shadow:
-        0 15px 35px rgba(0,150,255,.10);
-}
-
-.social a:nth-child(3):hover{
-    box-shadow:
-        0 15px 35px rgba(255,50,120,.10);
-}
-
-.social a:nth-child(4):hover{
-    box-shadow:
-        0 15px 35px rgba(100,80,255,.12);
-}
-
-/* ===== FOOTER ===== */
-
-.card::after{
-    content:"";
-    position:absolute;
-
-    left:50%;
-    bottom:12px;
-
-    width:35px;
-    height:3px;
-
-    transform:translateX(-50%);
-
-    border-radius:20px;
-
-    background:rgba(255,255,255,.15);
-}
-
-/* ===== MOBILE ===== */
-
-@media(max-width:480px){
-
-    body{
-        padding:15px;
-        overflow-y:auto;
-    }
+@media(max-width:450px){
 
     .card{
-        padding:38px 20px 30px;
-        border-radius:28px;
-    }
-
-    .avatar{
-        width:105px;
-        height:105px;
-    }
-
-    h1{
-        font-size:32px;
-        letter-spacing:-1px;
-    }
-
-    p{
-        font-size:13px;
-        margin-bottom:24px;
-    }
-
-    .social a{
-        min-height:55px;
-        font-size:14px;
-        border-radius:16px;
-    }
-}
-
-/* ===== SMALL PHONE ===== */
-
-@media(max-width:350px){
-
-    .card{
-        padding:30px 15px;
-    }
-
-    .avatar{
-        width:90px;
-        height:90px;
+        padding:30px 20px;
     }
 
     h1{
         font-size:28px;
     }
+
 }
+
 </style>
 </head>
 
@@ -426,54 +251,144 @@ p{
 
 <div class="card">
 
-<img src="/logo.png" class="avatar" alt="Abuzzy">
+    <!-- Agar rasm ishlatmoqchi bo'lsang:
+    <img src="abuzzy.png" class="avatar">
+    -->
 
-<h1>Abuzzy</h1>
+    <div style="
+        width:100px;
+        height:100px;
+        margin:0 auto 18px;
+        display:grid;
+        place-items:center;
+        border-radius:50%;
+        border:3px solid #00e5ff;
+        color:#00e5ff;
+        font-size:38px;
+        font-weight:800;
+        box-shadow:0 0 30px rgba(0,229,255,.4);
+    ">
+        A
+    </div>
 
-<p>
-Abuzzy— zamonaviy texnologiyalar, dasturlash, kiberxavfsizlik va AI yo‘nalishlariga qiziqadigan developer va technology enthusiastman.
+    <h1>ABUZZY<span>_DEV</span></h1>
 
-Men veb-saytlar, ilovalar, o‘yinlar va turli raqamli loyihalar yaratish hamda ularni test qilish bilan shug‘ullanaman. Ayniqsa Roblox Studio, Web Development, JavaScript, HTML/CSS, Termux va AI texnologiyalari bilan ishlashga katta qiziqishim bor.
+    <div class="status">
+        <span class="dot"></span>
+        <span id="status">ONLINE</span>
+    </div>
 
-Shuningdek, dasturlar va tizimlarning xavfsizligini o‘rganish, zaifliklarni aniqlash va penetration testing yo‘nalishida tajriba orttirishga harakat qilaman.
+    <p id="about">
+        Roblox Creator & Developer.
+        I build games, websites and creative digital experiences.
+    </p>
 
-Men yangi texnologiyalarni tez o‘rganishga, o‘z loyihalarimni yaratishga va mavjud tizimlarni yanada yaxshilashga intilaman. Maqsadim — kuchli developer bo‘lish va kelajakda professional darajadagi texnologik loyihalar yaratish.
-</p>
+    <div class="links">
 
-<div class="social">
+        <a href="https://www.roblox.com/games/108520005363467/Abuzzy"
+           target="_blank">
+            🎮 Roblox Game
+        </a>
 
-<a href="https://t.me/ABUZZY_dev" target="_blank">
-<i class="fab fa-telegram"></i>
-Telegram
-</a>
+        <a href="https://github.com/okenabu18-commits"
+           target="_blank">
+            💻 GitHub
+        </a>
 
-<a href="https://instagram.com/dev_roro" target="_blank">
-<i class="fab fa-instagram"></i>
-Instagram
-</a>
+        <a href="https://instagram.com/dev_roro"
+           target="_blank">
+            📸 Instagram
+        </a>
 
-<a href="https://discord.gg/y2YzpFHvM" target="_blank">
-<i class="fab fa-discord"></i>
-Discord
-</a>
+        <a href="https://discord.gg/kKJcYU6sX"
+           target="_blank">
+            💬 Discord
+        </a>
 
-<a href="https://github.com/okenabu18-commits" target="_blank">
-<i class="fab fa-git"></i>
-GitHub
-</a>
+        <a href="https://www.roblox.com/communities/483115864/NOVOY-BOLLA#!/about"
+           target="_blank">
+            👥 Roblox Community
+        </a>
+
+    </div>
+
+    <div class="languages">
+        <button class="active" onclick="lang('uz',this)">UZ</button>
+        <button onclick="lang('en',this)">EN</button>
+        <button onclick="lang('ru',this)">RU</button>
+    </div>
+
+    <footer>
+        © 2026 ABUZZY_DEV
+    </footer>
+
+</div>
 
 <script>
-document.addEventListener("contextmenu", e => e.preventDefault());
 
-document.querySelectorAll("a").forEach(a => {
-    a.addEventListener("contextmenu", e => e.preventDefault());
-    a.addEventListener("dragstart", e => e.preventDefault());
-});
+const text = {
+
+    uz:{
+        status:"ONLINE",
+        about:"Men Roblox Creator va Developer-man. O‘yinlar, web saytlar va kreativ digital loyihalar yarataman."
+    },
+
+    en:{
+        status:"ONLINE",
+        about:"I'm a Roblox Creator and Developer. I build games, websites and creative digital experiences."
+    },
+
+    ru:{
+        status:"ОНЛАЙН",
+        about:"Я Roblox Creator и Developer. Создаю игры, сайты и креативные цифровые проекты."
+    }
+
+};
+
+function lang(language,button){
+
+    document.getElementById("status").textContent =
+        text[language].status;
+
+    document.getElementById("about").textContent =
+        text[language].about;
+
+    document.querySelectorAll(".languages button")
+        .forEach(btn => btn.classList.remove("active"));
+
+    button.classList.add("active");
+
+    localStorage.setItem("language",language);
+}
+
+const saved = localStorage.getItem("language");
+
+if(saved){
+
+    const button =
+        [...document.querySelectorAll(".languages button")]
+        .find(btn => btn.textContent.toLowerCase() === saved);
+
+    if(button){
+        lang(saved,button);
+    }
+
+}
+
 </script>
-
-</div>
-
-</div>
 
 </body>
 </html>
+```
+
+### Hostingga joylash
+
+Faqat:
+
+```text
+index.html
+```
+
+faylini hostingning **public_html** yoki saytning root papkasiga tashlaysan.
+
+Keyin domeningni ochsang, sayt to‘g‘ridan-to‘g‘ri ishlaydi. Alohida CSS yoki JS fayli kerak emas.
