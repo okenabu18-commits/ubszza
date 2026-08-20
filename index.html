@@ -283,27 +283,27 @@ footer{
 
     <a href="https://instagram.com/dev_roro" target="_blank">
         <i class="fab fa-instagram"></i>
-        instagram
+        Instagram
     </a>
 
     <a href="https://github.com/okenabu18-commits" target="_blank">
         <i class="fab fa-github"></i>
-        github
+        Github
     </a>
 
     <a href="https://discord.gg/kKJcYU6sX" target="_blank">
         <i class="fab fa-discord"></i>
-        discord
+        Discord
     </a>
 
     <a href="#" target="_blank">
         <i class="fab fa-telegram"></i>
-        telegram
+        Telegram
     </a>
 
     <a href="https://www.roblox.com/games/108520005363467/Abuzzy" target="_blank">
         <i class="fas fa-gamepad"></i>
-        roblox
+        Roblox
     </a>
 
 </div>
@@ -315,58 +315,6 @@ footer{
 
 </div>
 
-<script>
-
-const text = {
-
-    uz:{
-        status:"ONLINE",
-        about:"Men Roblox Creator va Developer-man. O‘yinlar, web saytlar va kreativ digital loyihalar yarataman."
-    },
-
-    en:{
-        status:"ONLINE",
-        about:"I'm a Roblox Creator and Developer. I build games, websites and creative digital experiences."
-    },
-
-    ru:{
-        status:"ОНЛАЙН",
-        about:"Я Roblox Creator и Developer. Создаю игры, сайты и креативные цифровые проекты."
-    }
-
-};
-
-function lang(language,button){
-
-    document.getElementById("status").textContent =
-        text[language].status;
-
-    document.getElementById("about").textContent =
-        text[language].about;
-
-    document.querySelectorAll(".languages button")
-        .forEach(btn => btn.classList.remove("active"));
-
-    button.classList.add("active");
-
-    localStorage.setItem("language",language);
-}
-
-const saved = localStorage.getItem("language");
-
-if(saved){
-
-    const button =
-        [...document.querySelectorAll(".languages button")]
-        .find(btn => btn.textContent.toLowerCase() === saved);
-
-    if(button){
-        lang(saved,button);
-    }
-
-}
-
-</script>
 
 </body>
 </html>
