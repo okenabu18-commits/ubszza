@@ -2,106 +2,330 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
 <title>ABU TV</title>
 
 <style>
+/* =====================================================
+   RESET
+===================================================== */
+
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+    width:100%;
+    min-height:100%;
 }
 
 body{
     background:#050505;
-    color:white;
-    font-family:Arial,sans-serif;
+    color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
+    overflow-x:hidden;
 }
 
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+:root{
+    --accent:#00aaff;
+    --bg:#050505;
+    --panel:#111;
+    --panel2:#181818;
+    --border:#292929;
+    --muted:#999;
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
 header{
+    width:100%;
     height:70px;
+
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:0 25px;
-    background:#0d0d0d;
-    border-bottom:1px solid #222;
+
+    padding:
+        0
+        max(18px, env(safe-area-inset-right))
+        0
+        max(18px, env(safe-area-inset-left));
+
+    background:rgba(10,10,10,.96);
+
+    border-bottom:1px solid var(--border);
+
+    position:sticky;
+    top:0;
+    z-index:100;
 }
 
 .logo{
-    color:#00aaff;
-    font-size:26px;
+    color:var(--accent);
+    font-size:27px;
     font-weight:900;
+    letter-spacing:.5px;
 }
 
-.header-buttons{
+.header-right{
     display:flex;
+    align-items:center;
     gap:10px;
 }
 
-button{
-    border:0;
-    background:#191919;
-    color:white;
-    border:1px solid #303030;
-    border-radius:9px;
-    padding:11px 15px;
-    cursor:pointer;
-    font-size:16px;
+.online{
+    display:flex;
+    align-items:center;
+    gap:7px;
+
+    color:#aaa;
+    font-size:13px;
 }
 
-button:hover{
-    background:#00aaff;
+.online-dot{
+    width:8px;
+    height:8px;
+
+    background:#00e676;
+    border-radius:50%;
+
+    box-shadow:0 0 12px #00e676;
 }
+
+.icon-btn{
+    width:43px;
+    height:43px;
+
+    border:1px solid #303030;
+    border-radius:10px;
+
+    background:#171717;
+    color:white;
+
+    cursor:pointer;
+
+    font-size:19px;
+}
+
+.icon-btn:hover,
+.icon-btn:focus{
+    border-color:var(--accent);
+    background:#202020;
+}
+
+/* =====================================================
+   MAIN
+===================================================== */
 
 main{
-    max-width:1500px;
+    width:100%;
+    max-width:1700px;
+
     margin:auto;
-    padding:25px;
+
+    padding:24px;
 }
+
+/* =====================================================
+   PLAYER
+===================================================== */
 
 .player{
     position:relative;
+
     width:100%;
-    aspect-ratio:16/9;
+
+    aspect-ratio:16 / 9;
+
     background:#000;
+
     border-radius:15px;
+
     overflow:hidden;
+
+    box-shadow:
+        0 20px 70px rgba(0,0,0,.65);
 }
 
-iframe{
+.player iframe{
     width:100%;
     height:100%;
+
     border:0;
+
+    display:block;
 }
+
+/* custom buttons OUTSIDE iframe */
 
 .player-tools{
     position:absolute;
-    right:15px;
+
     top:15px;
-    z-index:10;
+    right:15px;
+
+    z-index:20;
+
     display:flex;
     gap:8px;
 }
 
-.player-tools button{
+.player-tool{
     width:44px;
     height:44px;
-    padding:0;
-    background:rgba(0,0,0,.75);
-    backdrop-filter:blur(8px);
+
+    border:1px solid rgba(255,255,255,.18);
+
+    border-radius:10px;
+
+    background:rgba(0,0,0,.72);
+
+    color:#fff;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    backdrop-filter:blur(10px);
 }
 
-/* SETTINGS */
+.player-tool:hover{
+    background:var(--accent);
+}
+
+/* =====================================================
+   INFO
+===================================================== */
+
+.info{
+    padding:22px 3px;
+}
+
+.title{
+    font-size:30px;
+    font-weight:800;
+
+    margin-bottom:12px;
+}
+
+.meta{
+    display:flex;
+    flex-wrap:wrap;
+
+    gap:9px;
+}
+
+.badge{
+    padding:8px 13px;
+
+    border-radius:8px;
+
+    background:#121212;
+
+    border:1px solid #292929;
+
+    color:#aaa;
+
+    font-size:14px;
+}
+
+/* =====================================================
+   EPISODES
+===================================================== */
+
+.episodes{
+    margin-top:5px;
+}
+
+.episodes-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:15px;
+}
+
+.episodes-header h2{
+    font-size:23px;
+}
+
+.episode-list{
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fill,minmax(180px,1fr));
+
+    gap:12px;
+}
+
+.episode{
+    min-height:75px;
+
+    padding:16px;
+
+    background:var(--panel);
+
+    border:1px solid var(--border);
+
+    border-radius:11px;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.episode:hover{
+    border-color:var(--accent);
+    transform:translateY(-2px);
+}
+
+.episode.active{
+    border-color:var(--accent);
+    background:#08202c;
+}
+
+.episode-number{
+    font-weight:700;
+}
+
+.episode-duration{
+    color:#888;
+    font-size:13px;
+
+    margin-top:7px;
+}
+
+/* =====================================================
+   SETTINGS
+===================================================== */
 
 .overlay{
     position:fixed;
+
     inset:0;
-    background:rgba(0,0,0,.7);
+
     display:none;
     align-items:center;
     justify-content:center;
-    z-index:9999;
+
+    background:rgba(0,0,0,.72);
+
+    backdrop-filter:blur(8px);
+
+    z-index:10000;
+
+    padding:20px;
 }
 
 .overlay.show{
@@ -109,94 +333,113 @@ iframe{
 }
 
 .settings{
-    width:400px;
-    max-width:90%;
+    width:430px;
+    max-width:100%;
+
     background:#111;
-    border:1px solid #333;
-    border-radius:16px;
+
+    border:1px solid #303030;
+
+    border-radius:18px;
+
     overflow:hidden;
+
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.8);
 }
 
 .settings-header{
-    padding:20px;
+    min-height:65px;
+
     display:flex;
+    align-items:center;
     justify-content:space-between;
+
+    padding:15px 18px;
+
     border-bottom:1px solid #292929;
 }
 
-.settings-row{
-    padding:18px 20px;
-    border-bottom:1px solid #222;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+.settings-header h2{
+    font-size:20px;
 }
 
-.settings-row span{
-    color:#aaa;
-    font-size:13px;
+.close-settings{
+    width:40px;
+    height:40px;
+
+    border:0;
+    border-radius:9px;
+
+    background:#202020;
+
+    color:#fff;
+
+    font-size:21px;
+
+    cursor:pointer;
+}
+
+.setting-row{
+    min-height:70px;
+
+    padding:14px 18px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:20px;
+
+    border-bottom:1px solid #222;
+}
+
+.setting-info strong{
+    display:block;
+
+    margin-bottom:4px;
+}
+
+.setting-info span{
+    color:#777;
+    font-size:12px;
 }
 
 select{
-    background:#222;
-    color:white;
+    background:#202020;
+
+    color:#fff;
+
     border:1px solid #444;
-    padding:8px;
-    border-radius:7px;
-}
 
-.info{
-    padding:22px 5px;
-}
-
-.title{
-    font-size:30px;
-    font-weight:800;
-    margin-bottom:12px;
-}
-
-.meta{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-}
-
-.badge{
-    padding:8px 12px;
-    background:#121212;
-    border:1px solid #292929;
     border-radius:8px;
-    color:#aaa;
+
+    padding:9px 12px;
+
+    outline:none;
 }
 
-.episodes{
-    margin-top:20px;
-}
-
-.episodes h2{
-    margin-bottom:15px;
-}
-
-.episode{
-    width:180px;
-    padding:16px;
-    background:#111;
-    border:1px solid #292929;
-    border-radius:10px;
-}
-
-.episode.active{
-    border-color:#00aaff;
-    background:#08202c;
-}
+/* =====================================================
+   FOOTER
+===================================================== */
 
 footer{
     text-align:center;
+
     padding:35px;
+
     color:#555;
+
+    font-size:13px;
 }
 
-/* FULLSCREEN */
+/* =====================================================
+   FULLSCREEN
+===================================================== */
+
+body.fullscreen-mode{
+    overflow:hidden;
+}
 
 body.fullscreen-mode header,
 body.fullscreen-mode .info,
@@ -212,36 +455,261 @@ body.fullscreen-mode main{
 
 body.fullscreen-mode .player{
     position:fixed;
+
     inset:0;
+
     width:100vw;
     height:100vh;
+
+    aspect-ratio:auto;
+
     border-radius:0;
-    z-index:5000;
+
+    z-index:9998;
 }
 
-/* MOBILE */
+/* =====================================================
+   PHONE
+===================================================== */
 
-@media(max-width:700px){
+@media(max-width:600px){
 
     header{
-        height:60px;
-        padding:0 12px;
+        height:58px;
+
+        padding-left:12px;
+        padding-right:12px;
     }
 
     .logo{
         font-size:21px;
     }
 
-    main{
-        padding:10px;
+    .online{
+        display:none;
     }
 
-    .title{
-        font-size:22px;
+    .header-right{
+        gap:6px;
+    }
+
+    .icon-btn{
+        width:39px;
+        height:39px;
+        font-size:17px;
+    }
+
+    main{
+        padding:9px;
     }
 
     .player{
-        border-radius:8px;
+        border-radius:9px;
+    }
+
+    .player-tools{
+        top:8px;
+        right:8px;
+    }
+
+    .player-tool{
+        width:39px;
+        height:39px;
+        font-size:16px;
+    }
+
+    .info{
+        padding:16px 2px;
+    }
+
+    .title{
+        font-size:21px;
+    }
+
+    .badge{
+        font-size:12px;
+        padding:7px 9px;
+    }
+
+    .episodes-header h2{
+        font-size:19px;
+    }
+
+    .episode-list{
+        grid-template-columns:
+            repeat(2,minmax(0,1fr));
+
+        gap:8px;
+    }
+
+    .episode{
+        min-height:65px;
+        padding:12px;
+    }
+
+    .episode-number{
+        font-size:14px;
+    }
+
+    .episode-duration{
+        font-size:11px;
+    }
+
+    .settings{
+        border-radius:15px;
+    }
+
+    .setting-row{
+        min-height:64px;
+        padding:12px 15px;
+    }
+
+}
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media(min-width:601px) and (max-width:1024px){
+
+    header{
+        height:65px;
+    }
+
+    main{
+        padding:16px;
+    }
+
+    .title{
+        font-size:26px;
+    }
+
+    .episode-list{
+        grid-template-columns:
+            repeat(3,minmax(0,1fr));
+    }
+
+}
+
+/* =====================================================
+   LAPTOP / PC
+===================================================== */
+
+@media(min-width:1025px) and (max-width:1599px){
+
+    main{
+        max-width:1450px;
+    }
+
+}
+
+/* =====================================================
+   BIG TV
+===================================================== */
+
+@media(min-width:1600px){
+
+    header{
+        height:88px;
+
+        padding-left:45px;
+        padding-right:45px;
+    }
+
+    .logo{
+        font-size:34px;
+    }
+
+    .online{
+        font-size:16px;
+    }
+
+    .icon-btn{
+        width:52px;
+        height:52px;
+
+        font-size:22px;
+    }
+
+    main{
+        max-width:1800px;
+        padding:35px;
+    }
+
+    .player{
+        border-radius:18px;
+    }
+
+    .player-tools{
+        top:22px;
+        right:22px;
+
+        gap:12px;
+    }
+
+    .player-tool{
+        width:58px;
+        height:58px;
+
+        font-size:24px;
+    }
+
+    .title{
+        font-size:38px;
+    }
+
+    .badge{
+        font-size:16px;
+        padding:10px 15px;
+    }
+
+    .episodes-header h2{
+        font-size:28px;
+    }
+
+    .episode-list{
+        grid-template-columns:
+            repeat(auto-fill,minmax(240px,1fr));
+
+        gap:16px;
+    }
+
+    .episode{
+        min-height:95px;
+        padding:20px;
+    }
+
+    .episode-number{
+        font-size:18px;
+    }
+
+    .episode-duration{
+        font-size:14px;
+    }
+
+}
+
+/* =====================================================
+   ULTRA TV
+===================================================== */
+
+@media(min-width:2500px){
+
+    header{
+        height:100px;
+    }
+
+    .logo{
+        font-size:40px;
+    }
+
+    main{
+        max-width:2200px;
+    }
+
+    .player-tool{
+        width:65px;
+        height:65px;
     }
 
 }
@@ -256,13 +724,24 @@ body.fullscreen-mode .player{
         ABU TV
     </div>
 
-    <div class="header-buttons">
+    <div class="header-right">
 
-        <button id="settingsBtn">
+        <div class="online">
+            <span class="online-dot"></span>
+            ONLINE
+        </div>
+
+        <button
+            class="icon-btn"
+            id="settingsBtn"
+            aria-label="Settings">
             ⚙
         </button>
 
-        <button id="fullscreenBtn">
+        <button
+            class="icon-btn"
+            id="fullscreenBtn"
+            aria-label="Fullscreen">
             ⛶
         </button>
 
@@ -273,19 +752,26 @@ body.fullscreen-mode .player{
 
 <main>
 
-    <div class="player" id="player">
+    <div
+        class="player"
+        id="player">
 
         <div class="player-tools">
 
-            <button id="settingsPlayer">
+            <button
+                class="player-tool"
+                id="playerSettings">
                 ⚙
             </button>
 
-            <button id="fullscreenPlayer">
+            <button
+                class="player-tool"
+                id="playerFullscreen">
                 ⛶
             </button>
 
         </div>
+
 
         <iframe
             id="okPlayer"
@@ -324,12 +810,24 @@ body.fullscreen-mode .player{
 
     <section class="episodes">
 
-        <h2>📺 Qismlar</h2>
+        <div class="episodes-header">
+            <h2>📺 Qismlar</h2>
+        </div>
 
-        <div class="episode active">
-            <b>1-qism</b>
-            <br>
-            <small>2:22:15</small>
+        <div class="episode-list">
+
+            <div class="episode active">
+
+                <div class="episode-number">
+                    1-qism
+                </div>
+
+                <div class="episode-duration">
+                    2:22:15
+                </div>
+
+            </div>
+
         </div>
 
     </section>
@@ -344,27 +842,39 @@ body.fullscreen-mode .player{
 
 <!-- SETTINGS -->
 
-<div class="overlay" id="overlay">
+<div
+    class="overlay"
+    id="settingsOverlay">
 
     <div class="settings">
 
         <div class="settings-header">
 
-            <h2>⚙ Settings</h2>
+            <h2>
+                ⚙ TV Settings
+            </h2>
 
-            <button id="closeSettings">
+            <button
+                class="close-settings"
+                id="closeSettings">
                 ×
             </button>
 
         </div>
 
 
-        <div class="settings-row">
+        <div class="setting-row">
 
-            <div>
-                <b>Fullscreen</b>
-                <br>
-                <span>Playerni to‘liq ekran qilish</span>
+            <div class="setting-info">
+
+                <strong>
+                    Fullscreen
+                </strong>
+
+                <span>
+                    To‘liq ekran rejimi
+                </span>
+
             </div>
 
             <button id="settingsFullscreen">
@@ -374,18 +884,30 @@ body.fullscreen-mode .player{
         </div>
 
 
-        <div class="settings-row">
+        <div class="setting-row">
 
-            <div>
-                <b>Player</b>
-                <br>
-                <span>OK.ru video player</span>
+            <div class="setting-info">
+
+                <strong>
+                    Interface
+                </strong>
+
+                <span>
+                    TV responsive interface
+                </span>
+
             </div>
 
-            <select>
-                <option>Auto</option>
-                <option>720p</option>
-                <option>1080p</option>
+            <select id="interfaceSize">
+
+                <option value="auto">
+                    Auto
+                </option>
+
+                <option value="large">
+                    Large TV
+                </option>
+
             </select>
 
         </div>
@@ -397,19 +919,26 @@ body.fullscreen-mode .player{
 
 <script>
 
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
 const player =
     document.getElementById("player");
 
 const overlay =
-    document.getElementById("overlay");
+    document.getElementById("settingsOverlay");
 
+
+/* =====================================================
+   SETTINGS
+===================================================== */
 
 function openSettings(){
 
     overlay.classList.add("show");
 
 }
-
 
 function closeSettings(){
 
@@ -418,15 +947,15 @@ function closeSettings(){
 }
 
 
+/* =====================================================
+   FULLSCREEN
+===================================================== */
+
 function fullscreen(){
 
     if(document.fullscreenElement){
 
         document.exitFullscreen();
-
-        document.body.classList.remove(
-            "fullscreen-mode"
-        );
 
         return;
     }
@@ -446,65 +975,125 @@ function fullscreen(){
 }
 
 
-document
-    .getElementById("settingsBtn")
-    .onclick = openSettings;
+document.addEventListener(
+    "fullscreenchange",
+    function(){
+
+        if(!document.fullscreenElement){
+
+            document.body.classList.remove(
+                "fullscreen-mode"
+            );
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
 
 document
-    .getElementById("settingsPlayer")
-    .onclick = openSettings;
+    .getElementById("settingsBtn")
+    .addEventListener(
+        "click",
+        openSettings
+    );
+
+document
+    .getElementById("playerSettings")
+    .addEventListener(
+        "click",
+        openSettings
+    );
 
 document
     .getElementById("closeSettings")
-    .onclick = closeSettings;
+    .addEventListener(
+        "click",
+        closeSettings
+    );
 
 
 document
     .getElementById("fullscreenBtn")
-    .onclick = fullscreen;
+    .addEventListener(
+        "click",
+        fullscreen
+    );
 
 document
-    .getElementById("fullscreenPlayer")
-    .onclick = fullscreen;
+    .getElementById("playerFullscreen")
+    .addEventListener(
+        "click",
+        fullscreen
+    );
 
 document
     .getElementById("settingsFullscreen")
-    .onclick = function(){
+    .addEventListener(
+        "click",
+        function(){
 
-        closeSettings();
-        fullscreen();
+            closeSettings();
 
-    };
+            fullscreen();
+
+        }
+    );
 
 
-overlay.onclick = function(e){
+/* =====================================================
+   OVERLAY CLOSE
+===================================================== */
 
-    if(e.target === overlay){
+overlay.addEventListener(
+    "click",
+    function(e){
 
-        closeSettings();
+        if(e.target === overlay){
+
+            closeSettings();
+
+        }
 
     }
+);
 
-};
 
-
-/* TV KEYBOARD */
+/* =====================================================
+   TV / KEYBOARD
+===================================================== */
 
 document.addEventListener(
     "keydown",
     function(e){
 
-        if(e.key === "F11" || e.key.toLowerCase() === "f"){
+        /* F = Fullscreen */
+
+        if(
+            e.key.toLowerCase() === "f"
+        ){
 
             fullscreen();
 
         }
 
-        if(e.key.toLowerCase() === "s"){
+
+        /* S = Settings */
+
+        if(
+            e.key.toLowerCase() === "s"
+        ){
 
             openSettings();
 
         }
+
+
+        /* ESC */
 
         if(e.key === "Escape"){
 
@@ -514,6 +1103,34 @@ document.addEventListener(
 
     }
 );
+
+
+/* =====================================================
+   INTERFACE SIZE
+===================================================== */
+
+document
+    .getElementById("interfaceSize")
+    .addEventListener(
+        "change",
+        function(){
+
+            if(this.value === "large"){
+
+                document.body.classList.add(
+                    "tv-full"
+                );
+
+            }else{
+
+                document.body.classList.remove(
+                    "tv-full"
+                );
+
+            }
+
+        }
+    );
 
 </script>
 
