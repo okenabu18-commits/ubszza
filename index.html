@@ -1,830 +1,257 @@
-
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>ABUZZY_DEV</title>
-
-<link rel="icon" type="image/png" href="/logo.png">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-
-<style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-    min-height:100vh;
-    padding:30px 15px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    font-family:Arial, sans-serif;
-    color:#fff;
-
-    background:#020409;
-
-    overflow-x:hidden;
-    overflow-y:auto;
-}
-
-/* BACKGROUND */
-
-.bg{
-    position:fixed;
-    inset:0;
-    z-index:-5;
-    background:
-        radial-gradient(
-            circle at 15% 10%,
-            rgba(0,229,255,.14),
-            transparent 32%
-        ),
-        radial-gradient(
-            circle at 85% 90%,
-            rgba(124,58,237,.14),
-            transparent 32%
-        ),
-        #020409;
-}
-
-.bg::before,
-.bg::after{
-    content:"";
-    position:absolute;
-    width:350px;
-    height:350px;
-    border-radius:50%;
-    filter:blur(110px);
-    opacity:.18;
-}
-
-.bg::before{
-    background:#00e5ff;
-    left:-150px;
-    top:-150px;
-    animation:moveOne 9s infinite alternate ease-in-out;
-}
-
-.bg::after{
-    background:#7c3aed;
-    right:-150px;
-    bottom:-150px;
-    animation:moveTwo 10s infinite alternate ease-in-out;
-}
-
-@keyframes moveOne{
-    to{
-        transform:translate(100px,100px) scale(1.15);
-    }
-}
-
-@keyframes moveTwo{
-    to{
-        transform:translate(-100px,-100px) scale(1.15);
-    }
-}
-
-/* CONTAINER */
-
-.container{
-    width:100%;
-    max-width:440px;
-    margin:auto;
-}
-
-/* CARD */
-
-.card{
-    width:100%;
-    padding:34px 24px;
-
-    text-align:center;
-
-    background:rgba(255,255,255,.045);
-    border:1px solid rgba(255,255,255,.1);
-
-    border-radius:28px;
-
-    backdrop-filter:blur(20px);
-    -webkit-backdrop-filter:blur(20px);
-
-    box-shadow:
-        0 25px 80px rgba(0,0,0,.55),
-        0 0 45px rgba(0,229,255,.06);
-
-    animation:cardIn .8s ease;
-}
-
-@keyframes cardIn{
-    from{
-        opacity:0;
-        transform:translateY(30px) scale(.97);
-    }
-
-    to{
-        opacity:1;
-        transform:translateY(0) scale(1);
-    }
-}
-
-/* LOGO */
-
-.avatar{
-    display:block;
-
-    width:105px;
-    height:105px;
-
-    margin:0 auto 18px;
-
-    object-fit:cover;
-
-    border-radius:50%;
-
-    border:3px solid #00e5ff;
-
-    box-shadow:
-        0 0 25px rgba(0,229,255,.4),
-        0 0 60px rgba(0,229,255,.12);
-
-    animation:logoGlow 2.5s ease-in-out infinite alternate;
-}
-
-@keyframes logoGlow{
-    from{
-        box-shadow:
-            0 0 20px rgba(0,229,255,.3);
-    }
-
-    to{
-        box-shadow:
-            0 0 40px rgba(0,229,255,.6),
-            0 0 70px rgba(0,229,255,.15);
-    }
-}
-
-/* NAME */
-
-h1{
-    font-size:32px;
-    font-weight:800;
-    letter-spacing:-1px;
-}
-
-h1 span{
-    color:#00e5ff;
-}
-
-/* ROLE */
-
-.role{
-    margin-top:9px;
-
-    color:#8993a5;
-
-    font-size:13px;
-    line-height:1.5;
-}
-
-/* STATUS */
-
-.status{
-    display:inline-flex;
-    align-items:center;
-    gap:7px;
-
-    margin:17px 0;
-
-    padding:7px 12px;
-
-    border-radius:50px;
-
-    color:#86efac;
-
-    background:rgba(34,197,94,.07);
-
-    border:1px solid rgba(34,197,94,.2);
-
-    font-size:10px;
-    font-weight:700;
-}
-
-.dot{
-    width:7px;
-    height:7px;
-
-    border-radius:50%;
-
-    background:#22c55e;
-
-    box-shadow:0 0 12px #22c55e;
-}
-
-/* ABOUT */
-
-.about{
-    margin-bottom:25px;
-
-    color:#7e899b;
-
-    font-size:14px;
-    line-height:1.75;
-}
-
-/* LINKS */
-
-.links{
-    display:grid;
-    gap:12px;
-}
-
-.links a{
-    position:relative;
-
-    min-height:54px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    gap:12px;
-
-    padding:14px 45px 14px 18px;
-
-    color:#fff;
-    text-decoration:none;
-
-    background:rgba(255,255,255,.055);
-
-    border:1px solid rgba(255,255,255,.09);
-
-    border-radius:15px;
-
-    overflow:hidden;
-
-    transition:
-        transform .3s ease,
-        background .3s ease,
-        border-color .3s ease,
-        box-shadow .3s ease;
-}
-
-/* SHINE */
-
-.links a::before{
-    content:"";
-
-    position:absolute;
-
-    top:0;
-    left:-120%;
-
-    width:80%;
-    height:100%;
-
-    background:linear-gradient(
-        90deg,
-        transparent,
-        rgba(255,255,255,.14),
-        transparent
-    );
-
-    transform:skewX(-20deg);
-
-    transition:.65s;
-}
-
-/* ICON */
-
-.links a > i:first-child{
-    position:relative;
-    z-index:2;
-
-    width:24px;
-
-    color:#00e5ff;
-
-    font-size:20px;
-
-    transition:
-        transform .35s ease,
-        color .25s ease,
-        text-shadow .25s ease;
-}
-
-/* TEXT */
-
-.links a span{
-    position:relative;
-    z-index:2;
-
-    font-size:14px;
-    font-weight:700;
-}
-
-/* ARROW */
-
-.arrow{
-    position:absolute;
-    right:18px;
-
-    color:#526074;
-
-    font-size:12px;
-
-    transition:.3s;
-}
-
-/* HOVER */
-
-.links a:hover{
-    transform:translateY(-5px) scale(1.02);
-
-    background:
-        linear-gradient(
-            120deg,
-            rgba(0,229,255,.1),
-            rgba(124,58,237,.08)
-        );
-
-    border-color:rgba(0,229,255,.35);
-
-    box-shadow:
-        0 12px 35px rgba(0,0,0,.3),
-        0 0 25px rgba(0,229,255,.12);
-}
-
-.links a:hover::before{
-    left:140%;
-}
-
-.links a:hover > i:first-child{
-    transform:scale(1.18) rotate(-7deg);
-
-    color:#fff;
-
-    text-shadow:0 0 15px #00e5ff;
-}
-
-.links a:hover .arrow{
-    transform:translateX(5px);
-    color:#00e5ff;
-}
-
-/* ACTIVE */
-
-.links a:active{
-    transform:scale(.97);
-}
-
-/* LANGUAGE */
-
-.divider{
-    width:100%;
-    height:1px;
-
-    margin:25px 0 20px;
-
-    background:rgba(255,255,255,.07);
-}
-
-.languages{
-    display:flex;
-    justify-content:center;
-    gap:5px;
-}
-
-.languages button{
-    border:0;
-
-    padding:7px 10px;
-
-    border-radius:8px;
-
-    background:transparent;
-
-    color:#606b7d;
-
-    cursor:pointer;
-
-    font-size:10px;
-    font-weight:800;
-
-    transition:.25s;
-}
-
-.languages button:hover,
-.languages button.active{
-    color:#00e5ff;
-
-    background:rgba(0,229,255,.08);
-
-    transform:translateY(-2px);
-}
-
-/* FOOTER */
-
-footer{
-    margin-top:20px;
-
-    color:#4e596b;
-
-    font-size:10px;
-}
-
-/* =========================
-   TABLET
-========================= */
-
-@media (min-width:600px){
-
-    body{
-        padding:50px 25px;
-    }
-
-    .container{
-        max-width:460px;
-    }
-
-    .card{
-        padding:40px 30px;
-    }
-
-}
-
-/* =========================
-   SMALL PHONES
-========================= */
-
-@media (max-width:480px){
-
-    body{
-        align-items:flex-start;
-        padding:25px 12px;
-    }
-
-    .container{
-        margin-top:10px;
-    }
-
-    .card{
-        padding:28px 17px;
-        border-radius:24px;
-    }
-
-    .avatar{
-        width:90px;
-        height:90px;
-    }
-
-    h1{
-        font-size:28px;
-    }
-
-    .role{
-        font-size:12px;
-    }
-
-    .about{
-        font-size:13px;
-    }
-
-    .links a{
-        min-height:52px;
-        padding:13px 42px 13px 14px;
-    }
-
-    .links a span{
-        font-size:13px;
-    }
-
-}
-
-/* =========================
-   VERY SMALL PHONES
-========================= */
-
-@media (max-width:350px){
-
-    body{
-        padding:15px 8px;
-    }
-
-    .card{
-        padding:25px 13px;
-    }
-
-    h1{
-        font-size:25px;
-    }
-
-    .about{
-        font-size:12px;
-    }
-
-    .links{
-        gap:9px;
-    }
-
-    .links a{
-        min-height:50px;
-    }
-
-}
-
-/* =========================
-   TOUCH DEVICES
-========================= */
-
-@media (hover:none){
-
-    .links a:hover{
-        transform:none;
-    }
-
-    .links a:hover::before{
-        left:-120%;
-    }
-
-    .links a:active{
-        transform:scale(.97);
-        background:rgba(0,229,255,.1);
-    }
-
-}
-
-/* =========================
-   REDUCE MOTION
-========================= */
-
-@media (prefers-reduced-motion:reduce){
-
-    *,
-    *::before,
-    *::after{
-        animation:none!important;
-        transition:none!important;
-    }
-
-}
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABU TV — Bergen HD</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #050505;
+            color: white;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+        }
+
+        header {
+            height: 70px;
+            background: #0d0d0d;
+            border-bottom: 1px solid #222;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 800;
+            color: #00aaff;
+        }
+
+        .live {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .dot {
+            width: 9px;
+            height: 9px;
+            background: red;
+            border-radius: 50%;
+            box-shadow: 0 0 10px red;
+        }
+
+        main {
+            width: 100%;
+            max-width: 1500px;
+            margin: auto;
+            padding: 25px;
+        }
+
+        .player {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 10px 50px rgba(0,0,0,.6);
+        }
+
+        .player iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .info {
+            padding: 20px 5px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .meta {
+            display: flex;
+            gap: 15px;
+            color: #aaa;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: #151515;
+            padding: 8px 13px;
+            border-radius: 8px;
+        }
+
+        .episodes {
+            margin-top: 25px;
+        }
+
+        .episodes h2 {
+            margin-bottom: 15px;
+        }
+
+        .episode-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .episode {
+            background: #111;
+            border: 1px solid #242424;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .episode:hover {
+            background: #1c1c1c;
+            border-color: #00aaff;
+            transform: translateY(-2px);
+        }
+
+        .episode.active {
+            border-color: #00aaff;
+            background: #09202b;
+        }
+
+        footer {
+            text-align: center;
+            color: #666;
+            padding: 30px;
+        }
+
+        @media (max-width: 700px) {
+            header {
+                padding: 0 15px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            main {
+                padding: 12px;
+            }
+
+            .title {
+                font-size: 21px;
+            }
+
+            .player {
+                border-radius: 8px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="bg"></div>
+<header>
+    <div class="logo">ABU TV</div>
 
-<div class="container">
-
-<div class="card">
-
-    <img
-        src="/logo.png"
-        class="avatar"
-        alt="ABUZZY_DEV"
-    >
-
-    <h1>
-        ABUZZY<span>_DEV</span>
-    </h1>
-
-    <div class="role">
-        Developer • Roblox Creator • Web Developer
-    </div>
-
-    <div class="status">
+    <div class="live">
         <span class="dot"></span>
-        <span id="status">ONLINE</span>
+        ONLINE
+    </div>
+</header>
+
+<main>
+
+    <div class="player">
+        <iframe
+            id="videoPlayer"
+            src="https://ok.ru/videoembed/9931741530647"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen>
+        </iframe>
     </div>
 
-    <p class="about" id="about">
-        Men Roblox o‘yinlari, web loyihalar va
-        kreativ digital experiences yarataman.
-    </p>
+    <div class="info">
 
+        <div class="title" id="videoTitle">
+            Bergen HD
+        </div>
 
-    <div class="links">
-
-        <!-- ROBLOX -->
-
-        <a
-            href="https://www.roblox.com/games/108520005363467/Abuzzy"
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-            <i class="fas fa-gamepad"></i>
-
-            <span id="roblox">
-                Roblox Game
-            </span>
-
-            <i class="fas fa-arrow-right arrow"></i>
-        </a>
-
-
-        <!-- GITHUB -->
-
-        <a
-            href="https://github.com/okenabu18-commits"
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-            <i class="fab fa-github"></i>
-
-            <span>
-                GitHub
-            </span>
-
-            <i class="fas fa-arrow-right arrow"></i>
-        </a>
-
-
-        <!-- DISCORD -->
-
-        <a
-            href="https://discord.gg/kKJcYU6sX"
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-            <i class="fab fa-discord"></i>
-
-            <span>
-                Discord
-            </span>
-
-            <i class="fas fa-arrow-right arrow"></i>
-        </a>
-
-
-        <!-- TELEGRAM -->
-
-       
-        <a
-            href="https://t.me/ABUZZY_dev"
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-            <i class="fab fa-telegram"></i>
-
-            <span>
-                T.me
-            </span>
-
-            <i class="fas fa-arrow-right arrow"></i>
-        </a>
-    </div>
-
-
-    <div class="divider"></div>
-
-
-    <div class="languages">
-
-        <button
-            class="active"
-            onclick="changeLang('uz',this)"
-        >
-            UZ
-        </button>
-
-        <button
-            onclick="changeLang('en',this)"
-        >
-            EN
-        </button>
-
-        <button
-            onclick="changeLang('ru',this)"
-        >
-            RU
-        </button>
+        <div class="meta">
+            <div class="badge">🎬 Film</div>
+            <div class="badge">HD</div>
+            <div class="badge">⏱ 2:22:15</div>
+            <div class="badge">OK.ru</div>
+        </div>
 
     </div>
 
+    <section class="episodes">
 
-    <footer>
-        © 2026 ABUZZY_DEV
-    </footer>
+        <h2>📺 Qismlar</h2>
 
-</div>
+        <div class="episode-list">
 
-</div>
+            <div
+                class="episode active"
+                onclick="openEpisode(
+                    'Bergen HD',
+                    '2:22:15',
+                    '9931741530647'
+                )">
+                <b>1-qism</b>
+                <br>
+                <small>2:22:15</small>
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    ABU TV © 2026
+</footer>
 
 
 <script>
 
-const translations = {
+function openEpisode(title, duration, videoId) {
 
-    uz:{
-        status:"ONLINE",
+    const player = document.getElementById("videoPlayer");
 
-        about:
-        "Men Roblox o‘yinlari, web loyihalar va kreativ digital experiences yarataman.",
+    const titleElement = document.getElementById("videoTitle");
 
-        roblox:
-        "Roblox Game"
-    },
+    player.src =
+        "https://ok.ru/videoembed/" + videoId;
 
-    en:{
-        status:"ONLINE",
+    titleElement.textContent = title;
 
-        about:
-        "I create Roblox games, web projects and creative digital experiences.",
+    document.querySelectorAll(".episode").forEach(ep => {
+        ep.classList.remove("active");
+    });
 
-        roblox:
-        "Roblox Game"
-    },
+    event.currentTarget.classList.add("active");
 
-    ru:{
-        status:"ОНЛАЙН",
-
-        about:
-        "Я создаю Roblox-игры, веб-проекты и креативные цифровые продукты.",
-
-        roblox:
-        "Roblox Игра"
-    }
-
-};
-
-
-function changeLang(language,button){
-
-    const data=translations[language];
-
-    const status=document.getElementById("status");
-    const about=document.getElementById("about");
-    const roblox=document.getElementById("roblox");
-
-    status.style.opacity="0";
-    about.style.opacity="0";
-    roblox.style.opacity="0";
-
-    setTimeout(()=>{
-
-        status.textContent=data.status;
-        about.textContent=data.about;
-        roblox.textContent=data.roblox;
-
-        status.style.opacity="1";
-        about.style.opacity="1";
-        roblox.style.opacity="1";
-
-    },120);
-
-
-    document
-        .querySelectorAll(".languages button")
-        .forEach(btn=>{
-            btn.classList.remove("active");
-        });
-
-    button.classList.add("active");
-
-    localStorage.setItem(
-        "abuzzy_language",
-        language
-    );
-}
-
-
-/* SAVED LANGUAGE */
-
-const saved=
-localStorage.getItem("abuzzy_language");
-
-if(saved && translations[saved]){
-
-    const buttons=
-        document.querySelectorAll(".languages button");
-
-    const languages=["uz","en","ru"];
-
-    const index=
-        languages.indexOf(saved);
-
-    if(buttons[index]){
-        changeLang(saved,buttons[index]);
-    }
-
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 }
 
 </script>
 
 </body>
 </html>
-
