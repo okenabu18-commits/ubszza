@@ -5,11 +5,11 @@
 <meta charset="UTF-8">
 
 <meta
-  name="viewport"
-  content="width=device-width,
-           initial-scale=1.0,
-           maximum-scale=1.0,
-           viewport-fit=cover"
+    name="viewport"
+    content="width=device-width,
+    initial-scale=1.0,
+    maximum-scale=1.0,
+    viewport-fit=cover"
 >
 
 <title>TV Player</title>
@@ -27,7 +27,6 @@ body {
     width: 100%;
     min-height: 100%;
     background: #000;
-    color: #fff;
     font-family: Arial, sans-serif;
 }
 
@@ -41,248 +40,114 @@ body {
 
 .player {
     width: min(1000px, 100vw);
-    background: #080808;
-    overflow: hidden;
+    background: #000;
 }
 
 /* VIDEO */
 
 .video-box {
     position: relative;
-
     width: 100%;
     aspect-ratio: 16 / 9;
-
     background: #000;
+    overflow: hidden;
 }
 
-video {
+.video-box iframe {
+    position: absolute;
+    inset: 0;
+
     width: 100%;
     height: 100%;
 
+    border: 0;
     display: block;
-
-    background: #000;
-
-    object-fit: contain;
 }
 
-/* TOP */
+/* TV LABEL */
 
-.top {
+.tv-label {
     position: absolute;
-
-    top: 0;
-    left: 0;
-    right: 0;
-
-    height: 70px;
-
-    padding: 18px;
-
-    pointer-events: none;
-
-    background:
-        linear-gradient(
-            to bottom,
-            rgba(0,0,0,.8),
-            transparent
-        );
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    font-size: 13px;
-    font-weight: bold;
-}
-
-.dot {
-    width: 9px;
-    height: 9px;
-
-    border-radius: 50%;
-
-    background: #f22;
-
-    box-shadow: 0 0 12px #f22;
-}
-
-/* CUSTOM CONTROLS */
-
-.controls {
-    position: absolute;
-
-    left: 0;
-    right: 0;
-    bottom: 0;
-
-    padding: 10px 12px;
-
-    background:
-        linear-gradient(
-            to top,
-            rgba(0,0,0,.95),
-            transparent
-        );
+    top: 15px;
+    left: 15px;
 
     display: flex;
     align-items: center;
     gap: 7px;
 
-    opacity: 0;
+    padding: 7px 10px;
 
-    transition: opacity .2s;
+    color: #fff;
+    background: rgba(0,0,0,.55);
 
-    z-index: 20;
+    border-radius: 7px;
+
+    font-size: 12px;
+    font-weight: bold;
+
+    z-index: 10;
+    pointer-events: none;
 }
 
-.video-box:hover .controls,
-.video-box:focus-within .controls {
-    opacity: 1;
+.dot {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+    background: #ff1744;
+
+    box-shadow: 0 0 10px #ff1744;
 }
 
-/* BUTTON */
+/* FULLSCREEN BUTTON */
 
-button {
+.fullscreen-btn {
+    position: absolute;
+
+    right: 12px;
+    bottom: 12px;
+
+    width: 45px;
+    height: 45px;
+
     border: 0;
+    border-radius: 9px;
 
-    background: transparent;
+    background: rgba(0,0,0,.75);
+    color: #fff;
 
-    color: white;
+    font-size: 23px;
 
     cursor: pointer;
-
-    touch-action: manipulation;
-}
-
-.control {
-    width: 40px;
-    height: 40px;
-
-    border-radius: 8px;
+    z-index: 20;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    font-size: 18px;
+    touch-action: manipulation;
 }
 
-.control:hover {
-    background: rgba(255,255,255,.15);
-}
-
-/* PROGRESS */
-
-.progress-wrap {
-    flex: 1;
-
-    display: flex;
-    align-items: center;
-
-    min-width: 50px;
-}
-
-#progress {
-    width: 100%;
-
-    height: 4px;
-
-    cursor: pointer;
-
-    accent-color: #fff;
-}
-
-/* TIME */
-
-.time {
-    min-width: 85px;
-
-    text-align: center;
-
-    font-size: 12px;
-
-    color: #ddd;
-}
-
-/* SETTINGS */
-
-.settings {
-    position: relative;
-}
-
-.menu {
-    position: absolute;
-
-    right: 0;
-    bottom: 48px;
-
-    width: 190px;
-
-    padding: 7px;
-
-    background: #181818;
-
-    border: 1px solid #333;
-
-    border-radius: 10px;
-
-    display: none;
-
-    box-shadow: 0 15px 40px rgba(0,0,0,.7);
-}
-
-.menu.open {
-    display: block;
-}
-
-.menu-title {
-    padding: 9px 10px;
-
-    color: #999;
-
-    font-size: 11px;
-
-    text-transform: uppercase;
-}
-
-.menu button {
-    width: 100%;
-
-    padding: 11px;
-
-    text-align: left;
-
-    border-radius: 7px;
-
-    font-size: 14px;
-}
-
-.menu button:hover {
-    background: #292929;
+.fullscreen-btn:active {
+    transform: scale(.92);
 }
 
 /* INFO */
 
 .info {
-    padding: 15px;
-
+    padding: 14px;
     background: #0b0b0b;
+    color: #fff;
 }
 
 .title {
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 700;
 }
 
-.sub {
+.subtitle {
     margin-top: 5px;
-
     color: #888;
-
     font-size: 13px;
 }
 
@@ -292,24 +157,28 @@ button {
     width: 100vw !important;
     height: 100vh !important;
 
+    max-width: none !important;
     aspect-ratio: auto !important;
 
     background: #000;
 }
 
+.video-box:fullscreen iframe {
+    width: 100vw !important;
+    height: 100vh !important;
+}
+
+/* WEBKIT */
+
 .video-box:-webkit-full-screen {
     width: 100vw !important;
     height: 100vh !important;
-
     background: #000;
 }
 
-.video-box:fullscreen video,
-.video-box:-webkit-full-screen video {
+.video-box:-webkit-full-screen iframe {
     width: 100vw !important;
     height: 100vh !important;
-
-    object-fit: contain;
 }
 
 /* MOBILE */
@@ -320,26 +189,16 @@ button {
         width: 100vw;
     }
 
-    .controls {
-        opacity: 1;
-
-        padding:
-            7px
-            8px
-            calc(7px + env(safe-area-inset-bottom));
+    .video-box {
+        width: 100vw;
     }
 
-    .control {
-        width: 36px;
-        height: 36px;
+    .fullscreen-btn {
+        width: 42px;
+        height: 42px;
 
-        font-size: 16px;
-    }
-
-    .time {
-        min-width: 65px;
-
-        font-size: 10px;
+        right: 9px;
+        bottom: 9px;
     }
 
     .info {
@@ -351,7 +210,7 @@ button {
     }
 }
 
-/* LANDSCAPE PHONE */
+/* LANDSCAPE */
 
 @media (
     max-width: 950px
@@ -372,11 +231,10 @@ button {
     .video-box {
         width: 100vw;
         height: 100vh;
-
         aspect-ratio: auto;
     }
 
-    video {
+    .video-box iframe {
         width: 100vw;
         height: 100vh;
     }
@@ -397,148 +255,42 @@ button {
         id="videoBox"
     >
 
-        <!--
-        ==========================================
-        PUT YOUR OWN / LICENSED VIDEO URL HERE
-        ==========================================
-        -->
+        <!-- ORIGINAL OK.RU PLAYER -->
 
-        <video
-            id="video"
-            preload="metadata"
-            playsinline
-            webkit-playsinline
+        <iframe
+            id="okPlayer"
+            src="https://ok.ru/videoembed/10478943930903"
+            title="OK.ru Video"
+            allow="
+                autoplay;
+                fullscreen;
+                picture-in-picture;
+                encrypted-media
+            "
+            allowfullscreen
+            webkitallowfullscreen
+            mozallowfullscreen
+        ></iframe>
+
+
+        <!-- TV LABEL -->
+
+        <div class="tv-label">
+            <span class="dot"></span>
+            TV
+        </div>
+
+
+        <!-- FULLSCREEN -->
+
+        <button
+            id="fullscreenBtn"
+            class="fullscreen-btn"
+            type="button"
+            aria-label="Fullscreen"
         >
-            <source
-                src="https://ok.ru/videoembed/9548582816350"
-                type="video/mp4"
-            >
-
-            Your browser does not support video.
-        </video>
-
-
-        <!-- TOP -->
-
-        <div class="top">
-
-            <div class="logo">
-
-                <span class="dot"></span>
-
-                TV
-
-            </div>
-
-        </div>
-
-
-        <!-- CONTROLS -->
-
-        <div class="controls">
-
-            <!-- PLAY -->
-
-            <button
-                class="control"
-                id="play"
-                title="Play / Pause"
-            >
-                ▶
-            </button>
-
-
-            <!-- VOLUME -->
-
-            <button
-                class="control"
-                id="mute"
-                title="Mute"
-            >
-                🔊
-            </button>
-
-
-            <!-- PROGRESS -->
-
-            <div class="progress-wrap">
-
-                <input
-                    id="progress"
-                    type="range"
-                    min="0"
-                    max="100"
-                    value="0"
-                >
-
-            </div>
-
-
-            <!-- TIME -->
-
-            <div
-                class="time"
-                id="time"
-            >
-                00:00 / 00:00
-            </div>
-
-
-            <!-- SETTINGS -->
-
-            <div class="settings">
-
-                <button
-                    class="control"
-                    id="settingsBtn"
-                    title="Settings"
-                >
-                    ⚙
-                </button>
-
-
-                <div
-                    class="menu"
-                    id="settingsMenu"
-                >
-
-                    <div class="menu-title">
-                        Settings
-                    </div>
-
-
-                    <button data-speed="0.5">
-                        Speed&nbsp;&nbsp; 0.5x
-                    </button>
-
-                    <button data-speed="1">
-                        Speed&nbsp;&nbsp; Normal
-                    </button>
-
-                    <button data-speed="1.5">
-                        Speed&nbsp;&nbsp; 1.5x
-                    </button>
-
-                    <button data-speed="2">
-                        Speed&nbsp;&nbsp; 2x
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- FULLSCREEN -->
-
-            <button
-                class="control"
-                id="fullscreen"
-                title="Fullscreen"
-            >
-                ⛶
-            </button>
-
-        </div>
+            ⛶
+        </button>
 
     </div>
 
@@ -546,11 +298,11 @@ button {
     <div class="info">
 
         <div class="title">
-            TV Player
+            Azobli muhabbat
         </div>
 
-        <div class="sub">
-            1000px Responsive • Landscape Fullscreen
+        <div class="subtitle">
+            OK.ru • Responsive TV Player
         </div>
 
     </div>
@@ -560,254 +312,14 @@ button {
 
 <script>
 
-/* ==========================================
-   ELEMENTS
-========================================== */
-
-const video =
-    document.getElementById("video");
-
 const videoBox =
     document.getElementById("videoBox");
 
-const play =
-    document.getElementById("play");
+const fullscreenBtn =
+    document.getElementById("fullscreenBtn");
 
-const mute =
-    document.getElementById("mute");
 
-const progress =
-    document.getElementById("progress");
-
-const time =
-    document.getElementById("time");
-
-const fullscreen =
-    document.getElementById("fullscreen");
-
-const settingsBtn =
-    document.getElementById("settingsBtn");
-
-const settingsMenu =
-    document.getElementById("settingsMenu");
-
-
-/* ==========================================
-   FORMAT TIME
-========================================== */
-
-function formatTime(seconds) {
-
-    if (!Number.isFinite(seconds)) {
-        return "00:00";
-    }
-
-    const hours =
-        Math.floor(seconds / 3600);
-
-    const minutes =
-        Math.floor(
-            (seconds % 3600) / 60
-        );
-
-    const secs =
-        Math.floor(seconds % 60);
-
-    if (hours > 0) {
-
-        return (
-            String(hours).padStart(2, "0")
-            + ":" +
-            String(minutes).padStart(2, "0")
-            + ":" +
-            String(secs).padStart(2, "0")
-        );
-
-    }
-
-    return (
-        String(minutes).padStart(2, "0")
-        + ":" +
-        String(secs).padStart(2, "0")
-    );
-}
-
-
-/* ==========================================
-   PLAY / PAUSE
-========================================== */
-
-play.addEventListener(
-    "click",
-    async () => {
-
-        if (video.paused) {
-
-            try {
-
-                await video.play();
-
-            } catch (error) {
-
-                console.log(error);
-
-            }
-
-        } else {
-
-            video.pause();
-
-        }
-
-    }
-);
-
-
-video.addEventListener(
-    "play",
-    () => {
-
-        play.textContent = "❚❚";
-
-    }
-);
-
-
-video.addEventListener(
-    "pause",
-    () => {
-
-        play.textContent = "▶";
-
-    }
-);
-
-
-/* ==========================================
-   MUTE
-========================================== */
-
-mute.addEventListener(
-    "click",
-    () => {
-
-        video.muted =
-            !video.muted;
-
-        mute.textContent =
-            video.muted
-                ? "🔇"
-                : "🔊";
-
-    }
-);
-
-
-/* ==========================================
-   PROGRESS
-========================================== */
-
-video.addEventListener(
-    "timeupdate",
-    () => {
-
-        if (!video.duration) {
-            return;
-        }
-
-        progress.value =
-            (
-                video.currentTime /
-                video.duration
-            ) * 100;
-
-        time.textContent =
-            formatTime(video.currentTime)
-            + " / " +
-            formatTime(video.duration);
-
-    }
-);
-
-
-progress.addEventListener(
-    "input",
-    () => {
-
-        if (!video.duration) {
-            return;
-        }
-
-        video.currentTime =
-            (
-                Number(progress.value) /
-                100
-            ) * video.duration;
-
-    }
-);
-
-
-/* ==========================================
-   SETTINGS
-========================================== */
-
-settingsBtn.addEventListener(
-    "click",
-    (event) => {
-
-        event.stopPropagation();
-
-        settingsMenu.classList.toggle(
-            "open"
-        );
-
-    }
-);
-
-
-document.addEventListener(
-    "click",
-    () => {
-
-        settingsMenu.classList.remove(
-            "open"
-        );
-
-    }
-);
-
-
-document.querySelectorAll(
-    "[data-speed]"
-).forEach(
-    button => {
-
-        button.addEventListener(
-            "click",
-            (event) => {
-
-                event.stopPropagation();
-
-                video.playbackRate =
-                    Number(
-                        button.dataset.speed
-                    );
-
-                settingsMenu.classList.remove(
-                    "open"
-                );
-
-            }
-        );
-
-    }
-);
-
-
-/* ==========================================
-   FULLSCREEN CHECK
-========================================== */
+/* CHECK */
 
 function isFullscreen() {
 
@@ -821,9 +333,7 @@ function isFullscreen() {
 }
 
 
-/* ==========================================
-   LANDSCAPE
-========================================== */
+/* LANDSCAPE */
 
 async function lockLandscape() {
 
@@ -838,25 +348,21 @@ async function lockLandscape() {
                 "landscape"
             );
 
-            return true;
         }
 
     } catch (error) {
 
         console.log(
-            "Landscape unavailable:",
+            "Landscape lock unavailable:",
             error
         );
 
     }
 
-    return false;
 }
 
 
-/* ==========================================
-   UNLOCK
-========================================== */
+/* UNLOCK */
 
 function unlockOrientation() {
 
@@ -876,9 +382,7 @@ function unlockOrientation() {
 }
 
 
-/* ==========================================
-   ENTER FULLSCREEN
-========================================== */
+/* ENTER */
 
 async function enterFullscreen() {
 
@@ -918,11 +422,6 @@ async function enterFullscreen() {
 
         }
 
-
-        /*
-        Try landscape AFTER fullscreen.
-        */
-
         await lockLandscape();
 
     }
@@ -939,9 +438,7 @@ async function enterFullscreen() {
 }
 
 
-/* ==========================================
-   EXIT FULLSCREEN
-========================================== */
+/* EXIT */
 
 async function exitFullscreen() {
 
@@ -979,26 +476,18 @@ async function exitFullscreen() {
 
         }
 
-    }
-
-    catch (error) {
-
-        console.log(error);
-
-    }
+    } catch (error) {}
 
     unlockOrientation();
 
 }
 
 
-/* ==========================================
-   FULLSCREEN BUTTON
-========================================== */
+/* BUTTON */
 
-fullscreen.addEventListener(
+fullscreenBtn.addEventListener(
     "click",
-    async () => {
+    async function() {
 
         if (isFullscreen()) {
 
@@ -1014,137 +503,48 @@ fullscreen.addEventListener(
 );
 
 
-/* ==========================================
-   FULLSCREEN CHANGE
-========================================== */
+/* CHANGE */
 
 document.addEventListener(
     "fullscreenchange",
-    () => {
+    function() {
 
         if (!isFullscreen()) {
-
             unlockOrientation();
-
         }
 
     }
 );
-
 
 document.addEventListener(
     "webkitfullscreenchange",
-    () => {
+    function() {
 
         if (!isFullscreen()) {
-
             unlockOrientation();
-
         }
 
     }
 );
 
 
-/* ==========================================
-   DOUBLE TAP MOBILE
-========================================== */
-
-let lastTap = 0;
-
-videoBox.addEventListener(
-    "touchend",
-    () => {
-
-        const now =
-            Date.now();
-
-        if (
-            now - lastTap < 350
-        ) {
-
-            if (isFullscreen()) {
-
-                exitFullscreen();
-
-            } else {
-
-                enterFullscreen();
-
-            }
-
-        }
-
-        lastTap = now;
-
-    },
-    {
-        passive: true
-    }
-);
-
-
-/* ==========================================
-   KEYBOARD
-========================================== */
+/* KEYBOARD */
 
 document.addEventListener(
     "keydown",
-    event => {
+    function(event) {
 
         if (
             event.key.toLowerCase() === "f"
         ) {
 
             if (isFullscreen()) {
-
                 exitFullscreen();
-
             } else {
-
                 enterFullscreen();
-
             }
 
         }
-
-
-        if (
-            event.key === " "
-            &&
-            document.activeElement.tagName
-                !== "INPUT"
-        ) {
-
-            event.preventDefault();
-
-            if (video.paused) {
-
-                video.play();
-
-            } else {
-
-                video.pause();
-
-            }
-
-        }
-
-    }
-);
-
-
-/* ==========================================
-   VIDEO READY
-========================================== */
-
-video.addEventListener(
-    "loadedmetadata",
-    () => {
-
-        time.textContent =
-            "00:00 / " +
-            formatTime(video.duration);
 
     }
 );
