@@ -1,12 +1,20 @@
+# Responsive OK.ru TV Player — Fullscreen
+
+```html
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+>
 
 <title>TV Player</title>
 
 <style>
+
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
@@ -18,155 +26,197 @@ body {
     padding: 0;
     width: 100%;
     min-height: 100%;
-    background: #050505;
-    color: #fff;
-    font-family: Arial, Helvetica, sans-serif;
+    background: #000;
+    font-family: Arial, sans-serif;
 }
 
 body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 25px;
 }
 
-/* MAIN TV */
+/* =========================
+   PLAYER
+========================= */
 
 .tv-player {
-    width: min(1000px, 100%);
-    background: #101010;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow:
-        0 25px 80px rgba(0,0,0,.75),
-        0 0 0 1px rgba(255,255,255,.06);
+    width: 100%;
+    max-width: 1000px;
+    background: #000;
 }
 
-/* VIDEO */
+/* =========================
+   VIDEO
+========================= */
 
 .video-box {
     position: relative;
+
     width: 100%;
     aspect-ratio: 16 / 9;
+
     background: #000;
     overflow: hidden;
 }
 
+/* OK.RU */
+
 .video-box iframe {
     position: absolute;
-    inset: 0;
+
+    top: 0;
+    left: 0;
 
     width: 100%;
     height: 100%;
 
     border: 0;
+
+    display: block;
 }
 
-/* TOP OVERLAY */
+/* =========================
+   FULLSCREEN BUTTON
+========================= */
 
-.top {
+.fullscreen-btn {
+
     position: absolute;
+
+    right: 12px;
+    bottom: 12px;
+
+    width: 46px;
+    height: 46px;
+
+    border: 0;
+    border-radius: 10px;
+
+    background: rgba(0,0,0,.75);
+
+    color: white;
+
+    font-size: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    z-index: 100;
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    touch-action: manipulation;
+
+    transition:
+        background .15s,
+        transform .15s;
+}
+
+.fullscreen-btn:hover {
+    background: rgba(255,255,255,.18);
+}
+
+.fullscreen-btn:active {
+    transform: scale(.9);
+}
+
+/* =========================
+   TOP
+========================= */
+
+.top-bar {
+
+    position: absolute;
+
     top: 0;
     left: 0;
     right: 0;
 
-    height: 70px;
+    height: 65px;
 
-    padding: 18px 20px;
+    padding: 18px;
 
-    background: linear-gradient(
-        to bottom,
-        rgba(0,0,0,.75),
-        transparent
-    );
+    z-index: 50;
 
     pointer-events: none;
-    z-index: 5;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,.75),
+            transparent
+        );
 }
 
-.tv-label {
+.tv-logo {
+
     display: inline-flex;
+
     align-items: center;
-    gap: 8px;
+
+    gap: 7px;
+
+    color: white;
 
     font-size: 13px;
-    font-weight: bold;
+
+    font-weight: 700;
 }
 
 .live-dot {
+
     width: 9px;
     height: 9px;
 
-    background: #ff1744;
     border-radius: 50%;
 
-    box-shadow: 0 0 12px #ff1744;
+    background: #ff1744;
+
+    box-shadow:
+        0 0 12px #ff1744;
 }
 
-/* FULLSCREEN BUTTON */
-
-.fullscreen-button {
-    position: absolute;
-
-    right: 15px;
-    bottom: 15px;
-
-    width: 45px;
-    height: 45px;
-
-    border: 0;
-    border-radius: 9px;
-
-    background: rgba(0,0,0,.75);
-    color: white;
-
-    font-size: 23px;
-
-    cursor: pointer;
-
-    z-index: 20;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    backdrop-filter: blur(8px);
-
-    transition: .2s;
-}
-
-.fullscreen-button:hover {
-    background: rgba(255,255,255,.16);
-}
-
-.fullscreen-button:active {
-    transform: scale(.92);
-}
-
-/* INFO */
+/* =========================
+   INFO
+========================= */
 
 .info {
-    padding: 15px 18px 18px;
+
+    padding: 15px;
+
+    background: #0b0b0b;
+
+    color: white;
 }
 
 .title {
-    font-size: 19px;
+    font-size: 18px;
     font-weight: 700;
 }
 
 .description {
-    margin-top: 6px;
+    margin-top: 5px;
     color: #888;
     font-size: 13px;
 }
 
-/* REAL FULLSCREEN */
+/* =========================
+   REAL FULLSCREEN
+========================= */
 
 .video-box:fullscreen {
-    width: 100vw;
-    height: 100vh;
 
-    aspect-ratio: auto;
+    width: 100vw !important;
+    height: 100vh !important;
+
+    max-width: none !important;
+
+    aspect-ratio: auto !important;
 
     background: #000;
 
@@ -174,52 +224,68 @@ body {
 }
 
 .video-box:-webkit-full-screen {
-    width: 100vw;
-    height: 100vh;
+
+    width: 100vw !important;
+    height: 100vh !important;
 
     background: #000;
 
     border-radius: 0;
 }
 
-.video-box:fullscreen iframe,
-.video-box:-webkit-full-screen iframe {
-    width: 100vw;
-    height: 100vh;
+.video-box:fullscreen iframe {
+
+    width: 100vw !important;
+    height: 100vh !important;
+
+    position: absolute;
+
+    inset: 0;
 }
 
-/* MOBILE */
+.video-box:-webkit-full-screen iframe {
+
+    width: 100vw !important;
+    height: 100vh !important;
+
+    position: absolute;
+
+    inset: 0;
+}
+
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 600px) {
 
     body {
-        padding: 0;
         align-items: center;
     }
 
     .tv-player {
-        width: 100%;
-        border-radius: 0;
-        box-shadow: none;
+        width: 100vw;
+        max-width: none;
     }
 
     .video-box {
-        width: 100%;
+        width: 100vw;
         aspect-ratio: 16 / 9;
     }
 
-    .fullscreen-button {
-        width: 42px;
-        height: 42px;
+    .fullscreen-btn {
 
-        right: 10px;
-        bottom: 10px;
+        right: 8px;
+        bottom: 8px;
+
+        width: 43px;
+        height: 43px;
 
         font-size: 21px;
     }
 
     .info {
-        padding: 13px;
+        padding: 12px;
     }
 
     .title {
@@ -231,35 +297,63 @@ body {
     }
 }
 
-/* PHONE LANDSCAPE */
+/* =========================
+   PHONE LANDSCAPE
+========================= */
 
-@media (max-width: 900px) and (orientation: landscape) {
-
-    body {
-        padding: 0;
-    }
+@media (
+    max-width: 950px
+) and (
+    orientation: landscape
+) {
 
     .tv-player {
         width: 100vw;
-        height: 100vh;
-        border-radius: 0;
     }
 
     .video-box {
         width: 100vw;
         height: 100vh;
+
         aspect-ratio: auto;
     }
 
     .video-box iframe {
+
         width: 100vw;
         height: 100vh;
+
     }
 
     .info {
         display: none;
     }
+
+    .fullscreen-btn {
+        bottom: 15px;
+        right: 15px;
+    }
 }
+
+/* =========================
+   SAFE AREA iPHONE
+========================= */
+
+@supports (
+    padding: env(safe-area-inset-bottom)
+) {
+
+    .fullscreen-btn {
+
+        bottom:
+            calc(
+                12px +
+                env(safe-area-inset-bottom)
+            );
+
+    }
+}
+
 </style>
 </head>
 
@@ -267,36 +361,62 @@ body {
 
 <div class="tv-player">
 
-    <div class="video-box" id="videoBox">
+    <div
+        class="video-box"
+        id="videoBox"
+    >
 
-        <!-- ORIGINAL OK.RU PLAYER -->
+        <!--
+            ORIGINAL OK.RU PLAYER
+            KEEP OK.RU CONTROLS
+        -->
 
         <iframe
+            id="okPlayer"
+
             src="https://ok.ru/videoembed/9548582816350"
-            allow="autoplay; fullscreen; picture-in-picture"
+
+            allow="
+                autoplay;
+                fullscreen;
+                picture-in-picture;
+                encrypted-media
+            "
+
             allowfullscreen
-            webkitallowfullscreen>
-        </iframe>
+            webkitallowfullscreen
+            mozallowfullscreen
+        ></iframe>
 
-        <!-- FULLSCREEN -->
-
-        <button
-            class="fullscreen-button"
-            id="fullscreenButton"
-            aria-label="Fullscreen">
-            ⛶
-        </button>
 
         <!-- TOP -->
 
-        <div class="top">
-            <div class="tv-label">
+        <div class="top-bar">
+
+            <div class="tv-logo">
+
                 <span class="live-dot"></span>
+
                 TV
+
             </div>
+
         </div>
 
+
+        <!-- EXTERNAL FULLSCREEN -->
+
+        <button
+            id="fullscreenBtn"
+            class="fullscreen-btn"
+            type="button"
+            aria-label="Fullscreen"
+        >
+            ⛶
+        </button>
+
     </div>
+
 
     <div class="info">
 
@@ -315,18 +435,54 @@ body {
 
 <script>
 
+/*
+=================================================
+ FULLSCREEN SYSTEM
+ Works with:
+ Chrome
+ Edge
+ Firefox
+ Android Chrome
+ Samsung Internet
+ Safari / iOS fallback
+=================================================
+*/
+
 const videoBox =
     document.getElementById("videoBox");
 
-const fullscreenButton =
-    document.getElementById("fullscreenButton");
+const fullscreenBtn =
+    document.getElementById("fullscreenBtn");
+
+const okPlayer =
+    document.getElementById("okPlayer");
 
 
-/* FULLSCREEN */
+/* ----------------------------------------------
+   CHECK FULLSCREEN
+---------------------------------------------- */
+
+function isFullscreen() {
+
+    return (
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement
+    );
+
+}
+
+
+/* ----------------------------------------------
+   ENTER FULLSCREEN
+---------------------------------------------- */
 
 async function enterFullscreen() {
 
     try {
+
+        /* Modern browsers */
 
         if (videoBox.requestFullscreen) {
 
@@ -334,29 +490,89 @@ async function enterFullscreen() {
                 navigationUI: "hide"
             });
 
-        } else if (videoBox.webkitRequestFullscreen) {
+            return true;
+        }
+
+
+        /* Safari */
+
+        if (videoBox.webkitRequestFullscreen) {
 
             videoBox.webkitRequestFullscreen();
 
-        } else if (videoBox.msRequestFullscreen) {
+            return true;
+        }
+
+
+        /* Firefox */
+
+        if (videoBox.mozRequestFullScreen) {
+
+            videoBox.mozRequestFullScreen();
+
+            return true;
+        }
+
+
+        /* Old Edge */
+
+        if (videoBox.msRequestFullscreen) {
 
             videoBox.msRequestFullscreen();
 
+            return true;
+        }
+
+
+        /*
+        =========================================
+        iOS FALLBACK
+
+        The OK.ru iframe itself supports
+        native fullscreen through allowfullscreen.
+
+        We focus the iframe so its own player
+        controls remain available.
+        =========================================
+        */
+
+        if (
+            /iPhone|iPad|iPod/i.test(
+                navigator.userAgent
+            )
+        ) {
+
+            okPlayer.focus();
+
+            return false;
         }
 
     } catch (error) {
 
         console.log(
-            "Fullscreen error:",
+            "Fullscreen:",
             error
         );
 
+        /*
+        Fallback to OK.ru native player
+        */
+
+        try {
+
+            okPlayer.focus();
+
+        } catch (_) {}
+
+        return false;
     }
 
 }
 
 
-/* EXIT */
+/* ----------------------------------------------
+   EXIT FULLSCREEN
+---------------------------------------------- */
 
 async function exitFullscreen() {
 
@@ -366,32 +582,60 @@ async function exitFullscreen() {
 
             await document.exitFullscreen();
 
-        } else if (document.webkitExitFullscreen) {
+            return;
+        }
+
+        if (
+            document.webkitExitFullscreen
+        ) {
 
             document.webkitExitFullscreen();
 
+            return;
+        }
+
+        if (
+            document.mozCancelFullScreen
+        ) {
+
+            document.mozCancelFullScreen();
+
+            return;
+        }
+
+        if (
+            document.msExitFullscreen
+        ) {
+
+            document.msExitFullscreen();
+
+            return;
         }
 
     } catch (error) {
 
-        console.log(error);
+        console.log(
+            "Exit fullscreen:",
+            error
+        );
 
     }
 
 }
 
 
-/* BUTTON */
+/* ----------------------------------------------
+   BUTTON
+---------------------------------------------- */
 
-fullscreenButton.addEventListener(
+fullscreenBtn.addEventListener(
     "click",
-    async function() {
+    async function(event) {
 
-        const fullscreen =
-            document.fullscreenElement ||
-            document.webkitFullscreenElement;
+        event.preventDefault();
+        event.stopPropagation();
 
-        if (fullscreen) {
+        if (isFullscreen()) {
 
             await exitFullscreen();
 
@@ -405,36 +649,120 @@ fullscreenButton.addEventListener(
 );
 
 
-/* ESC / FULLSCREEN CHANGE */
+/* ----------------------------------------------
+   KEYBOARD
+---------------------------------------------- */
 
-function updateButton() {
+document.addEventListener(
+    "keydown",
+    function(event) {
 
-    const fullscreen =
-        document.fullscreenElement ||
-        document.webkitFullscreenElement;
+        if (event.key === "f") {
 
-    fullscreenButton.textContent =
-        fullscreen ? "⛶" : "⛶";
+            if (isFullscreen()) {
+
+                exitFullscreen();
+
+            } else {
+
+                enterFullscreen();
+
+            }
+
+        }
+
+        if (event.key === "Escape") {
+
+            if (isFullscreen()) {
+
+                exitFullscreen();
+
+            }
+
+        }
+
+    }
+);
+
+
+/* ----------------------------------------------
+   FULLSCREEN CHANGE
+---------------------------------------------- */
+
+function fullscreenChanged() {
+
+    if (isFullscreen()) {
+
+        fullscreenBtn.innerHTML = "⛶";
+
+    } else {
+
+        fullscreenBtn.innerHTML = "⛶";
+
+    }
 
 }
 
 
-/* STANDARD */
-
 document.addEventListener(
     "fullscreenchange",
-    updateButton
+    fullscreenChanged
 );
-
-
-/* SAFARI */
 
 document.addEventListener(
     "webkitfullscreenchange",
-    updateButton
+    fullscreenChanged
+);
+
+document.addEventListener(
+    "mozfullscreenchange",
+    fullscreenChanged
+);
+
+document.addEventListener(
+    "MSFullscreenChange",
+    fullscreenChanged
+);
+
+
+/* ----------------------------------------------
+   DOUBLE TAP / DOUBLE CLICK
+---------------------------------------------- */
+
+let lastTap = 0;
+
+videoBox.addEventListener(
+    "touchend",
+    function() {
+
+        const now = Date.now();
+
+        if (
+            now - lastTap < 350
+        ) {
+
+            if (isFullscreen()) {
+
+                exitFullscreen();
+
+            } else {
+
+                enterFullscreen();
+
+            }
+
+        }
+
+        lastTap = now;
+
+    },
+    {
+        passive: true
+    }
 );
 
 </script>
 
 </body>
 </html>
+```
