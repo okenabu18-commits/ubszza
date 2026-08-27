@@ -1,18 +1,22 @@
+# Responsive Horizontal TV Video Player
 
+```html
 <!DOCTYPE html>
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
 
 <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"
+  name="viewport"
+  content="width=device-width,
+           initial-scale=1.0,
+           maximum-scale=1.0,
+           viewport-fit=cover"
 >
 
 <title>TV Player</title>
 
 <style>
-
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
@@ -22,13 +26,11 @@ html,
 body {
     margin: 0;
     padding: 0;
-
     width: 100%;
-    height: 100%;
-
+    min-height: 100%;
     background: #000;
-
-    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+    font-family: Arial, sans-serif;
 }
 
 body {
@@ -37,54 +39,39 @@ body {
     align-items: center;
 }
 
-/* =========================
-   PLAYER
-========================= */
+/* PLAYER */
 
-.tv-player {
-    width: 100%;
-    max-width: 1000px;
-
-    background: #000;
+.player {
+    width: min(1000px, 100vw);
+    background: #080808;
+    overflow: hidden;
 }
 
-/* =========================
-   VIDEO
-========================= */
+/* VIDEO */
 
 .video-box {
-
     position: relative;
 
     width: 100%;
     aspect-ratio: 16 / 9;
 
     background: #000;
-
-    overflow: hidden;
 }
 
-.video-box iframe {
-
-    position: absolute;
-
-    inset: 0;
-
+video {
     width: 100%;
     height: 100%;
 
-    border: 0;
-
     display: block;
+
+    background: #000;
+
+    object-fit: contain;
 }
 
+/* TOP */
 
-/* =========================
-   TOP TV LABEL
-========================= */
-
-.top-bar {
-
+.top {
     position: absolute;
 
     top: 0;
@@ -95,126 +82,205 @@ body {
 
     padding: 18px;
 
-    z-index: 20;
-
     pointer-events: none;
 
     background:
         linear-gradient(
             to bottom,
-            rgba(0,0,0,.75),
+            rgba(0,0,0,.8),
             transparent
         );
 }
 
-.tv-label {
-
+.logo {
     display: flex;
-
     align-items: center;
-
     gap: 8px;
 
-    color: #fff;
-
     font-size: 13px;
-
-    font-weight: 700;
+    font-weight: bold;
 }
 
-.live-dot {
-
+.dot {
     width: 9px;
     height: 9px;
 
     border-radius: 50%;
 
-    background: #ff1744;
+    background: #f22;
 
-    box-shadow:
-        0 0 12px #ff1744;
+    box-shadow: 0 0 12px #f22;
 }
 
+/* CUSTOM CONTROLS */
 
-/* =========================
-   FULLSCREEN BUTTON
-========================= */
-
-.fullscreen-btn {
-
+.controls {
     position: absolute;
 
-    right: 12px;
-    bottom: 12px;
+    left: 0;
+    right: 0;
+    bottom: 0;
 
-    width: 46px;
-    height: 46px;
+    padding: 10px 12px;
 
-    border: none;
+    background:
+        linear-gradient(
+            to top,
+            rgba(0,0,0,.95),
+            transparent
+        );
 
-    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
 
-    background: rgba(0,0,0,.78);
+    opacity: 0;
 
-    color: #fff;
+    transition: opacity .2s;
 
-    font-size: 24px;
+    z-index: 20;
+}
+
+.video-box:hover .controls,
+.video-box:focus-within .controls {
+    opacity: 1;
+}
+
+/* BUTTON */
+
+button {
+    border: 0;
+
+    background: transparent;
+
+    color: white;
 
     cursor: pointer;
 
-    z-index: 100;
+    touch-action: manipulation;
+}
+
+.control {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 8px;
 
     display: flex;
-
     align-items: center;
     justify-content: center;
 
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-
-    touch-action: manipulation;
-
-    user-select: none;
-
-    transition:
-        background .15s,
-        transform .15s;
+    font-size: 18px;
 }
 
-.fullscreen-btn:hover {
-
-    background:
-        rgba(255,255,255,.18);
+.control:hover {
+    background: rgba(255,255,255,.15);
 }
 
-.fullscreen-btn:active {
+/* PROGRESS */
 
-    transform: scale(.90);
+.progress-wrap {
+    flex: 1;
+
+    display: flex;
+    align-items: center;
+
+    min-width: 50px;
 }
 
+#progress {
+    width: 100%;
 
-/* =========================
-   INFO
-========================= */
+    height: 4px;
+
+    cursor: pointer;
+
+    accent-color: #fff;
+}
+
+/* TIME */
+
+.time {
+    min-width: 85px;
+
+    text-align: center;
+
+    font-size: 12px;
+
+    color: #ddd;
+}
+
+/* SETTINGS */
+
+.settings {
+    position: relative;
+}
+
+.menu {
+    position: absolute;
+
+    right: 0;
+    bottom: 48px;
+
+    width: 190px;
+
+    padding: 7px;
+
+    background: #181818;
+
+    border: 1px solid #333;
+
+    border-radius: 10px;
+
+    display: none;
+
+    box-shadow: 0 15px 40px rgba(0,0,0,.7);
+}
+
+.menu.open {
+    display: block;
+}
+
+.menu-title {
+    padding: 9px 10px;
+
+    color: #999;
+
+    font-size: 11px;
+
+    text-transform: uppercase;
+}
+
+.menu button {
+    width: 100%;
+
+    padding: 11px;
+
+    text-align: left;
+
+    border-radius: 7px;
+
+    font-size: 14px;
+}
+
+.menu button:hover {
+    background: #292929;
+}
+
+/* INFO */
 
 .info {
-
     padding: 15px;
 
     background: #0b0b0b;
-
-    color: #fff;
 }
 
 .title {
-
     font-size: 18px;
-
-    font-weight: 700;
+    font-weight: bold;
 }
 
-.description {
-
+.sub {
     margin-top: 5px;
 
     color: #888;
@@ -222,120 +288,72 @@ body {
     font-size: 13px;
 }
 
-
-/* =========================
-   FULLSCREEN
-========================= */
+/* FULLSCREEN */
 
 .video-box:fullscreen {
-
-    position: fixed !important;
-
-    inset: 0 !important;
-
     width: 100vw !important;
     height: 100vh !important;
-
-    max-width: none !important;
 
     aspect-ratio: auto !important;
 
-    background: #000 !important;
-
-    border-radius: 0 !important;
+    background: #000;
 }
-
-.video-box:fullscreen iframe {
-
-    position: absolute !important;
-
-    inset: 0 !important;
-
-    width: 100vw !important;
-    height: 100vh !important;
-
-    border: 0 !important;
-}
-
-
-/* WEBKIT FULLSCREEN */
 
 .video-box:-webkit-full-screen {
-
     width: 100vw !important;
     height: 100vh !important;
 
-    background: #000 !important;
-
-    border-radius: 0 !important;
+    background: #000;
 }
 
-.video-box:-webkit-full-screen iframe {
-
+.video-box:fullscreen video,
+.video-box:-webkit-full-screen video {
     width: 100vw !important;
     height: 100vh !important;
+
+    object-fit: contain;
 }
 
-
-/* =========================
-   MOBILE
-========================= */
+/* MOBILE */
 
 @media (max-width: 600px) {
 
-    body {
-
+    .player {
         width: 100vw;
-        min-height: 100vh;
-
-        padding: 0;
     }
 
-    .tv-player {
+    .controls {
+        opacity: 1;
 
-        width: 100vw;
-
-        max-width: none;
+        padding:
+            7px
+            8px
+            calc(7px + env(safe-area-inset-bottom));
     }
 
-    .video-box {
-
-        width: 100vw;
-
-        aspect-ratio: 16 / 9;
-    }
-
-    .fullscreen-btn {
-
-        width: 43px;
-        height: 43px;
-
-        right: 9px;
-        bottom: 9px;
-
-        font-size: 21px;
-    }
-
-    .info {
-
-        padding: 12px;
-    }
-
-    .title {
+    .control {
+        width: 36px;
+        height: 36px;
 
         font-size: 16px;
     }
 
-    .description {
+    .time {
+        min-width: 65px;
 
-        font-size: 12px;
+        font-size: 10px;
+    }
+
+    .info {
+        padding: 12px;
+    }
+
+    .title {
+        font-size: 16px;
     }
 }
 
-
-/* =========================
-   LANDSCAPE PHONE
-========================= */
+/* LANDSCAPE PHONE */
 
 @media (
     max-width: 950px
@@ -344,121 +362,71 @@ body {
 ) {
 
     body {
-
         width: 100vw;
         height: 100vh;
-
-        padding: 0;
     }
 
-    .tv-player {
-
+    .player {
         width: 100vw;
         height: 100vh;
-
-        max-width: none;
     }
 
     .video-box {
-
         width: 100vw;
         height: 100vh;
 
         aspect-ratio: auto;
     }
 
-    .video-box iframe {
-
+    video {
         width: 100vw;
         height: 100vh;
     }
 
     .info {
-
         display: none;
     }
-
-    .fullscreen-btn {
-
-        right: 15px;
-        bottom: 15px;
-    }
 }
-
-
-/* =========================
-   SAFE AREA
-========================= */
-
-@supports (
-    padding: env(safe-area-inset-bottom)
-) {
-
-    .fullscreen-btn {
-
-        bottom:
-            calc(
-                10px +
-                env(safe-area-inset-bottom)
-            );
-    }
-}
-
 </style>
 </head>
 
-
 <body>
 
-
-<div class="tv-player">
-
-
-    <!-- VIDEO -->
+<div class="player">
 
     <div
         class="video-box"
         id="videoBox"
     >
 
+        <!--
+        ==========================================
+        PUT YOUR OWN / LICENSED VIDEO URL HERE
+        ==========================================
+        -->
 
-        <!-- =====================
-             OK.RU PLAYER
-        ====================== -->
+        <video
+            id="video"
+            preload="metadata"
+            playsinline
+            webkit-playsinline
+        >
+            <source
+                src="VIDEO_URL"
+                type="video/mp4"
+            >
 
-        <iframe
-
-            id="okPlayer"
-
-            src="https://ok.ru/videoembed/9548582816350"
-
-            title="TV Video"
-
-            allow="
-                autoplay;
-                fullscreen;
-                picture-in-picture;
-                encrypted-media
-            "
-
-            allowfullscreen
-
-            webkitallowfullscreen
-
-            mozallowfullscreen
-
-        ></iframe>
+            Your browser does not support video.
+        </video>
 
 
-        <!-- =====================
-             TV LABEL
-        ====================== -->
+        <!-- TOP -->
 
-        <div class="top-bar">
+        <div class="top">
 
-            <div class="tv-label">
+            <div class="logo">
 
-                <span class="live-dot"></span>
+                <span class="dot"></span>
 
                 TV
 
@@ -467,26 +435,115 @@ body {
         </div>
 
 
-        <!-- =====================
-             FULLSCREEN
-        ====================== -->
+        <!-- CONTROLS -->
 
-        <button
-            id="fullscreenBtn"
-            class="fullscreen-btn"
-            type="button"
-            aria-label="Fullscreen"
-        >
-            ⛶
-        </button>
+        <div class="controls">
 
+            <!-- PLAY -->
+
+            <button
+                class="control"
+                id="play"
+                title="Play / Pause"
+            >
+                ▶
+            </button>
+
+
+            <!-- VOLUME -->
+
+            <button
+                class="control"
+                id="mute"
+                title="Mute"
+            >
+                🔊
+            </button>
+
+
+            <!-- PROGRESS -->
+
+            <div class="progress-wrap">
+
+                <input
+                    id="progress"
+                    type="range"
+                    min="0"
+                    max="100"
+                    value="0"
+                >
+
+            </div>
+
+
+            <!-- TIME -->
+
+            <div
+                class="time"
+                id="time"
+            >
+                00:00 / 00:00
+            </div>
+
+
+            <!-- SETTINGS -->
+
+            <div class="settings">
+
+                <button
+                    class="control"
+                    id="settingsBtn"
+                    title="Settings"
+                >
+                    ⚙
+                </button>
+
+
+                <div
+                    class="menu"
+                    id="settingsMenu"
+                >
+
+                    <div class="menu-title">
+                        Settings
+                    </div>
+
+
+                    <button data-speed="0.5">
+                        Speed&nbsp;&nbsp; 0.5x
+                    </button>
+
+                    <button data-speed="1">
+                        Speed&nbsp;&nbsp; Normal
+                    </button>
+
+                    <button data-speed="1.5">
+                        Speed&nbsp;&nbsp; 1.5x
+                    </button>
+
+                    <button data-speed="2">
+                        Speed&nbsp;&nbsp; 2x
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- FULLSCREEN -->
+
+            <button
+                class="control"
+                id="fullscreen"
+                title="Fullscreen"
+            >
+                ⛶
+            </button>
+
+        </div>
 
     </div>
 
-
-    <!-- =====================
-         INFORMATION
-    ====================== -->
 
     <div class="info">
 
@@ -494,46 +551,265 @@ body {
             TV Player
         </div>
 
-        <div class="description">
-            OK.ru Video
+        <div class="sub">
+            1000px Responsive • Landscape Fullscreen
         </div>
 
     </div>
 
-
 </div>
-
 
 
 <script>
 
-/*
-==================================================
- FULLSCREEN SYSTEM
-==================================================
-*/
+/* ==========================================
+   ELEMENTS
+========================================== */
+
+const video =
+    document.getElementById("video");
 
 const videoBox =
-    document.getElementById(
-        "videoBox"
+    document.getElementById("videoBox");
+
+const play =
+    document.getElementById("play");
+
+const mute =
+    document.getElementById("mute");
+
+const progress =
+    document.getElementById("progress");
+
+const time =
+    document.getElementById("time");
+
+const fullscreen =
+    document.getElementById("fullscreen");
+
+const settingsBtn =
+    document.getElementById("settingsBtn");
+
+const settingsMenu =
+    document.getElementById("settingsMenu");
+
+
+/* ==========================================
+   FORMAT TIME
+========================================== */
+
+function formatTime(seconds) {
+
+    if (!Number.isFinite(seconds)) {
+        return "00:00";
+    }
+
+    const hours =
+        Math.floor(seconds / 3600);
+
+    const minutes =
+        Math.floor(
+            (seconds % 3600) / 60
+        );
+
+    const secs =
+        Math.floor(seconds % 60);
+
+    if (hours > 0) {
+
+        return (
+            String(hours).padStart(2, "0")
+            + ":" +
+            String(minutes).padStart(2, "0")
+            + ":" +
+            String(secs).padStart(2, "0")
+        );
+
+    }
+
+    return (
+        String(minutes).padStart(2, "0")
+        + ":" +
+        String(secs).padStart(2, "0")
     );
-
-const fullscreenBtn =
-    document.getElementById(
-        "fullscreenBtn"
-    );
-
-const okPlayer =
-    document.getElementById(
-        "okPlayer"
-    );
+}
 
 
-/*
-==================================================
- CHECK FULLSCREEN
-==================================================
-*/
+/* ==========================================
+   PLAY / PAUSE
+========================================== */
+
+play.addEventListener(
+    "click",
+    async () => {
+
+        if (video.paused) {
+
+            try {
+
+                await video.play();
+
+            } catch (error) {
+
+                console.log(error);
+
+            }
+
+        } else {
+
+            video.pause();
+
+        }
+
+    }
+);
+
+
+video.addEventListener(
+    "play",
+    () => {
+
+        play.textContent = "❚❚";
+
+    }
+);
+
+
+video.addEventListener(
+    "pause",
+    () => {
+
+        play.textContent = "▶";
+
+    }
+);
+
+
+/* ==========================================
+   MUTE
+========================================== */
+
+mute.addEventListener(
+    "click",
+    () => {
+
+        video.muted =
+            !video.muted;
+
+        mute.textContent =
+            video.muted
+                ? "🔇"
+                : "🔊";
+
+    }
+);
+
+
+/* ==========================================
+   PROGRESS
+========================================== */
+
+video.addEventListener(
+    "timeupdate",
+    () => {
+
+        if (!video.duration) {
+            return;
+        }
+
+        progress.value =
+            (
+                video.currentTime /
+                video.duration
+            ) * 100;
+
+        time.textContent =
+            formatTime(video.currentTime)
+            + " / " +
+            formatTime(video.duration);
+
+    }
+);
+
+
+progress.addEventListener(
+    "input",
+    () => {
+
+        if (!video.duration) {
+            return;
+        }
+
+        video.currentTime =
+            (
+                Number(progress.value) /
+                100
+            ) * video.duration;
+
+    }
+);
+
+
+/* ==========================================
+   SETTINGS
+========================================== */
+
+settingsBtn.addEventListener(
+    "click",
+    (event) => {
+
+        event.stopPropagation();
+
+        settingsMenu.classList.toggle(
+            "open"
+        );
+
+    }
+);
+
+
+document.addEventListener(
+    "click",
+    () => {
+
+        settingsMenu.classList.remove(
+            "open"
+        );
+
+    }
+);
+
+
+document.querySelectorAll(
+    "[data-speed]"
+).forEach(
+    button => {
+
+        button.addEventListener(
+            "click",
+            (event) => {
+
+                event.stopPropagation();
+
+                video.playbackRate =
+                    Number(
+                        button.dataset.speed
+                    );
+
+                settingsMenu.classList.remove(
+                    "open"
+                );
+
+            }
+        );
+
+    }
+);
+
+
+/* ==========================================
+   FULLSCREEN CHECK
+========================================== */
 
 function isFullscreen() {
 
@@ -547,11 +823,9 @@ function isFullscreen() {
 }
 
 
-/*
-==================================================
- LOCK LANDSCAPE
-==================================================
-*/
+/* ==========================================
+   LANDSCAPE
+========================================== */
 
 async function lockLandscape() {
 
@@ -572,22 +846,19 @@ async function lockLandscape() {
     } catch (error) {
 
         console.log(
-            "Landscape lock unavailable:",
+            "Landscape unavailable:",
             error
         );
 
     }
 
     return false;
-
 }
 
 
-/*
-==================================================
- UNLOCK ORIENTATION
-==================================================
-*/
+/* ==========================================
+   UNLOCK
+========================================== */
 
 function unlockOrientation() {
 
@@ -607,19 +878,13 @@ function unlockOrientation() {
 }
 
 
-/*
-==================================================
- ENTER FULLSCREEN
-==================================================
-*/
+/* ==========================================
+   ENTER FULLSCREEN
+========================================== */
 
 async function enterFullscreen() {
 
     try {
-
-        /*
-        Modern browsers
-        */
 
         if (
             videoBox.requestFullscreen
@@ -631,10 +896,6 @@ async function enterFullscreen() {
 
         }
 
-        /*
-        Safari / WebKit
-        */
-
         else if (
             videoBox.webkitRequestFullscreen
         ) {
@@ -642,10 +903,6 @@ async function enterFullscreen() {
             videoBox.webkitRequestFullscreen();
 
         }
-
-        /*
-        Firefox
-        */
 
         else if (
             videoBox.mozRequestFullScreen
@@ -655,10 +912,6 @@ async function enterFullscreen() {
 
         }
 
-        /*
-        Old MS browsers
-        */
-
         else if (
             videoBox.msRequestFullscreen
         ) {
@@ -667,55 +920,30 @@ async function enterFullscreen() {
 
         }
 
-        /*
-        If browser does not support
-        wrapper fullscreen, focus OK.ru.
-        */
-
-        else {
-
-            okPlayer.focus();
-
-        }
-
 
         /*
-        IMPORTANT:
-
-        Try to rotate the phone AFTER
-        fullscreen has started.
+        Try landscape AFTER fullscreen.
         */
 
         await lockLandscape();
 
+    }
 
-    } catch (error) {
+    catch (error) {
 
         console.log(
             "Fullscreen error:",
             error
         );
 
-        /*
-        Try native OK.ru player
-        */
-
-        try {
-
-            okPlayer.focus();
-
-        } catch (_) {}
-
     }
 
 }
 
 
-/*
-==================================================
- EXIT FULLSCREEN
-==================================================
-*/
+/* ==========================================
+   EXIT FULLSCREEN
+========================================== */
 
 async function exitFullscreen() {
 
@@ -753,35 +981,26 @@ async function exitFullscreen() {
 
         }
 
-    } catch (error) {
-
-        console.log(
-            "Exit fullscreen:",
-            error
-        );
-
     }
 
+    catch (error) {
+
+        console.log(error);
+
+    }
 
     unlockOrientation();
 
 }
 
 
-/*
-==================================================
- FULLSCREEN BUTTON
-==================================================
-*/
+/* ==========================================
+   FULLSCREEN BUTTON
+========================================== */
 
-fullscreenBtn.addEventListener(
+fullscreen.addEventListener(
     "click",
-    async function(event) {
-
-        event.preventDefault();
-
-        event.stopPropagation();
-
+    async () => {
 
         if (isFullscreen()) {
 
@@ -797,75 +1016,31 @@ fullscreenBtn.addEventListener(
 );
 
 
-/*
-==================================================
- FULLSCREEN CHANGE
-==================================================
-*/
-
-function fullscreenChanged() {
-
-    if (isFullscreen()) {
-
-        fullscreenBtn.textContent = "⛶";
-
-    }
-
-    else {
-
-        fullscreenBtn.textContent = "⛶";
-
-        unlockOrientation();
-
-    }
-
-}
-
+/* ==========================================
+   FULLSCREEN CHANGE
+========================================== */
 
 document.addEventListener(
     "fullscreenchange",
-    fullscreenChanged
+    () => {
+
+        if (!isFullscreen()) {
+
+            unlockOrientation();
+
+        }
+
+    }
 );
+
 
 document.addEventListener(
     "webkitfullscreenchange",
-    fullscreenChanged
-);
+    () => {
 
-document.addEventListener(
-    "mozfullscreenchange",
-    fullscreenChanged
-);
+        if (!isFullscreen()) {
 
-document.addEventListener(
-    "MSFullscreenChange",
-    fullscreenChanged
-);
-
-
-/*
-==================================================
- KEYBOARD F
-==================================================
-*/
-
-document.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (
-            event.key.toLowerCase() === "f"
-        ) {
-
-            if (isFullscreen()) {
-
-                exitFullscreen();
-
-            } else {
-
-                enterFullscreen();
-
-            }
+            unlockOrientation();
 
         }
 
@@ -873,45 +1048,18 @@ document.addEventListener(
 );
 
 
-/*
-==================================================
- ESC
-==================================================
-*/
-
-document.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (
-            event.key === "Escape"
-        ) {
-
-            if (isFullscreen()) {
-
-                exitFullscreen();
-
-            }
-
-        }
-
-    }
-);
-
-
-/*
-==================================================
- DOUBLE TAP
-==================================================
-*/
+/* ==========================================
+   DOUBLE TAP MOBILE
+========================================== */
 
 let lastTap = 0;
 
 videoBox.addEventListener(
     "touchend",
-    function() {
+    () => {
 
-        const now = Date.now();
+        const now =
+            Date.now();
 
         if (
             now - lastTap < 350
@@ -937,8 +1085,74 @@ videoBox.addEventListener(
     }
 );
 
+
+/* ==========================================
+   KEYBOARD
+========================================== */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key.toLowerCase() === "f"
+        ) {
+
+            if (isFullscreen()) {
+
+                exitFullscreen();
+
+            } else {
+
+                enterFullscreen();
+
+            }
+
+        }
+
+
+        if (
+            event.key === " "
+            &&
+            document.activeElement.tagName
+                !== "INPUT"
+        ) {
+
+            event.preventDefault();
+
+            if (video.paused) {
+
+                video.play();
+
+            } else {
+
+                video.pause();
+
+            }
+
+        }
+
+    }
+);
+
+
+/* ==========================================
+   VIDEO READY
+========================================== */
+
+video.addEventListener(
+    "loadedmetadata",
+    () => {
+
+        time.textContent =
+            "00:00 / " +
+            formatTime(video.duration);
+
+    }
+);
+
 </script>
 
 </body>
 </html>
-
+```
