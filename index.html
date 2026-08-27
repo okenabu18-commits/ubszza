@@ -1,24 +1,25 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>TV Player</title>
 
 <style>
 * {
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 html,
 body {
     margin: 0;
+    padding: 0;
     width: 100%;
     min-height: 100%;
     background: #050505;
-    color: white;
+    color: #fff;
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -26,24 +27,24 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 30px 15px;
+    padding: 25px;
 }
 
-/* PLAYER */
+/* MAIN TV */
 
-.player {
+.tv-player {
     width: min(1000px, 100%);
-    background: #0b0b0b;
-    border-radius: 14px;
+    background: #101010;
+    border-radius: 16px;
     overflow: hidden;
     box-shadow:
-        0 20px 70px rgba(0,0,0,.7),
+        0 25px 80px rgba(0,0,0,.75),
         0 0 0 1px rgba(255,255,255,.06);
 }
 
 /* VIDEO */
 
-.video-area {
+.video-box {
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
@@ -51,211 +52,98 @@ body {
     overflow: hidden;
 }
 
-.video-area iframe {
+.video-box iframe {
     position: absolute;
     inset: 0;
+
     width: 100%;
     height: 100%;
+
     border: 0;
 }
 
-/* TOP */
+/* TOP OVERLAY */
 
-.top-bar {
+.top {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
 
-    height: 65px;
+    height: 70px;
 
-    display: flex;
-    align-items: center;
+    padding: 18px 20px;
 
-    padding: 0 18px;
+    background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,.75),
+        transparent
+    );
 
-    background:
-        linear-gradient(
-            to bottom,
-            rgba(0,0,0,.8),
-            transparent
-        );
-
-    z-index: 5;
     pointer-events: none;
+    z-index: 5;
 }
 
-.live {
-    display: flex;
+.tv-label {
+    display: inline-flex;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
 
     font-size: 13px;
-    font-weight: 700;
-    letter-spacing: .5px;
+    font-weight: bold;
 }
 
 .live-dot {
     width: 9px;
     height: 9px;
-    border-radius: 50%;
+
     background: #ff1744;
+    border-radius: 50%;
+
     box-shadow: 0 0 12px #ff1744;
 }
 
-/* CUSTOM CONTROLS */
+/* FULLSCREEN BUTTON */
 
-.controls {
+.fullscreen-button {
     position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
 
-    height: 70px;
+    right: 15px;
+    bottom: 15px;
 
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    padding: 20px 15px 8px;
-
-    background:
-        linear-gradient(
-            to top,
-            rgba(0,0,0,.9),
-            transparent
-        );
-
-    z-index: 10;
-}
-
-/* BUTTON */
-
-.control-btn {
-    width: 42px;
-    height: 42px;
+    width: 45px;
+    height: 45px;
 
     border: 0;
-    background: transparent;
+    border-radius: 9px;
 
+    background: rgba(0,0,0,.75);
     color: white;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 23px;
 
     cursor: pointer;
 
-    border-radius: 8px;
+    z-index: 20;
 
-    font-size: 19px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    transition:
-        background .15s,
-        transform .15s;
+    backdrop-filter: blur(8px);
+
+    transition: .2s;
 }
 
-.control-btn:hover {
-    background: rgba(255,255,255,.12);
+.fullscreen-button:hover {
+    background: rgba(255,255,255,.16);
 }
 
-.control-btn:active {
+.fullscreen-button:active {
     transform: scale(.92);
 }
 
-/* SPACER */
-
-.spacer {
-    flex: 1;
-}
-
-/* SETTINGS */
-
-.settings-wrapper {
-    position: relative;
-}
-
-.settings-menu {
-    position: absolute;
-
-    right: 0;
-    bottom: 52px;
-
-    width: 190px;
-
-    background: #181818;
-
-    border: 1px solid rgba(255,255,255,.08);
-
-    border-radius: 10px;
-
-    padding: 7px;
-
-    box-shadow: 0 15px 40px rgba(0,0,0,.7);
-
-    display: none;
-}
-
-.settings-menu.show {
-    display: block;
-}
-
-.settings-title {
-    padding: 10px 12px;
-
-    color: #aaa;
-
-    font-size: 12px;
-    text-transform: uppercase;
-}
-
-.setting {
-    width: 100%;
-
-    border: 0;
-
-    background: transparent;
-
-    color: white;
-
-    padding: 11px 12px;
-
-    border-radius: 7px;
-
-    text-align: left;
-
-    cursor: pointer;
-
-    font-size: 14px;
-}
-
-.setting:hover {
-    background: rgba(255,255,255,.1);
-}
-
-/* FULLSCREEN */
-
-.video-area.fullscreen {
-    position: fixed;
-
-    inset: 0;
-
-    width: 100vw;
-    height: 100vh;
-
-    aspect-ratio: auto;
-
-    z-index: 999999;
-
-    border-radius: 0;
-}
-
-.video-area.fullscreen iframe {
-    width: 100%;
-    height: 100%;
-}
-
-/* TITLE */
+/* INFO */
 
 .info {
     padding: 15px 18px 18px;
@@ -266,12 +154,38 @@ body {
     font-weight: 700;
 }
 
-.subtitle {
+.description {
     margin-top: 6px;
-
     color: #888;
-
     font-size: 13px;
+}
+
+/* REAL FULLSCREEN */
+
+.video-box:fullscreen {
+    width: 100vw;
+    height: 100vh;
+
+    aspect-ratio: auto;
+
+    background: #000;
+
+    border-radius: 0;
+}
+
+.video-box:-webkit-full-screen {
+    width: 100vw;
+    height: 100vh;
+
+    background: #000;
+
+    border-radius: 0;
+}
+
+.video-box:fullscreen iframe,
+.video-box:-webkit-full-screen iframe {
+    width: 100vw;
+    height: 100vh;
 }
 
 /* MOBILE */
@@ -280,34 +194,70 @@ body {
 
     body {
         padding: 0;
+        align-items: center;
     }
 
-    .player {
+    .tv-player {
         width: 100%;
         border-radius: 0;
+        box-shadow: none;
     }
 
-    .video-area {
-        border-radius: 0;
+    .video-box {
+        width: 100%;
+        aspect-ratio: 16 / 9;
     }
 
-    .controls {
-        height: 60px;
-        padding: 15px 8px 5px;
-    }
+    .fullscreen-button {
+        width: 42px;
+        height: 42px;
 
-    .control-btn {
-        width: 38px;
-        height: 38px;
-        font-size: 17px;
+        right: 10px;
+        bottom: 10px;
+
+        font-size: 21px;
     }
 
     .info {
-        padding: 12px;
+        padding: 13px;
     }
 
     .title {
         font-size: 16px;
+    }
+
+    .description {
+        font-size: 12px;
+    }
+}
+
+/* PHONE LANDSCAPE */
+
+@media (max-width: 900px) and (orientation: landscape) {
+
+    body {
+        padding: 0;
+    }
+
+    .tv-player {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+    }
+
+    .video-box {
+        width: 100vw;
+        height: 100vh;
+        aspect-ratio: auto;
+    }
+
+    .video-box iframe {
+        width: 100vw;
+        height: 100vh;
+    }
+
+    .info {
+        display: none;
     }
 }
 </style>
@@ -315,117 +265,38 @@ body {
 
 <body>
 
-<div class="player">
+<div class="tv-player">
 
-    <div class="video-area" id="videoArea">
+    <div class="video-box" id="videoBox">
 
-        <!-- OK.RU VIDEO -->
+        <!-- ORIGINAL OK.RU PLAYER -->
 
         <iframe
-            id="okVideo"
             src="https://ok.ru/videoembed/9548582816350"
             allow="autoplay; fullscreen; picture-in-picture"
-            allowfullscreen>
+            allowfullscreen
+            webkitallowfullscreen>
         </iframe>
 
+        <!-- FULLSCREEN -->
 
-        <!-- TOP BAR -->
+        <button
+            class="fullscreen-button"
+            id="fullscreenButton"
+            aria-label="Fullscreen">
+            ⛶
+        </button>
 
-        <div class="top-bar">
-            <div class="live">
+        <!-- TOP -->
+
+        <div class="top">
+            <div class="tv-label">
                 <span class="live-dot"></span>
                 TV
             </div>
         </div>
 
-
-        <!-- CONTROLS -->
-
-        <div class="controls">
-
-            <!-- PLAY BUTTON -->
-
-            <button
-                class="control-btn"
-                id="playBtn"
-                title="Play">
-                ▶
-            </button>
-
-
-            <!-- VOLUME -->
-
-            <button
-                class="control-btn"
-                id="volumeBtn"
-                title="Volume">
-                🔊
-            </button>
-
-
-            <div class="spacer"></div>
-
-
-            <!-- SETTINGS -->
-
-            <div class="settings-wrapper">
-
-                <button
-                    class="control-btn"
-                    id="settingsBtn"
-                    title="Settings">
-                    ⚙
-                </button>
-
-                <div
-                    class="settings-menu"
-                    id="settingsMenu">
-
-                    <div class="settings-title">
-                        Settings
-                    </div>
-
-                    <button class="setting">
-                        Quality
-                        <span style="float:right;color:#888">
-                            Auto
-                        </span>
-                    </button>
-
-                    <button class="setting">
-                        Speed
-                        <span style="float:right;color:#888">
-                            Normal
-                        </span>
-                    </button>
-
-                    <button class="setting">
-                        Subtitles
-                        <span style="float:right;color:#888">
-                            Off
-                        </span>
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- FULLSCREEN -->
-
-            <button
-                class="control-btn"
-                id="fullscreenBtn"
-                title="Fullscreen">
-                ⛶
-            </button>
-
-        </div>
-
     </div>
-
-
-    <!-- VIDEO INFO -->
 
     <div class="info">
 
@@ -433,8 +304,8 @@ body {
             TV Player
         </div>
 
-        <div class="subtitle">
-            OK.ru Video • 1000px Responsive Player
+        <div class="description">
+            OK.ru Video
         </div>
 
     </div>
@@ -444,126 +315,36 @@ body {
 
 <script>
 
-const videoArea =
-    document.getElementById("videoArea");
+const videoBox =
+    document.getElementById("videoBox");
 
-const playBtn =
-    document.getElementById("playBtn");
-
-const volumeBtn =
-    document.getElementById("volumeBtn");
-
-const settingsBtn =
-    document.getElementById("settingsBtn");
-
-const settingsMenu =
-    document.getElementById("settingsMenu");
-
-const fullscreenBtn =
-    document.getElementById("fullscreenBtn");
-
-
-/* PLAY */
-
-let playing = false;
-
-playBtn.addEventListener("click", () => {
-
-    /*
-      IMPORTANT:
-      OK.ru iframe is cross-origin.
-
-      Therefore this button cannot directly
-      call the iframe's play() method.
-
-      The OK.ru player's own controls should
-      be used for playback.
-    */
-
-    playing = !playing;
-
-    playBtn.textContent =
-        playing ? "❚❚" : "▶";
-
-});
-
-
-/* VOLUME */
-
-volumeBtn.addEventListener("click", () => {
-
-    /*
-      Volume of the OK.ru iframe cannot be
-      directly controlled from this page
-      because it is cross-origin.
-    */
-
-    volumeBtn.textContent =
-        volumeBtn.textContent === "🔊"
-            ? "🔇"
-            : "🔊";
-
-});
-
-
-/* SETTINGS */
-
-settingsBtn.addEventListener("click", (event) => {
-
-    event.stopPropagation();
-
-    settingsMenu.classList.toggle("show");
-
-});
-
-
-/* CLOSE SETTINGS */
-
-document.addEventListener("click", (event) => {
-
-    if (
-        !settingsBtn.contains(event.target) &&
-        !settingsMenu.contains(event.target)
-    ) {
-
-        settingsMenu.classList.remove("show");
-
-    }
-
-});
+const fullscreenButton =
+    document.getElementById("fullscreenButton");
 
 
 /* FULLSCREEN */
 
-fullscreenBtn.addEventListener("click", async () => {
+async function enterFullscreen() {
 
     try {
 
-        if (!document.fullscreenElement) {
+        if (videoBox.requestFullscreen) {
 
-            if (videoArea.requestFullscreen) {
+            await videoBox.requestFullscreen({
+                navigationUI: "hide"
+            });
 
-                await videoArea.requestFullscreen();
+        } else if (videoBox.webkitRequestFullscreen) {
 
-            }
+            videoBox.webkitRequestFullscreen();
 
-            else if (videoArea.webkitRequestFullscreen) {
+        } else if (videoBox.msRequestFullscreen) {
 
-                videoArea.webkitRequestFullscreen();
-
-            }
-
-        }
-
-        else {
-
-            await document.exitFullscreen();
+            videoBox.msRequestFullscreen();
 
         }
 
-    }
-
-    catch (error) {
+    } catch (error) {
 
         console.log(
             "Fullscreen error:",
@@ -572,28 +353,85 @@ fullscreenBtn.addEventListener("click", async () => {
 
     }
 
-});
+}
 
 
-/* FULLSCREEN ICON */
+/* EXIT */
 
-document.addEventListener(
-    "fullscreenchange",
-    () => {
+async function exitFullscreen() {
 
-        if (document.fullscreenElement) {
+    try {
 
-            fullscreenBtn.textContent = "⛶";
+        if (document.exitFullscreen) {
+
+            await document.exitFullscreen();
+
+        } else if (document.webkitExitFullscreen) {
+
+            document.webkitExitFullscreen();
 
         }
 
-        else {
+    } catch (error) {
 
-            fullscreenBtn.textContent = "⛶";
+        console.log(error);
+
+    }
+
+}
+
+
+/* BUTTON */
+
+fullscreenButton.addEventListener(
+    "click",
+    async function() {
+
+        const fullscreen =
+            document.fullscreenElement ||
+            document.webkitFullscreenElement;
+
+        if (fullscreen) {
+
+            await exitFullscreen();
+
+        } else {
+
+            await enterFullscreen();
 
         }
 
     }
+);
+
+
+/* ESC / FULLSCREEN CHANGE */
+
+function updateButton() {
+
+    const fullscreen =
+        document.fullscreenElement ||
+        document.webkitFullscreenElement;
+
+    fullscreenButton.textContent =
+        fullscreen ? "⛶" : "⛶";
+
+}
+
+
+/* STANDARD */
+
+document.addEventListener(
+    "fullscreenchange",
+    updateButton
+);
+
+
+/* SAFARI */
+
+document.addEventListener(
+    "webkitfullscreenchange",
+    updateButton
 );
 
 </script>
