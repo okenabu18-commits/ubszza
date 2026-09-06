@@ -7,7 +7,7 @@
 <title>ABUZZY CODE</title>
 
 <!-- EmailJS (optional real email verification — see CONFIG in script) -->
-<script src="gemini-svg.svg"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 <!-- Working logo (SVG favicon, no missing logo.png anymore) -->
 <link rel="icon" type="image/svg+xml" href="gemini-svg.svg">
@@ -211,7 +211,7 @@ body.dark .progress{background:#202a3d}
   <div class="auth-container">
     <div class="auth-card">
       <div class="logo-icon"><img src="gemini-svg.svg" alt="logo"></div>
-      <h1 data-i18n="brandTitle">ABUZZY</h1>
+      <h1 data-i18n="brandTitle">ABUZZY CODE</h1>
       <p class="auth-sub" data-i18n="tagline">Learn coding one question at a time.</p>
 
       <div class="auth-tabs">
@@ -237,7 +237,7 @@ body.dark .progress{background:#202a3d}
       </div>
 
   <div id="verify-box" class="hidden">
-  <div class="info-text" style="color: var(--muted); font-size: 13px; margin-bottom: 12px;" data-i18n="  Code sent to your email.">
+  <div class="info-text" style="color: var(--muted); font-size: 13px; margin-bottom: 12px;" data-i18n="codeSentInfo">
     Code sent to your email.
   </div>
   <div class="input-wrap">
@@ -386,7 +386,7 @@ body.dark .progress{background:#202a3d}
     <section id="view-about" class="view">
       <div class="card about-card">
         <div class="about-hero">
-          <div class="about-hero-icon"><img src="logo.png" alt="logo"></div>
+          <div class="about-hero-icon"><img src="gemini-svg.svg" alt="logo"></div>
           <h1 data-i18n="aboutTitle">About ABUZZY CODE</h1>
           <p class="muted" data-i18n="aboutSub">A simple interactive platform for learning programming.</p>
         </div>
@@ -461,7 +461,7 @@ en:{
   login:"Login", signup:"Sign Up", createAccount:"Create Account",
   emailPh:"Email", passwordPh:"Password", usernamePh:"Username",
   passwordMinPh:"Password — minimum 8 characters", codePh:"Enter 6-digit code",
-  verifyAccount:"Verify Account", demoCodeLabel:"Demo verification code",
+  verifyAccount:"Verify Account", demoCodeLabel:"Demo verification code", codeSentInfo:"Code sent to your email. Check your inbox and enter the 6-digit code.",
   join:"Join", aboutUs:"About Us", turnstileHint:"Please complete the verification above to continue.",
   navHome:"Home", navCourses:"Courses", navProfile:"Profile", navAbout:"About", navSettings:"Settings",
   welcome:"Welcome back", continueLearning:"Continue learning", xpGoal:"100 XP course goal",
@@ -493,7 +493,7 @@ ru:{
   login:"Войти", signup:"Регистрация", createAccount:"Создать аккаунт",
   emailPh:"Email", passwordPh:"Пароль", usernamePh:"Имя пользователя",
   passwordMinPh:"Пароль — минимум 8 символов", codePh:"Введите 6-значный код",
-  verifyAccount:"Подтвердить аккаунт", demoCodeLabel:"Демо-код подтверждения",
+  verifyAccount:"Подтвердить аккаунт", demoCodeLabel:"Демо-код подтверждения", codeSentInfo:"Код отправлен на вашу электронную почту. Проверьте почту и введите 6-значный код.",
   join:"Присоединиться", aboutUs:"О нас", turnstileHint:"Пожалуйста, пройдите проверку выше, чтобы продолжить.",
   navHome:"Главная", navCourses:"Курсы", navProfile:"Профиль", navAbout:"О нас", navSettings:"Настройки",
   welcome:"С возвращением", continueLearning:"Продолжить обучение", xpGoal:"Цель курса — 100 XP",
@@ -525,7 +525,7 @@ uz:{
   login:"Kirish", signup:"Ro‘yxatdan o‘tish", createAccount:"Akkaunt yaratish",
   emailPh:"Email", passwordPh:"Parol", usernamePh:"Foydalanuvchi nomi",
   passwordMinPh:"Parol — kamida 8 ta belgi", codePh:"6 xonali kodni kiriting",
-  verifyAccount:"Akkauntni tasdiqlash", demoCodeLabel:"Demo tasdiqlash kodi",
+  verifyAccount:"Akkauntni tasdiqlash", demoCodeLabel:"Demo tasdiqlash kodi", codeSentInfo:"Kodingiz elektron pochtaga yuborildi. Pochtani tekshiring va 6 xonali kodni kiriting.",
   join:"Qo‘shilish", aboutUs:"Biz haqimizda", turnstileHint:"Davom etish uchun yuqoridagi tekshiruvni bajaring.",
   navHome:"Bosh sahifa", navCourses:"Kurslar", navProfile:"Profil", navAbout:"Biz haqimizda", navSettings:"Sozlamalar",
   welcome:"Xush kelibsiz", continueLearning:"O‘qishni davom ettirish", xpGoal:"Kurs maqsadi — 100 XP",
