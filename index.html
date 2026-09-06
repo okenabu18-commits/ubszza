@@ -1,555 +1,1163 @@
-
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#6c5ce7">
+<title>ABUZZY</title>
 
-<meta
-    name="viewport"
-    content="width=device-width,
-    initial-scale=1.0,
-    maximum-scale=1.0,
-    viewport-fit=cover"
->
+<!-- EmailJS (optional real email verification — see CONFIG in script) -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
-<title>TV Player</title>
+<!-- Working logo (SVG favicon, no missing logo.png anymore) -->
+<link rel="icon" type="image/svg+xml" href="logo.png">
+
+<!-- Cloudflare Turnstile bot check -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 <style>
-* {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
+:root{
+  --bg:#f5f7fb;--card:#ffffff;--text:#172033;--muted:#6b7280;--border:#e5e7eb;
+  --primary:#6c5ce7;--primary2:#8b7cff;
+  --green:#16a34a;--red:#dc2626;--blue:#2563eb;
+  --shadow:0 20px 60px rgba(30,30,60,.09);--shadow2:0 10px 30px rgba(30,30,60,.07);
+  --radius:22px;
 }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);
+  background:radial-gradient(circle at 0% 0%,rgba(108,92,231,.14),transparent 32%),radial-gradient(circle at 100% 20%,rgba(37,99,235,.08),transparent 28%),var(--bg);
+  min-height:100vh}
+button,input,select{font:inherit}
+button{cursor:pointer}
+a{color:inherit}
+.hidden{display:none!important}
+#toast{position:fixed;left:50%;top:22px;transform:translateX(-50%) translateY(-20px);background:#111827;color:#fff;padding:13px 20px;border-radius:999px;font-weight:800;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:9999;box-shadow:0 15px 40px rgba(0,0,0,.2)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#cfd3dd;border-radius:999px}
 
-html,
-body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    min-height: 100%;
-    background: #000;
-    font-family: Arial, sans-serif;
+.auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:25px}
+.auth-container{width:100%;max-width:460px}
+.auth-card{background:rgba(255,255,255,.92);backdrop-filter:blur(25px);border:1px solid rgba(255,255,255,.7);box-shadow:var(--shadow);border-radius:30px;padding:34px}
+.logo-icon{width:72px;height:72px;display:grid;place-items:center;border-radius:22px;color:#fff;font-size:30px;background:linear-gradient(135deg,var(--primary),var(--blue));box-shadow:0 15px 35px rgba(108,92,231,.3);margin-bottom:20px;overflow:hidden}
+.logo-icon img{width:100%;height:100%;object-fit:cover}
+.auth-card h1{margin:0;font-size:31px;font-weight:950}
+.auth-sub{color:var(--muted);margin:8px 0 24px}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:5px;background:#f1f2f7;border-radius:15px;margin-bottom:20px}
+.auth-tabs button{border:0;background:transparent;padding:11px;border-radius:11px;font-weight:900;color:var(--muted)}
+.auth-tabs button.active{color:#fff;background:var(--primary);box-shadow:0 6px 15px rgba(108,92,231,.25)}
+.input-wrap{position:relative;margin-bottom:12px}
+.input-wrap i{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#9ca3af}
+.input{width:100%;border:1px solid var(--border);background:#fff;color:var(--text);padding:14px 15px 14px 44px;outline:none;border-radius:14px;transition:.2s}
+.input:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(108,92,231,.1)}
+.btn{border:1px solid var(--border);background:#fff;color:var(--text);padding:12px 16px;border-radius:14px;font-weight:900;transition:.18s;display:inline-flex;align-items:center;justify-content:center;gap:9px}
+.btn:hover{transform:translateY(-2px);box-shadow:var(--shadow2)}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary2));border-color:transparent;color:#fff}
+.btn-success{background:var(--green);border-color:var(--green);color:#fff}
+.btn-danger{color:var(--red);border-color:rgba(220,38,38,.25)}
+.btn-block{width:100%}
+.error{min-height:22px;color:var(--red);font-weight:800;font-size:14px;margin:12px 0}
+.demo-code{background:#f4f5f8;border:1px dashed #cdd1db;padding:14px;border-radius:14px;text-align:center;margin-bottom:12px}
+.demo-code strong{color:var(--primary);font-size:21px;letter-spacing:4px}
+.auth-links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+#turnstile-box{margin:12px 0;display:flex;justify-content:center}
+
+.topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.84);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:13px 22px;display:flex;align-items:center;gap:18px}
+.brand{font-size:20px;font-weight:950;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.brand img{width:26px;height:26px;border-radius:8px}
+.brand span{color:var(--primary)}
+.nav{display:flex;gap:5px;flex:1}
+.nav button{border:0;background:transparent;color:var(--muted);padding:10px 13px;border-radius:12px;font-weight:850;transition:.18s}
+.nav button:hover,.nav button.active{background:rgba(108,92,231,.1);color:var(--primary)}
+.top-stats{display:flex;align-items:center;gap:8px}
+.stat-pill{background:#fff;border:1px solid var(--border);border-radius:999px;padding:8px 12px;font-weight:900;font-size:13px;white-space:nowrap}
+.container{width:100%;max-width:1150px;margin:auto;padding:32px 20px 80px}
+.view{display:none}
+.view.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow2);padding:24px}
+.hero{margin-bottom:22px}
+.hero h1{margin:0 0 7px;font-size:34px;font-weight:950}
+.hero p{margin:0}
+.muted{color:var(--muted)}
+
+.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(300px,.7fr);gap:18px}
+.continue-card{min-height:250px;display:flex;flex-direction:column;justify-content:space-between}
+.course-label{display:flex;align-items:center;gap:14px}
+.course-icon{width:58px;height:58px;border-radius:17px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--primary),var(--blue));font-size:24px}
+.course-label h2{margin:0}
+.progress{height:12px;background:#edf0f5;border-radius:999px;overflow:hidden;margin-top:14px}
+.progress-bar{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--primary),var(--blue));transition:width .35s}
+.progress-info{display:flex;justify-content:space-between;margin-top:8px;color:var(--muted);font-size:13px;font-weight:800}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:15px}
+.mini-stat{background:#f8f9fc;border:1px solid var(--border);border-radius:16px;padding:15px}
+.mini-stat i{color:var(--primary)}
+.mini-stat-label{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:900;margin-top:7px}
+.mini-stat-value{font-size:21px;font-weight:950;margin-top:3px}
+
+.lang-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}
+.lang-card{border:1px solid var(--border);background:#fff;border-radius:22px;padding:23px;cursor:pointer;transition:.2s;box-shadow:var(--shadow2);position:relative;overflow:hidden}
+.lang-card::after{content:"";position:absolute;width:100px;height:100px;right:-45px;top:-45px;background:rgba(108,92,231,.08);border-radius:50%}
+.lang-card:hover{transform:translateY(-5px);border-color:var(--primary);box-shadow:0 20px 45px rgba(30,30,60,.12)}
+.lang-icon{width:58px;height:58px;display:grid;place-items:center;border-radius:17px;background:#f1efff;color:var(--primary);font-size:25px;margin-bottom:16px}
+.lang-name{font-size:21px;font-weight:950}
+.lang-count{color:var(--muted);font-size:13px;margin-top:5px}
+.lang-arrow{margin-top:18px;color:var(--primary);font-weight:900}
+
+.quiz-header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.quiz-header .progress{flex:1;margin:0}
+.quiz-count{white-space:nowrap;font-weight:900;color:var(--muted)}
+.lives{color:var(--red);white-space:nowrap;font-weight:950;letter-spacing:3px}
+.quiz-grid{display:grid;grid-template-columns:220px 1fr;gap:18px}
+.mascot-card{text-align:center;height:max-content;position:sticky;top:100px}
+.mascot-icon{width:110px;height:110px;margin:0 auto 15px;border-radius:32px;display:grid;place-items:center;font-size:48px;color:#fff;background:linear-gradient(135deg,var(--primary),var(--blue));box-shadow:0 20px 45px rgba(108,92,231,.25)}
+.bubble{border:1px solid var(--border);background:#f8f9fc;padding:13px;border-radius:15px;font-weight:800;color:var(--muted)}
+.quiz-card{min-width:0}
+.badge{display:inline-flex;align-items:center;gap:7px;color:var(--primary);background:rgba(108,92,231,.09);border:1px solid rgba(108,92,231,.15);border-radius:999px;padding:7px 11px;font-weight:900;font-size:13px}
+.question{font-size:27px;line-height:1.3;margin:18px 0 20px;font-weight:950}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.answer{min-height:70px;text-align:left;background:#fff;border:2px solid var(--border);border-radius:17px;padding:15px;font-weight:850;color:var(--text);transition:.18s;display:flex;align-items:center;gap:12px}
+.answer:hover{border-color:var(--primary);background:#faf9ff;transform:translateY(-2px)}
+.answer-number{width:31px;height:31px;flex:0 0 31px;display:grid;place-items:center;border-radius:10px;background:#f1f2f6;color:var(--muted);font-weight:950}
+.answer.correct{border-color:var(--green);background:rgba(22,163,74,.09);color:#166534}
+.answer.correct .answer-number{background:var(--green);color:#fff}
+.answer.wrong{border-color:var(--red);background:rgba(220,38,38,.08);color:#991b1b}
+.answer.wrong .answer-number{background:var(--red);color:#fff}
+.answer.disabled{pointer-events:none;opacity:.6}
+.feedback{margin-top:17px;border:1px solid var(--border);border-radius:17px;padding:17px}
+.feedback.good{border-color:rgba(22,163,74,.35);background:rgba(22,163,74,.05)}
+.feedback.bad{border-color:rgba(220,38,38,.35);background:rgba(220,38,38,.04)}
+.feedback-title{margin:0 0 6px;font-size:18px}
+.feedback-text{margin:0 0 15px;color:var(--muted);line-height:1.55}
+
+.result-card{max-width:650px;margin:auto;text-align:center;padding:40px}
+.result-icon{width:90px;height:90px;display:grid;place-items:center;margin:auto;border-radius:28px;color:#fff;background:linear-gradient(135deg,var(--primary),var(--blue));font-size:38px}
+.result-xp{font-size:42px;font-weight:1000;color:var(--primary);margin:15px 0}
+.result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:25px 0}
+
+.profile-card{max-width:760px;margin:auto}
+.profile-head{display:flex;align-items:center;gap:18px}
+.profile-avatar{width:82px;height:82px;display:grid;place-items:center;border-radius:25px;background:linear-gradient(135deg,var(--primary),var(--blue));color:#fff;font-size:30px}
+.profile-head h1{margin:0 0 4px}
+
+.settings-card{max-width:760px;margin:auto}
+.setting{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:18px 0;border-bottom:1px solid var(--border)}
+.setting:last-child{border-bottom:0}
+.setting-title{font-weight:900}
+.setting-desc{color:var(--muted);font-size:13px;margin-top:4px}
+.select{border:1px solid var(--border);background:#fff;padding:11px 13px;border-radius:12px;color:var(--text);outline:none}
+
+.about-card{max-width:820px;margin:auto}
+.about-hero{text-align:center;padding:25px 10px 30px}
+.about-hero-icon{width:82px;height:82px;margin:auto;display:grid;place-items:center;border-radius:25px;background:linear-gradient(135deg,var(--primary),var(--blue));color:#fff;font-size:34px;overflow:hidden}
+.about-hero-icon img{width:100%;height:100%;object-fit:cover}
+.about-hero h1{font-size:32px;margin:18px 0 7px}
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.feature{padding:18px;background:#f8f9fc;border:1px solid var(--border);border-radius:17px}
+.feature i{color:var(--primary);font-size:21px;margin-bottom:10px}
+.feature h3{margin:0 0 6px}
+.feature p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
+
+body.dark{--bg:#0b1020;--card:#111827;--text:#f3f4f6;--muted:#9ca3af;--border:#263044;background:radial-gradient(circle at 0% 0%,rgba(108,92,231,.18),transparent 30%),#0b1020}
+body.dark .topbar{background:rgba(11,16,32,.86)}
+body.dark .auth-card,body.dark .lang-card,body.dark .answer,body.dark .stat-pill,body.dark .btn,body.dark .input,body.dark .select{background:#111827;color:var(--text)}
+body.dark .auth-tabs,body.dark .mini-stat,body.dark .bubble,body.dark .feature{background:#0d1424}
+body.dark .answer-number{background:#1d2638}
+body.dark .progress{background:#202a3d}
+
+@media(max-width:850px){
+  .dashboard-grid{grid-template-columns:1fr}
+  .quiz-grid{grid-template-columns:1fr}
+  .mascot-card{position:static;display:flex;align-items:center;gap:15px;text-align:left}
+  .mascot-icon{width:70px;height:70px;flex:0 0 70px;font-size:29px;margin:0}
+  .bubble{flex:1}
 }
-
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+@media(max-width:700px){
+  .topbar{flex-wrap:wrap;padding:12px 14px}
+  .nav{width:100%;order:3;overflow:auto}
+  .nav button{flex:1;white-space:nowrap;font-size:12px}
+  .top-stats{margin-left:auto}
+  .top-stats .stat-pill{display:none}
+  .container{padding:24px 14px 60px}
+  .hero h1{font-size:27px}
+  .stats-grid,.result-stats,.feature-grid{grid-template-columns:1fr}
+  .answers{grid-template-columns:1fr}
+  .question{font-size:22px}
+  .auth-card{padding:25px 20px}
+  .result-card{padding:28px 20px}
+  .profile-head{align-items:flex-start}
+  .setting{align-items:flex-start;flex-direction:column}
+  .select{width:100%}
 }
-
-/* PLAYER */
-
-.player {
-    width: min(1000px, 100vw);
-    background: #000;
-}
-
-/* VIDEO */
-
-.video-box {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    background: #000;
-    overflow: hidden;
-}
-
-.video-box iframe {
-    position: absolute;
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
-    border: 0;
-    display: block;
-}
-
-/* TV LABEL */
-
-.tv-label {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-
-    display: flex;
-    align-items: center;
-    gap: 7px;
-
-    padding: 7px 10px;
-
-    color: #fff;
-    background: rgba(0,0,0,.55);
-
-    border-radius: 7px;
-
-    font-size: 12px;
-    font-weight: bold;
-
-    z-index: 10;
-    pointer-events: none;
-}
-
-.dot {
-    width: 8px;
-    height: 8px;
-
-    border-radius: 50%;
-    background: #ff1744;
-
-    box-shadow: 0 0 10px #ff1744;
-}
-
-/* FULLSCREEN BUTTON */
-
-.fullscreen-btn {
-    position: absolute;
-
-    right: 12px;
-    bottom: 12px;
-
-    width: 45px;
-    height: 45px;
-
-    border: 0;
-    border-radius: 9px;
-
-    background: rgba(0,0,0,.75);
-    color: #fff;
-
-    font-size: 23px;
-
-    cursor: pointer;
-    z-index: 20;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    touch-action: manipulation;
-}
-
-.fullscreen-btn:active {
-    transform: scale(.92);
-}
-
-/* INFO */
-
-.info {
-    padding: 14px;
-    background: #0b0b0b;
-    color: #fff;
-}
-
-.title {
-    font-size: 18px;
-    font-weight: 700;
-}
-
-.subtitle {
-    margin-top: 5px;
-    color: #888;
-    font-size: 13px;
-}
-
-/* FULLSCREEN */
-
-.video-box:fullscreen {
-    width: 100vw !important;
-    height: 100vh !important;
-
-    max-width: none !important;
-    aspect-ratio: auto !important;
-
-    background: #000;
-}
-
-.video-box:fullscreen iframe {
-    width: 100vw !important;
-    height: 100vh !important;
-}
-
-/* WEBKIT */
-
-.video-box:-webkit-full-screen {
-    width: 100vw !important;
-    height: 100vh !important;
-    background: #000;
-}
-
-.video-box:-webkit-full-screen iframe {
-    width: 100vw !important;
-    height: 100vh !important;
-}
-
-/* MOBILE */
-
-@media (max-width: 600px) {
-
-    .player {
-        width: 100vw;
-    }
-
-    .video-box {
-        width: 100vw;
-    }
-
-    .fullscreen-btn {
-        width: 42px;
-        height: 42px;
-
-        right: 9px;
-        bottom: 9px;
-    }
-
-    .info {
-        padding: 12px;
-    }
-
-    .title {
-        font-size: 16px;
-    }
-}
-
-/* LANDSCAPE */
-
-@media (
-    max-width: 950px
-) and (
-    orientation: landscape
-) {
-
-    body {
-        width: 100vw;
-        height: 100vh;
-    }
-
-    .player {
-        width: 100vw;
-        height: 100vh;
-    }
-
-    .video-box {
-        width: 100vw;
-        height: 100vh;
-        aspect-ratio: auto;
-    }
-
-    .video-box iframe {
-        width: 100vw;
-        height: 100vh;
-    }
-
-    .info {
-        display: none;
-    }
+@media(max-width:430px){
+  .brand{font-size:17px}
+  .btn{padding:11px 12px}
+  .lives{letter-spacing:1px;font-size:13px}
 }
 </style>
 </head>
-
 <body>
 
-<div class="player">
+<div id="toast"></div>
 
-    <div
-        class="video-box"
-        id="videoBox"
-    >
+<!-- AUTH -->
+<section id="auth-screen" class="auth-screen">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="logo-icon"><img src="python.png" alt="logo"></div>
+      <h1 data-i18n="brandTitle">Teach <span style="color:var(--primary)">vs</span> Code</h1>
+      <p class="auth-sub" data-i18n="tagline">Learn coding one question at a time.</p>
 
-        <!-- ORIGINAL OK.RU PLAYER -->
+      <div class="auth-tabs">
+        <button id="tab-login" class="active"><i class="fas fa-right-to-bracket"></i> <span data-i18n="login">Login</span></button>
+        <button id="tab-signup"><i class="fas fa-user-plus"></i> <span data-i18n="signup">Sign Up</span></button>
+      </div>
 
-        <iframe
-            id="okPlayer"
-            src="https://ok.ru/videoembed/10478943930903"
-            title="OK.ru Video"
-            allow="
-                autoplay;
-                fullscreen;
-                picture-in-picture;
-                encrypted-media
-            "
-            allowfullscreen
-            webkitallowfullscreen
-            mozallowfullscreen
-        ></iframe>
+      <div id="login-box">
+        <div class="input-wrap"><i class="fas fa-envelope"></i><input class="input" id="login-email" type="email" data-i18n-ph="emailPh" placeholder="Email"></div>
+        <div class="input-wrap"><i class="fas fa-lock"></i><input class="input" id="login-password" type="password" data-i18n-ph="passwordPh" placeholder="Password"></div>
+        <button class="btn btn-primary btn-block" id="btn-login"><i class="fas fa-right-to-bracket"></i> <span data-i18n="login">Login</span></button>
+      </div>
 
-
-        <!-- TV LABEL -->
-
-        <div class="tv-label">
-            <span class="dot"></span>
-            TV
+      <div id="signup-box" class="hidden">
+        <div class="input-wrap"><i class="fas fa-user"></i><input class="input" id="signup-username" data-i18n-ph="usernamePh" placeholder="Username"></div>
+        <div id="turnstile-box">
+          <div class="cf-turnstile" data-sitekey="0x4AAAAAAEpAAZmzUIJkfhEj" data-callback="onTurnstileOk" data-expired-callback="onTurnstileExpired"></div>
         </div>
+        <div class="input-wrap"><i class="fas fa-envelope"></i><input class="input" id="signup-email" type="email" data-i18n-ph="emailPh" placeholder="Email"></div>
+        <div class="input-wrap"><i class="fas fa-lock"></i><input class="input" id="signup-password" type="password" data-i18n-ph="passwordMinPh" placeholder="Password — minimum 8 characters"></div>
+        <button class="btn btn-primary btn-block" id="btn-signup" disabled><i class="fas fa-paper-plane"></i> <span data-i18n="createAccount">Create Account</span></button>
+        <p class="setting-desc" id="turnstile-hint" data-i18n="turnstileHint" style="text-align:center;margin-top:8px">Please complete the verification above to continue.</p>
+      </div>
 
-
-        <!-- FULLSCREEN -->
-
-        <button
-            id="fullscreenBtn"
-            class="fullscreen-btn"
-            type="button"
-            aria-label="Fullscreen"
-        >
-            ⛶
-        </button>
-
-    </div>
-
-
-    <div class="info">
-
-        <div class="title">
-            Azobli muhabbat
-        </div>
-
-        <div class="subtitle">
-            OK.ru • Responsive TV Player
-        </div>
-
-    </div>
-
+  <div id="verify-box" class="hidden">
+  <div class="info-text" style="color: var(--muted); font-size: 13px; margin-bottom: 12px;" data-i18n="codeSentInfo">
+    Verification code has been sent to your email address.
+  </div>
+  <div class="input-wrap">
+    <i class="fas fa-shield-halved"></i>
+    <input class="input" id="verify-code" maxlength="6" data-i18n-ph="codePh" placeholder="Enter 6-digit code">
+  </div>
+  <button class="btn btn-success btn-block" id="btn-verify">
+    <i class="fas fa-circle-check"></i> 
+    <span data-i18n="verifyAccount">Verify Account</span>
+  </button>
 </div>
 
+      <p class="error" id="auth-error"></p>
+
+      <div class="auth-links">
+        <a class="btn" href="https://t.me/abuzzy_uz" target="_blank"><i class="fab fa-telegram"></i> <span data-i18n="join">Join</span></a>
+        <button class="btn" id="auth-about"><i class="fas fa-circle-info"></i> <span data-i18n="aboutUs">About Us</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APP -->
+<div id="app-screen" class="hidden">
+  <header class="topbar">
+    <div class="brand"><img src="logo.png" alt="logo"> Teach <span>vs</span> Code</div>
+    <nav class="nav">
+      <button data-view="dashboard" class="active"><i class="fas fa-house"></i> <span data-i18n="navHome">Home</span></button>
+      <button data-view="languages"><i class="fas fa-laptop-code"></i> <span data-i18n="navCourses">Courses</span></button>
+      <button data-view="profile"><i class="fas fa-user"></i> <span data-i18n="navProfile">Profile</span></button>
+      <button data-view="about"><i class="fas fa-circle-info"></i> <span data-i18n="navAbout">About</span></button>
+      <button data-view="settings"><i class="fas fa-gear"></i> <span data-i18n="navSettings">Settings</span></button>
+    </nav>
+    <div class="top-stats">
+      <div class="stat-pill"><i class="fas fa-fire" style="color:#f97316"></i> <span id="top-streak">0</span></div>
+      <div class="stat-pill"><i class="fas fa-star" style="color:#f59e0b"></i> <span id="top-xp">0</span></div>
+      <button class="btn" id="btn-logout"><i class="fas fa-right-from-bracket"></i></button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section id="view-dashboard" class="view active">
+      <div class="hero">
+        <h1><span id="welcome-text" data-i18n="welcome">Welcome back</span>, <span id="dash-name">Coder</span></h1>
+        <p class="muted" data-i18n="tagline">Learn coding one question at a time.</p>
+      </div>
+      <div class="dashboard-grid">
+        <div class="card continue-card">
+          <div>
+            <div class="course-label">
+              <div class="course-icon"><i id="continue-icon" class="fas fa-code"></i></div>
+              <div><div class="muted" data-i18n="continueLearning">Continue learning</div><h2 id="continue-label">HTML</h2></div>
+            </div>
+            <div class="progress"><div id="continue-progress" class="progress-bar"></div></div>
+            <div class="progress-info"><span id="continue-progress-text">0%</span><span data-i18n="xpGoal">100 XP course goal</span></div>
+          </div>
+          <button class="btn btn-primary btn-block" id="btn-continue"><i class="fas fa-play"></i> <span data-i18n="continueBtn">Continue Learning</span></button>
+        </div>
+        <div class="card">
+          <h2><i class="fas fa-chart-line"></i> <span data-i18n="yourProgress">Your Progress</span></h2>
+          <div class="stats-grid">
+            <div class="mini-stat"><i class="fas fa-star"></i><div class="mini-stat-label" data-i18n="xp">XP</div><div id="dash-xp" class="mini-stat-value">0</div></div>
+            <div class="mini-stat"><i class="fas fa-book-open"></i><div class="mini-stat-label" data-i18n="lessons">Lessons</div><div id="dash-lessons" class="mini-stat-value">0</div></div>
+            <div class="mini-stat"><i class="fas fa-bullseye"></i><div class="mini-stat-label" data-i18n="accuracy">Accuracy</div><div id="dash-accuracy" class="mini-stat-value">0%</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-languages" class="view">
+      <div class="hero"><h1 data-i18n="chooseCourse">Choose your course</h1><p class="muted" id="courses-sub" data-i18n="everyCourseHas">Every course contains 290+ questions.</p></div>
+      <div id="lang-grid" class="lang-grid"></div>
+    </section>
+
+    <section id="view-quiz" class="view">
+      <div class="quiz-header">
+        <button class="btn" id="btn-back"><i class="fas fa-arrow-left"></i></button>
+        <div class="progress"><div id="quiz-progress" class="progress-bar"></div></div>
+        <div class="quiz-count" id="quiz-count">1 / 90</div>
+        <div class="lives" id="quiz-lives"></div>
+      </div>
+      <div class="quiz-grid">
+        <div class="card mascot-card">
+          <div class="mascot-icon" id="mascot-icon"><i class="fas fa-code"></i></div>
+          <div class="bubble" id="mascot-bubble">Ready to code?</div>
+        </div>
+        <div class="card quiz-card">
+          <div class="badge" id="quiz-lang">HTML</div>
+          <h2 class="question" id="question-text">Question</h2>
+          <div id="answers" class="answers"></div>
+          <div id="feedback" class="feedback hidden">
+            <h3 id="feedback-title" class="feedback-title">Correct!</h3>
+            <p id="feedback-text" class="feedback-text"></p>
+            <button id="btn-next" class="btn btn-primary btn-block"><i class="fas fa-arrow-right"></i> <span data-i18n="continueBtnShort">Continue</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-results" class="view">
+      <div class="card result-card">
+        <div class="result-icon"><i class="fas fa-trophy"></i></div>
+        <h1 data-i18n="lessonComplete">Lesson Complete!</h1>
+        <div class="result-xp" id="result-xp">+0 XP</div>
+        <div class="result-stats">
+          <div class="mini-stat"><div class="mini-stat-label" data-i18n="correct">Correct</div><div class="mini-stat-value" id="result-correct">0/0</div></div>
+          <div class="mini-stat"><div class="mini-stat-label" data-i18n="accuracy">Accuracy</div><div class="mini-stat-value" id="result-accuracy">0%</div></div>
+          <div class="mini-stat"><div class="mini-stat-label" data-i18n="xp">XP</div><div class="mini-stat-value" id="result-total-xp">0</div></div>
+        </div>
+        <button class="btn btn-primary btn-block" id="btn-play-again"><i class="fas fa-rotate-right"></i> <span data-i18n="playAgain">Play Again</span></button>
+        <br>
+        <button class="btn btn-block" id="btn-change-lang"><i class="fas fa-code-branch"></i> <span data-i18n="changeCourse">Change Course</span></button>
+      </div>
+    </section>
+
+    <section id="view-gameover" class="view">
+      <div class="card result-card">
+        <div class="result-icon"><i class="fas fa-heart-crack"></i></div>
+        <h1 data-i18n="outOfLives">Out of lives</h1>
+        <p class="muted" data-i18n="dontWorry">Don't worry. Practice makes progress.</p>
+        <br>
+        <button class="btn btn-primary btn-block" id="btn-try-again"><i class="fas fa-rotate-right"></i> <span data-i18n="tryAgain">Try Again</span></button>
+        <br>
+        <button class="btn btn-block" id="btn-back-lang"><i class="fas fa-arrow-left"></i> <span data-i18n="backToCourses">Back to Courses</span></button>
+      </div>
+    </section>
+
+    <section id="view-profile" class="view">
+      <div class="card profile-card">
+        <div class="profile-head">
+          <div class="profile-avatar"><i class="fas fa-user"></i></div>
+          <div><h1 id="profile-name">Coder</h1><div class="muted" id="profile-email">email</div></div>
+        </div>
+        <br>
+        <div class="stats-grid">
+          <div class="mini-stat"><i class="fas fa-star"></i><div class="mini-stat-label" data-i18n="xp">XP</div><div id="profile-xp" class="mini-stat-value">0</div></div>
+          <div class="mini-stat"><i class="fas fa-fire"></i><div class="mini-stat-label" data-i18n="streak">Streak</div><div id="profile-streak" class="mini-stat-value">0</div></div>
+          <div class="mini-stat"><i class="fas fa-book"></i><div class="mini-stat-label" data-i18n="lessons">Lessons</div><div id="profile-lessons" class="mini-stat-value">0</div></div>
+        </div>
+        <br>
+        <a href="https://t.me/abuzzy_uz" target="_blank" class="btn btn-primary"><i class="fab fa-telegram"></i> <span data-i18n="joinTelegram">Join Telegram</span></a>
+      </div>
+    </section>
+
+    <section id="view-about" class="view">
+      <div class="card about-card">
+        <div class="about-hero">
+          <div class="about-hero-icon"><img src="logo.png" alt="logo"></div>
+          <h1 data-i18n="aboutTitle">About Teach vs Code</h1>
+          <p class="muted" data-i18n="aboutSub">A simple interactive platform for learning programming.</p>
+        </div>
+        <div class="feature-grid">
+          <div class="feature"><i class="fas fa-circle-question"></i><h3 id="feat1-title" data-i18n="feat1Title">1450+ Questions</h3><p data-i18n="feat1Text">Learn HTML, CSS, JavaScript, Python and Java through interactive questions.</p></div>
+          <div class="feature"><i class="fas fa-chart-line"></i><h3 data-i18n="feat2Title">Track Progress</h3><p data-i18n="feat2Text">XP, lessons, accuracy and language progress are saved locally.</p></div>
+          <div class="feature"><i class="fas fa-mobile-screen-button"></i><h3 data-i18n="feat3Title">Every Device</h3><p data-i18n="feat3Text">The interface is optimized for desktop, tablet and mobile screens.</p></div>
+        </div>
+        <br>
+        <div class="card">
+          <h2><i class="fas fa-users"></i> <span data-i18n="ourMission">Our Mission</span></h2>
+          <p class="muted" style="line-height:1.7" data-i18n="missionText">Teach vs Code is designed to make programming easier to start. Instead of overwhelming beginners with huge lessons, the platform breaks learning into small questions and immediate feedback.</p>
+          <a href="https://t.me/abuzzy_uz" target="_blank" class="btn btn-primary"><i class="fab fa-telegram"></i> <span data-i18n="joinCommunity">Join Community</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-settings" class="view">
+      <div class="card settings-card">
+        <h1><i class="fas fa-gear"></i> <span data-i18n="navSettings">Settings</span></h1>
+        <div class="setting">
+          <div><div class="setting-title" data-i18n="interfaceLang">Interface Language</div><div class="setting-desc" data-i18n="interfaceLangDesc">English, Russian or Uzbek.</div></div>
+          <select id="ui-language" class="select">
+            <option value="en">English</option>
+            <option value="ru">Русский</option>
+            <option value="uz">O‘zbekcha</option>
+          </select>
+        </div>
+        <div class="setting">
+          <div><div class="setting-title" data-i18n="appearance">Appearance</div><div class="setting-desc" data-i18n="appearanceDesc">Switch between light and dark interface.</div></div>
+          <button class="btn" id="theme-toggle"><i class="fas fa-moon"></i> <span data-i18n="theme">Theme</span></button>
+        </div>
+        <div class="setting">
+          <div><div class="setting-title" data-i18n="telegram">Telegram</div><div class="setting-desc" data-i18n="telegramDesc">Join the Teach vs Code community.</div></div>
+          <a href="https://t.me/abuzzy_uz" target="_blank" class="btn"><i class="fab fa-telegram"></i> <span data-i18n="join">Join</span></a>
+        </div>
+        <div class="setting">
+          <div><div class="setting-title" data-i18n="resetProgress">Reset Progress</div><div class="setting-desc" data-i18n="resetProgressDesc">Delete XP, lessons and course progress.</div></div>
+          <button class="btn btn-danger" id="btn-reset"><i class="fas fa-trash"></i> <span data-i18n="reset">Reset</span></button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
 
 <script>
+"use strict";
 
-const videoBox =
-    document.getElementById("videoBox");
+/* =========================================================
+   CONFIG — plug in your own keys for real email sending.
+   If left blank, the app falls back to showing the demo
+   code on screen (works fully offline, no account needed).
+========================================================= */
+const EMAILJS_CONFIG = {
+  PUBLIC_KEY: "FskoiHCDqqUV43tRI",   // e.g. "AbCdEfGhIjKlMn"
+  SERVICE_ID: "service_r7108uh",   // e.g. "service_xxx"
+  TEMPLATE_ID: "template_2hi7cps"   // template must expose {{to_email}} and {{code}}
+};
+const EMAILJS_ENABLED = !!(EMAILJS_CONFIG.PUBLIC_KEY && EMAILJS_CONFIG.SERVICE_ID && EMAILJS_CONFIG.TEMPLATE_ID);
+if (EMAILJS_ENABLED && window.emailjs) { emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY); }
 
-const fullscreenBtn =
-    document.getElementById("fullscreenBtn");
+const STORE_KEY = "teach_vs_code_world_v5";
+const QUESTIONS_PER_COURSE = 290;
 
+/* =========================================================
+   FULL UI TRANSLATIONS (EN / RU / UZ)
+========================================================= */
+const I18N = {
+en:{
+  brandTitle:"Teach vs Code", tagline:"Learn coding one question at a time.",
+  login:"Login", signup:"Sign Up", createAccount:"Create Account",
+  emailPh:"Email", passwordPh:"Password", usernamePh:"Username",
+  passwordMinPh:"Password — minimum 8 characters", codePh:"Enter 6-digit code",
+  verifyAccount:"Verify Account", demoCodeLabel:"Demo verification code",
+  join:"Join", aboutUs:"About Us", turnstileHint:"Please complete the verification above to continue.",
+  navHome:"Home", navCourses:"Courses", navProfile:"Profile", navAbout:"About", navSettings:"Settings",
+  welcome:"Welcome back", continueLearning:"Continue learning", xpGoal:"100 XP course goal",
+  continueBtn:"Continue Learning", continueBtnShort:"Continue", yourProgress:"Your Progress",
+  xp:"XP", lessons:"Lessons", accuracy:"Accuracy", streak:"Streak",
+  chooseCourse:"Choose your course", everyCourseHas:`Every course contains ${QUESTIONS_PER_COURSE}+ questions.`,
+  lessonComplete:"Lesson Complete!", correct:"Correct!", playAgain:"Play Again", changeCourse:"Change Course",
+  outOfLives:"Out of lives", dontWorry:"Don't worry. Practice makes progress.", tryAgain:"Try Again", backToCourses:"Back to Courses",
+  joinTelegram:"Join Telegram", aboutTitle:"About Teach vs Code", aboutSub:"A simple interactive platform for learning programming.",
+  feat1Title:"1450+ Questions", feat1Text:"Learn HTML, CSS, JavaScript, Python and Java through interactive questions.",
+  feat2Title:"Track Progress", feat2Text:"XP, lessons, accuracy and language progress are saved locally.",
+  feat3Title:"Every Device", feat3Text:"The interface is optimized for desktop, tablet and mobile screens.",
+  ourMission:"Our Mission", missionText:"Teach vs Code is designed to make programming easier to start. Instead of overwhelming beginners with huge lessons, the platform breaks learning into small questions and immediate feedback.",
+  joinCommunity:"Join Community", interfaceLang:"Interface Language", interfaceLangDesc:"English, Russian or Uzbek.",
+  appearance:"Appearance", appearanceDesc:"Switch between light and dark interface.", theme:"Theme",
+  telegram:"Telegram", telegramDesc:"Join the Teach vs Code community.",
+  resetProgress:"Reset Progress", resetProgressDesc:"Delete XP, lessons and course progress.", reset:"Reset",
+  ready:"Ready to code?", wrong:"Not quite!",
+  needFill:"Please fill all fields.", shortPassword:"Password must be at least 8 characters.",
+  invalidLogin:"Invalid email or password.", accountExists:"An account with this email already exists.",
+  verificationCreated:"Verification code created.", verificationSent:"Verification code sent to your email.",
+  verified:"Account created successfully.", invalidCode:"Invalid verification code.",
+  loggedIn:"Logged in successfully.", loggedOut:"Logged out successfully.", resetDone:"Progress reset successfully.",
+  needTurnstile:"Please complete the verification widget.", langChanged:"Language changed.",
+  insufficientQ:"has insufficient questions.", questionsSuffix:"questions"
+},
+ru:{
+  brandTitle:"Teach vs Code", tagline:"Изучай программирование по одному вопросу.",
+  login:"Войти", signup:"Регистрация", createAccount:"Создать аккаунт",
+  emailPh:"Email", passwordPh:"Пароль", usernamePh:"Имя пользователя",
+  passwordMinPh:"Пароль — минимум 8 символов", codePh:"Введите 6-значный код",
+  verifyAccount:"Подтвердить аккаунт", demoCodeLabel:"Демо-код подтверждения",
+  join:"Присоединиться", aboutUs:"О нас", turnstileHint:"Пожалуйста, пройдите проверку выше, чтобы продолжить.",
+  navHome:"Главная", navCourses:"Курсы", navProfile:"Профиль", navAbout:"О нас", navSettings:"Настройки",
+  welcome:"С возвращением", continueLearning:"Продолжить обучение", xpGoal:"Цель курса — 100 XP",
+  continueBtn:"Продолжить обучение", continueBtnShort:"Далее", yourProgress:"Ваш прогресс",
+  xp:"XP", lessons:"Уроки", accuracy:"Точность", streak:"Серия",
+  chooseCourse:"Выберите курс", everyCourseHas:`Каждый курс содержит ${QUESTIONS_PER_COURSE}+ вопросов.`,
+  lessonComplete:"Урок завершён!", correct:"Правильно!", playAgain:"Играть снова", changeCourse:"Сменить курс",
+  outOfLives:"Жизни закончились", dontWorry:"Не расстраивайтесь. Практика ведёт к прогрессу.", tryAgain:"Попробовать снова", backToCourses:"К курсам",
+  joinTelegram:"Присоединиться в Telegram", aboutTitle:"О Teach vs Code", aboutSub:"Простая интерактивная платформа для изучения программирования.",
+  feat1Title:"1450+ вопросов", feat1Text:"Изучайте HTML, CSS, JavaScript, Python и Java через интерактивные вопросы.",
+  feat2Title:"Отслеживание прогресса", feat2Text:"XP, уроки, точность и прогресс по языкам сохраняются локально.",
+  feat3Title:"Любое устройство", feat3Text:"Интерфейс оптимизирован для компьютера, планшета и телефона.",
+  ourMission:"Наша миссия", missionText:"Teach vs Code создан, чтобы упростить старт в программировании. Вместо больших сложных уроков платформа разбивает обучение на маленькие вопросы с мгновенной обратной связью.",
+  joinCommunity:"Присоединиться к сообществу", interfaceLang:"Язык интерфейса", interfaceLangDesc:"Английский, русский или узбекский.",
+  appearance:"Внешний вид", appearanceDesc:"Переключение между светлой и тёмной темой.", theme:"Тема",
+  telegram:"Telegram", telegramDesc:"Присоединяйтесь к сообществу Teach vs Code.",
+  resetProgress:"Сбросить прогресс", resetProgressDesc:"Удалить XP, уроки и прогресс по курсам.", reset:"Сбросить",
+  ready:"Готов кодить?", wrong:"Не совсем!",
+  needFill:"Заполните все поля.", shortPassword:"Пароль должен содержать минимум 8 символов.",
+  invalidLogin:"Неверный email или пароль.", accountExists:"Аккаунт с таким email уже существует.",
+  verificationCreated:"Код подтверждения создан.", verificationSent:"Код подтверждения отправлен на вашу почту.",
+  verified:"Аккаунт успешно создан.", invalidCode:"Неверный код подтверждения.",
+  loggedIn:"Вход выполнен.", loggedOut:"Вы вышли из аккаунта.", resetDone:"Прогресс успешно сброшен.",
+  needTurnstile:"Пожалуйста, пройдите проверку.", langChanged:"Язык изменён.",
+  insufficientQ:"недостаточно вопросов.", questionsSuffix:"вопросов"
+},
+uz:{
+  brandTitle:"Teach vs Code", tagline:"Har bir savol bilan dasturlashni o‘rganing.",
+  login:"Kirish", signup:"Ro‘yxatdan o‘tish", createAccount:"Akkaunt yaratish",
+  emailPh:"Email", passwordPh:"Parol", usernamePh:"Foydalanuvchi nomi",
+  passwordMinPh:"Parol — kamida 8 ta belgi", codePh:"6 xonali kodni kiriting",
+  verifyAccount:"Akkauntni tasdiqlash", demoCodeLabel:"Demo tasdiqlash kodi",
+  join:"Qo‘shilish", aboutUs:"Biz haqimizda", turnstileHint:"Davom etish uchun yuqoridagi tekshiruvni bajaring.",
+  navHome:"Bosh sahifa", navCourses:"Kurslar", navProfile:"Profil", navAbout:"Biz haqimizda", navSettings:"Sozlamalar",
+  welcome:"Xush kelibsiz", continueLearning:"O‘qishni davom ettirish", xpGoal:"Kurs maqsadi — 100 XP",
+  continueBtn:"O‘qishni davom ettirish", continueBtnShort:"Davom etish", yourProgress:"Sizning progressingiz",
+  xp:"XP", lessons:"Darslar", accuracy:"Aniqlik", streak:"Ketma-ketlik",
+  chooseCourse:"Kursni tanlang", everyCourseHas:`Har bir kursda ${QUESTIONS_PER_COURSE}+ savol bor.`,
+  lessonComplete:"Dars tugadi!", correct:"To‘g‘ri!", playAgain:"Qayta o‘ynash", changeCourse:"Kursni almashtirish",
+  outOfLives:"Jonlar tugadi", dontWorry:"Xavotir olmang. Mashq — muvaffaqiyat kaliti.", tryAgain:"Qayta urinish", backToCourses:"Kurslarga qaytish",
+  joinTelegram:"Telegramga qo‘shilish", aboutTitle:"Teach vs Code haqida", aboutSub:"Dasturlashni o‘rganish uchun oddiy interaktiv platforma.",
+  feat1Title:"1450+ savol", feat1Text:"HTML, CSS, JavaScript, Python va Java'ni interaktiv savollar orqali o‘rganing.",
+  feat2Title:"Progressni kuzatish", feat2Text:"XP, darslar, aniqlik va til bo‘yicha progress lokal saqlanadi.",
+  feat3Title:"Har qanday qurilma", feat3Text:"Interfeys kompyuter, planshet va telefon uchun moslashtirilgan.",
+  ourMission:"Bizning maqsadimiz", missionText:"Teach vs Code dasturlashni boshlashni osonlashtirish uchun yaratilgan. Katta og‘ir darslar o‘rniga platforma o‘quvni kichik savollar va tezkor fikr-mulohazaga bo‘lib beradi.",
+  joinCommunity:"Jamiyatga qo‘shilish", interfaceLang:"Interfeys tili", interfaceLangDesc:"Ingliz, rus yoki o‘zbek tili.",
+  appearance:"Ko‘rinish", appearanceDesc:"Yorug‘ va qorong‘i tema o‘rtasida almashtirish.", theme:"Tema",
+  telegram:"Telegram", telegramDesc:"Teach vs Code jamiyatiga qo‘shiling.",
+  resetProgress:"Progressni tozalash", resetProgressDesc:"XP, darslar va kurs progressini o‘chirish.", reset:"Tozalash",
+  ready:"Kod yozishga tayyormisiz?", wrong:"Unchalik emas!",
+  needFill:"Barcha maydonlarni to‘ldiring.", shortPassword:"Parol kamida 8 ta belgidan iborat bo‘lishi kerak.",
+  invalidLogin:"Email yoki parol noto‘g‘ri.", accountExists:"Bu email bilan akkaunt allaqachon mavjud.",
+  verificationCreated:"Tasdiqlash kodi yaratildi.", verificationSent:"Tasdiqlash kodi elektron pochtangizga yuborildi.",
+  verified:"Akkaunt muvaffaqiyatli yaratildi.", invalidCode:"Tasdiqlash kodi noto‘g‘ri.",
+  loggedIn:"Kirish muvaffaqiyatli.", loggedOut:"Akkauntdan chiqildi.", resetDone:"Progress muvaffaqiyatli tozalandi.",
+  needTurnstile:"Iltimos, tekshiruvni bajaring.", langChanged:"Til o‘zgartirildi.",
+  insufficientQ:"savollar yetarli emas.", questionsSuffix:"savol"
+}
+};
 
-/* CHECK */
+let state = loadState();
+function defaultState(){ return { uiLang:"en", theme:"light", currentUser:null, users:[], pendingSignup:null, progress:{} }; }
+function loadState(){ try{ const raw=localStorage.getItem(STORE_KEY); if(!raw) return defaultState(); return Object.assign(defaultState(), JSON.parse(raw)); }catch{ return defaultState(); } }
+function saveState(){ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
 
-function isFullscreen() {
+const $ = id => document.getElementById(id);
+function t(key){ return (I18N[state.uiLang]?.[key]) ?? I18N.en[key] ?? key; }
+function localText(v){ if(typeof v==="string") return v; return v?.[state.uiLang] ?? v?.en ?? ""; }
 
-    return !!(
-        document.fullscreenElement ||
-        document.webkitFullscreenElement ||
-        document.mozFullScreenElement ||
-        document.msFullscreenElement
-    );
-
+function toast(message){
+  const el=$("toast"); el.textContent=message; el.classList.add("show");
+  clearTimeout(window.__toast);
+  window.__toast=setTimeout(()=>el.classList.remove("show"),2200);
 }
 
-
-/* LANDSCAPE */
-
-async function lockLandscape() {
-
-    try {
-
-        if (
-            screen.orientation &&
-            screen.orientation.lock
-        ) {
-
-            await screen.orientation.lock(
-                "landscape"
-            );
-
-        }
-
-    } catch (error) {
-
-        console.log(
-            "Landscape lock unavailable:",
-            error
-        );
-
-    }
-
+function shuffle(array){
+  const arr=[...array];
+  for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+  return arr;
 }
 
-
-/* UNLOCK */
-
-function unlockOrientation() {
-
-    try {
-
-        if (
-            screen.orientation &&
-            screen.orientation.unlock
-        ) {
-
-            screen.orientation.unlock();
-
-        }
-
-    } catch (error) {}
-
+function escapeHTML(value){
+  return String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
 }
 
-
-/* ENTER */
-
-async function enterFullscreen() {
-
-    try {
-
-        if (
-            videoBox.requestFullscreen
-        ) {
-
-            await videoBox.requestFullscreen({
-                navigationUI: "hide"
-            });
-
-        }
-
-        else if (
-            videoBox.webkitRequestFullscreen
-        ) {
-
-            videoBox.webkitRequestFullscreen();
-
-        }
-
-        else if (
-            videoBox.mozRequestFullScreen
-        ) {
-
-            videoBox.mozRequestFullScreen();
-
-        }
-
-        else if (
-            videoBox.msRequestFullscreen
-        ) {
-
-            videoBox.msRequestFullscreen();
-
-        }
-
-        await lockLandscape();
-
-    }
-
-    catch (error) {
-
-        console.log(
-            "Fullscreen error:",
-            error
-        );
-
-    }
-
+/* Apply translations to every element carrying data-i18n / data-i18n-ph */
+function applyI18n(){
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    el.textContent = t(el.getAttribute("data-i18n"));
+  });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el=>{
+    el.setAttribute("placeholder", t(el.getAttribute("data-i18n-ph")));
+  });
+  document.documentElement.lang = state.uiLang;
 }
 
+/* =========================================================
+   COURSES
+========================================================= */
+const LANGS = {
+  html:{ name:"HTML", icon:"fa-brands fa-html5" },
+  css:{ name:"CSS", icon:"fa-brands fa-css3-alt" },
+  javascript:{ name:"JavaScript", icon:"fa-brands fa-js" },
+  python:{ name:"Python", icon:"fa-brands fa-python" },
+  java:{ name:"Java", icon:"fa-brands fa-java" }
+};
 
-/* EXIT */
-
-async function exitFullscreen() {
-
-    try {
-
-        if (
-            document.exitFullscreen
-        ) {
-
-            await document.exitFullscreen();
-
-        }
-
-        else if (
-            document.webkitExitFullscreen
-        ) {
-
-            document.webkitExitFullscreen();
-
-        }
-
-        else if (
-            document.mozCancelFullScreen
-        ) {
-
-            document.mozCancelFullScreen();
-
-        }
-
-        else if (
-            document.msExitFullscreen
-        ) {
-
-            document.msExitFullscreen();
-
-        }
-
-    } catch (error) {}
-
-    unlockOrientation();
-
+function q(question, options, correct, explanation){
+  return { q:question, options:options, correct:correct, explain:explanation };
 }
 
+/* Curated multilingual core questions per course (real, hand-written, not templated) */
+const CORE = {
+html:[
+  q({en:"Which tag creates a paragraph?",ru:"Какой тег создаёт абзац?",uz:"Qaysi teg paragraf yaratadi?"},{en:["<div>","<p>","<span>","<section>"],ru:["<div>","<p>","<span>","<section>"],uz:["<div>","<p>","<span>","<section>"]},1,{en:"The <p> element represents a paragraph.",ru:"Элемент <p> обозначает абзац.",uz:"<p> elementi paragrafni bildiradi."}),
+  q({en:"Which tag creates the largest heading?",ru:"Какой тег создаёт самый большой заголовок?",uz:"Eng katta sarlavhani qaysi teg yaratadi?"},{en:["<h6>","<head>","<h1>","<title>"],ru:["<h6>","<head>","<h1>","<title>"],uz:["<h6>","<head>","<h1>","<title>"]},2,{en:"<h1> is the highest-level heading.",ru:"<h1> — заголовок самого высокого уровня.",uz:"<h1> eng yuqori darajadagi sarlavha."}),
+  q({en:"Which tag creates a hyperlink?",ru:"Какой тег создаёт гиперссылку?",uz:"Qaysi teg giperhavola yaratadi?"},{en:["<a>","<link>","<url>","<href>"],ru:["<a>","<link>","<url>","<href>"],uz:["<a>","<link>","<url>","<href>"]},0,{en:"The <a> element creates links.",ru:"Элемент <a> создаёт ссылки.",uz:"<a> elementi havola yaratadi."}),
+  q({en:"Which attribute specifies the destination of a link?",ru:"Какой атрибут указывает адрес ссылки?",uz:"Havola manzilini qaysi atribut belgilaydi?"},{en:["src","href","link","url"],ru:["src","href","link","url"],uz:["src","href","link","url"]},1,{en:"The href attribute contains the link destination.",ru:"Атрибут href содержит адрес назначения.",uz:"href atributi havola manzilini saqlaydi."}),
+  q({en:"Which tag inserts an image?",ru:"Какой тег вставляет изображение?",uz:"Qaysi teg rasm joylashtiradi?"},{en:["<picture>","<img>","<image>","<src>"],ru:["<picture>","<img>","<image>","<src>"],uz:["<picture>","<img>","<image>","<src>"]},1,{en:"The <img> element embeds an image.",ru:"<img> вставляет изображение.",uz:"<img> elementi rasmni joylashtiradi."}),
+  q({en:"Which attribute provides alternative text for an image?",ru:"Какой атрибут задаёт альтернативный текст изображения?",uz:"Rasm uchun alternativ matnni qaysi atribut beradi?"},{en:["title","alt","text","description"],ru:["title","alt","text","description"],uz:["title","alt","text","description"]},1,{en:"The alt attribute provides alternative text.",ru:"Атрибут alt задаёт альтернативный текст.",uz:"alt atributi alternativ matn beradi."}),
+  q({en:"Which tag creates an unordered list?",ru:"Какой тег создаёт маркированный список?",uz:"Qaysi teg tartibsiz ro‘yxat yaratadi?"},{en:["<ol>","<ul>","<li>","<list>"],ru:["<ol>","<ul>","<li>","<list>"],uz:["<ol>","<ul>","<li>","<list>"]},1,{en:"<ul> creates an unordered list.",ru:"<ul> создаёт маркированный список.",uz:"<ul> tartibsiz ro‘yxat yaratadi."}),
+  q({en:"Which tag creates an ordered list?",ru:"Какой тег создаёт нумерованный список?",uz:"Qaysi teg tartibli ro‘yxat yaratadi?"},{en:["<ul>","<ol>","<li>","<list>"],ru:["<ul>","<ol>","<li>","<list>"],uz:["<ul>","<ol>","<li>","<list>"]},1,{en:"<ol> creates an ordered list.",ru:"<ol> создаёт нумерованный список.",uz:"<ol> tartibli ro‘yxat yaratadi."}),
+  q({en:"Which tag defines the document body?",ru:"Какой тег определяет тело документа?",uz:"Hujjat tanasini qaysi teg belgilaydi?"},{en:["<body>","<main>","<document>","<content>"],ru:["<body>","<main>","<document>","<content>"],uz:["<body>","<main>","<document>","<content>"]},0,{en:"<body> contains the visible page content.",ru:"<body> содержит видимое содержимое страницы.",uz:"<body> ko‘rinadigan sahifa tarkibini saqlaydi."}),
+  q({en:"Which tag sets the browser page title?",ru:"Какой тег задаёт заголовок страницы браузера?",uz:"Brauzer sahifasi sarlavhasini qaysi teg belgilaydi?"},{en:["<heading>","<title>","<h1>","<name>"],ru:["<heading>","<title>","<h1>","<name>"],uz:["<heading>","<title>","<h1>","<name>"]},1,{en:"<title> defines the document title.",ru:"<title> задаёт заголовок документа.",uz:"<title> hujjat sarlavhasini belgilaydi."}),
+  q({en:"Which tag creates a table?",ru:"Какой тег создаёт таблицу?",uz:"Qaysi teg jadval yaratadi?"},{en:["<table>","<tab>","<grid>","<data>"],ru:["<table>","<tab>","<grid>","<data>"],uz:["<table>","<tab>","<grid>","<data>"]},0,{en:"<table> defines a table.",ru:"<table> определяет таблицу.",uz:"<table> jadvalni belgilaydi."}),
+  q({en:"Which tag creates a form?",ru:"Какой тег создаёт форму?",uz:"Qaysi teg forma yaratadi?"},{en:["<form>","<input>","<fieldset>","<form-box>"],ru:["<form>","<input>","<fieldset>","<form-box>"],uz:["<form>","<input>","<fieldset>","<form-box>"]},0,{en:"<form> groups controls for submitting data.",ru:"<form> группирует элементы для отправки данных.",uz:"<form> ma’lumot yuborish elementlarini birlashtiradi."}),
+  q({en:"Which input type hides typed characters?",ru:"Какой тип input скрывает введённые символы?",uz:"Qaysi input turi kiritilgan belgilarni yashiradi?"},{en:["secret","hidden","password","private"],ru:["secret","hidden","password","private"],uz:["secret","hidden","password","private"]},2,{en:"type=\"password\" masks typed characters.",ru:"type=\"password\" скрывает вводимые символы.",uz:"type=\"password\" kiritilgan belgilarni yashiradi."}),
+  q({en:"Which semantic tag represents the main content?",ru:"Какой семантический тег обозначает основное содержимое?",uz:"Asosiy kontentni qaysi semantik teg bildiradi?"},{en:["<main>","<content>","<primary>","<body-main>"],ru:["<main>","<content>","<primary>","<body-main>"],uz:["<main>","<content>","<primary>","<body-main>"]},0,{en:"<main> identifies the primary page content.",ru:"<main> обозначает основное содержимое страницы.",uz:"<main> sahifaning asosiy kontentini bildiradi."}),
+  q({en:"Which semantic tag represents navigation links?",ru:"Какой тег обозначает навигацию?",uz:"Navigatsiyani qaysi semantik teg bildiradi?"},{en:["<navigation>","<nav>","<links>","<menu-links>"],ru:["<navigation>","<nav>","<links>","<menu-links>"],uz:["<navigation>","<nav>","<links>","<menu-links>"]},1,{en:"<nav> contains major navigation links.",ru:"<nav> содержит навигационные ссылки.",uz:"<nav> asosiy navigatsiya havolalarini saqlaydi."}),
+  q({en:"Which declaration specifies HTML5?",ru:"Какая декларация указывает HTML5?",uz:"HTML5 ni qaysi deklaratsiya bildiradi?"},{en:["<!HTML>","<!DOCTYPE html>","<doctype=5>","<!HTML5>"],ru:["<!HTML>","<!DOCTYPE html>","<doctype=5>","<!HTML5>"],uz:["<!HTML>","<!DOCTYPE html>","<doctype=5>","<!HTML5>"]},1,{en:"<!DOCTYPE html> activates standards mode for HTML.",ru:"<!DOCTYPE html> объявляет HTML-документ.",uz:"<!DOCTYPE html> HTML hujjatini standart rejimda ishlatadi."}),
+  q({en:"Which attribute assigns a unique identifier?",ru:"Какой атрибут задаёт уникальный идентификатор?",uz:"Noyob identifikatorni qaysi atribut beradi?"},{en:["class","id","name","key"],ru:["class","id","name","key"],uz:["class","id","name","key"]},1,{en:"The id attribute identifies an element uniquely.",ru:"id уникально идентифицирует элемент.",uz:"id elementni noyob aniqlaydi."}),
+  q({en:"Which tag contains embedded CSS?",ru:"Какой тег содержит встроенный CSS?",uz:"Ichki CSS ni qaysi teg saqlaydi?"},{en:["<css>","<style>","<stylesheet>","<design>"],ru:["<css>","<style>","<stylesheet>","<design>"],uz:["<css>","<style>","<stylesheet>","<design>"]},1,{en:"<style> contains CSS rules.",ru:"<style> содержит CSS-правила.",uz:"<style> CSS qoidalarini saqlaydi."}),
+  q({en:"Which tag contains JavaScript code?",ru:"Какой тег содержит JavaScript?",uz:"JavaScript kodini qaysi teg saqlaydi?"},{en:["<javascript>","<script>","<js>","<code>"],ru:["<javascript>","<script>","<js>","<code>"],uz:["<javascript>","<script>","<js>","<code>"]},1,{en:"<script> embeds or loads JavaScript.",ru:"<script> содержит или подключает JavaScript.",uz:"<script> JavaScript kodini joylaydi."}),
+  q({en:"Which element opens a link in a new tab?",ru:"Какое значение открывает ссылку в новой вкладке?",uz:"Havolani yangi oynada ochish uchun qaysi qiymat ishlatiladi?"},{en:["target=\"_self\"","target=\"_blank\"","target=\"new\"","target=\"tab\""],ru:["target=\"_self\"","target=\"_blank\"","target=\"new\"","target=\"tab\""],uz:["target=\"_self\"","target=\"_blank\"","target=\"new\"","target=\"tab\""]},1,{en:"target=\"_blank\" opens a link in a new browsing context.",ru:"target=\"_blank\" открывает ссылку в новом контексте.",uz:"target=\"_blank\" havolani yangi kontekstda ochadi."})
+],
+css:[
+  q({en:"What does CSS stand for?",ru:"Что означает CSS?",uz:"CSS nimani anglatadi?"},{en:["Cascading Style Sheets","Computer Style Sheets","Creative Style System","Color Style Syntax"],ru:["Cascading Style Sheets","Computer Style Sheets","Creative Style System","Color Style Syntax"],uz:["Cascading Style Sheets","Computer Style Sheets","Creative Style System","Color Style Syntax"]},0,{en:"CSS means Cascading Style Sheets.",ru:"CSS означает Cascading Style Sheets.",uz:"CSS Cascading Style Sheets degani."}),
+  q({en:"Which selector targets a class?",ru:"Какой селектор выбирает класс?",uz:"Classni qaysi selector tanlaydi?"},{en:["#box",".box","box","@box"],ru:["#box",".box","box","@box"],uz:["#box",".box","box","@box"]},1,{en:"A dot selects a class.",ru:"Точка выбирает класс.",uz:"Nuqta classni tanlaydi."}),
+  q({en:"Which selector targets an id?",ru:"Какой селектор выбирает id?",uz:"Idni qaysi selector tanlaydi?"},{en:[".box","#box","box","*box"],ru:[".box","#box","box","*box"],uz:[".box","#box","box","*box"]},1,{en:"A hash selects an id.",ru:"Решётка выбирает id.",uz:"# belgisi idni tanlaydi."}),
+  q({en:"Which property changes text color?",ru:"Какое свойство меняет цвет текста?",uz:"Matn rangini qaysi property o‘zgartiradi?"},{en:["font-color","color","text-color","foreground"],ru:["font-color","color","text-color","foreground"],uz:["font-color","color","text-color","foreground"]},1,{en:"color controls the foreground text color.",ru:"color задаёт цвет текста.",uz:"color matn rangini belgilaydi."}),
+  q({en:"Which property changes the background color?",ru:"Какое свойство меняет цвет фона?",uz:"Fon rangini qaysi property o‘zgartiradi?"},{en:["background-color","bg-color","color-background","background"],ru:["background-color","bg-color","color-background","background"],uz:["background-color","bg-color","color-background","background"]},0,{en:"background-color sets the background color.",ru:"background-color задаёт цвет фона.",uz:"background-color fon rangini belgilaydi."}),
+  q({en:"Which property changes font size?",ru:"Какое свойство меняет размер шрифта?",uz:"Shrift o‘lchamini qaysi property o‘zgartiradi?"},{en:["font-size","text-size","size","font-height"],ru:["font-size","text-size","size","font-height"],uz:["font-size","text-size","size","font-height"]},0,{en:"font-size controls the font size.",ru:"font-size управляет размером шрифта.",uz:"font-size shrift o‘lchamini boshqaradi."}),
+  q({en:"Which property makes text bold?",ru:"Какое свойство делает текст жирным?",uz:"Matnni qalin qiluvchi property qaysi?"},{en:["font-weight","text-bold","font-bold","weight"],ru:["font-weight","text-bold","font-bold","weight"],uz:["font-weight","text-bold","font-bold","weight"]},0,{en:"font-weight controls text weight.",ru:"font-weight управляет насыщенностью.",uz:"font-weight matn qalinligini boshqaradi."}),
+  q({en:"Which property adds space inside an element?",ru:"Какое свойство добавляет внутренний отступ?",uz:"Ichki bo‘shliqni qaysi property beradi?"},{en:["margin","padding","spacing","inside"],ru:["margin","padding","spacing","inside"],uz:["margin","padding","spacing","inside"]},1,{en:"padding is the inner spacing of an element.",ru:"padding — внутренний отступ.",uz:"padding elementning ichki bo‘shlig‘i."}),
+  q({en:"Which property adds space outside an element?",ru:"Какое свойство добавляет внешний отступ?",uz:"Tashqi bo‘shliqni qaysi property beradi?"},{en:["margin","padding","outside","gap"],ru:["margin","padding","outside","gap"],uz:["margin","padding","outside","gap"]},0,{en:"margin creates outer spacing.",ru:"margin создаёт внешний отступ.",uz:"margin tashqi bo‘shliq yaratadi."}),
+  q({en:"Which property rounds corners?",ru:"Какое свойство скругляет углы?",uz:"Burchaklarni qaysi property yumaloqlaydi?"},{en:["border-radius","corner-radius","round","radius"],ru:["border-radius","corner-radius","round","radius"],uz:["border-radius","corner-radius","round","radius"]},0,{en:"border-radius rounds element corners.",ru:"border-radius скругляет углы.",uz:"border-radius burchaklarni yumaloqlaydi."}),
+  q({en:"Which layout system uses rows and columns?",ru:"Какая система раскладки использует строки и столбцы?",uz:"Qaysi layout tizimi qator va ustunlardan foydalanadi?"},{en:["Grid","Flex","Float","Inline"],ru:["Grid","Flex","Float","Inline"],uz:["Grid","Flex","Float","Inline"]},0,{en:"CSS Grid is designed for rows and columns.",ru:"CSS Grid работает со строками и столбцами.",uz:"CSS Grid qator va ustunlar bilan ishlaydi."}),
+  q({en:"Which property enables Flexbox?",ru:"Какое свойство включает Flexbox?",uz:"Flexboxni qaysi property yoqadi?"},{en:["display: flex","flex: on","layout: flex","position: flex"],ru:["display: flex","flex: on","layout: flex","position: flex"],uz:["display: flex","flex: on","layout: flex","position: flex"]},0,{en:"display:flex enables a flex formatting context.",ru:"display:flex включает Flexbox.",uz:"display:flex Flexboxni yoqadi."}),
+  q({en:"Which pseudo-class targets hover state?",ru:"Какой псевдокласс срабатывает при наведении?",uz:"Sichqoncha ustiga kelganda qaysi pseudo-class ishlaydi?"},{en:[":hover",":active",":focus",":over"],ru:[":hover",":active",":focus",":over"],uz:[":hover",":active",":focus",":over"]},0,{en:":hover applies when a pointer is over the element.",ru:":hover срабатывает при наведении.",uz:":hover pointer element ustida bo‘lganda ishlaydi."}),
+  q({en:"Which CSS unit is relative to the root font size?",ru:"Какая единица относительна к размеру корневого шрифта?",uz:"Qaysi CSS birligi root shrift o‘lchamiga nisbatan?"},{en:["rem","em","px","pt"],ru:["rem","em","px","pt"],uz:["rem","em","px","pt"]},0,{en:"rem is relative to the root element's font size.",ru:"rem относительна к размеру корневого шрифта.",uz:"rem root shrift o‘lchamiga nisbatan hisoblanadi."}),
+  q({en:"Which property controls stacking order?",ru:"Какое свойство управляет порядком наложения?",uz:"Elementlar ustma-ust joylashish tartibini qaysi property boshqaradi?"},{en:["z-index","stack","layer","order"],ru:["z-index","stack","layer","order"],uz:["z-index","stack","layer","order"]},0,{en:"z-index controls stacking order.",ru:"z-index управляет порядком наложения.",uz:"z-index elementlarning ustma-ust tartibini boshqaradi."}),
+  q({en:"Which property changes opacity?",ru:"Какое свойство меняет прозрачность?",uz:"Shaffoflikni qaysi property boshqaradi?"},{en:["opacity","alpha","transparent","visibility"],ru:["opacity","alpha","transparent","visibility"],uz:["opacity","alpha","transparent","visibility"]},0,{en:"opacity controls transparency.",ru:"opacity управляет прозрачностью.",uz:"opacity shaffoflikni boshqaradi."})
+],
+javascript:[
+  q({en:"Which keyword declares a reassignable variable?",ru:"Какое ключевое слово объявляет изменяемую переменную?",uz:"Qiymati o‘zgaradigan variable qaysi keyword bilan yaratiladi?"},{en:["const","let","static","final"],ru:["const","let","static","final"],uz:["const","let","static","final"]},1,{en:"let declares a variable that can be reassigned.",ru:"let объявляет переменную, которую можно переназначить.",uz:"let qayta qiymat beriladigan o‘zgaruvchini yaratadi."}),
+  q({en:"Which keyword declares a constant binding?",ru:"Какое ключевое слово объявляет константу?",uz:"Konstanta uchun qaysi keyword ishlatiladi?"},{en:["var","let","const","constant"],ru:["var","let","const","constant"],uz:["var","let","const","constant"]},2,{en:"const creates a binding that cannot be reassigned.",ru:"const нельзя переназначить.",uz:"const ga qayta qiymat berib bo‘lmaydi."}),
+  q({en:"Which function prints a value to the console?",ru:"Какая функция выводит значение в консоль?",uz:"Qiymatni console ga qaysi funksiya chiqaradi?"},{en:["print()","console.log()","echo()","write()"],ru:["print()","console.log()","echo()","write()"],uz:["print()","console.log()","echo()","write()"]},1,{en:"console.log() writes information to the console.",ru:"console.log() выводит информацию в консоль.",uz:"console.log() ma’lumotni console ga chiqaradi."}),
+  q({en:"Which operator checks strict equality?",ru:"Какой оператор проверяет строгое равенство?",uz:"Strict equality uchun qaysi operator ishlatiladi?"},{en:["==","=","===","!="],ru:["==","=","===","!="],uz:["==","=","===","!="]},2,{en:"=== compares value and type.",ru:"=== сравнивает значение и тип.",uz:"=== qiymat va turini tekshiradi."}),
+  q({en:"Which keyword defines a function?",ru:"Какое ключевое слово объявляет функцию?",uz:"Function yaratish uchun qaysi keyword ishlatiladi?"},{en:["function","def","func","method"],ru:["function","def","func","method"],uz:["function","def","func","method"]},0,{en:"function declares a JavaScript function.",ru:"function объявляет функцию.",uz:"function JavaScript funksiyasini yaratadi."}),
+  q({en:"Which method adds an item to the end of an array?",ru:"Какой метод добавляет элемент в конец массива?",uz:"Array oxiriga element qo‘shadigan method qaysi?"},{en:["push()","add()","append()","insert()"],ru:["push()","add()","append()","insert()"],uz:["push()","add()","append()","insert()"]},0,{en:"push() adds elements to the end of an array.",ru:"push() добавляет элементы в конец массива.",uz:"push() array oxiriga element qo‘shadi."}),
+  q({en:"Which method removes the last array item?",ru:"Какой метод удаляет последний элемент массива?",uz:"Array oxirgi elementini qaysi method o‘chiradi?"},{en:["pop()","remove()","deleteLast()","shift()"],ru:["pop()","remove()","deleteLast()","shift()"],uz:["pop()","remove()","deleteLast()","shift()"]},0,{en:"pop() removes the last element.",ru:"pop() удаляет последний элемент.",uz:"pop() oxirgi elementni o‘chiradi."}),
+  q({en:"Which method transforms each array item into a new array?",ru:"Какой метод преобразует каждый элемент массива?",uz:"Har bir array elementini o‘zgartiruvchi method qaysi?"},{en:["map()","transform()","change()","each()"],ru:["map()","transform()","change()","each()"],uz:["map()","transform()","change()","each()"]},0,{en:"map() creates a new array from transformed elements.",ru:"map() создаёт новый массив.",uz:"map() yangi array yaratadi."}),
+  q({en:"Which method filters an array by a condition?",ru:"Какой метод фильтрует массив по условию?",uz:"Arrayni shartga ko‘ra filter qiluvchi method qaysi?"},{en:["filter()","select()","where()","choose()"],ru:["filter()","select()","where()","choose()"],uz:["filter()","select()","where()","choose()"]},0,{en:"filter() returns elements that satisfy a condition.",ru:"filter() возвращает подходящие элементы.",uz:"filter() shartga mos elementlarni qaytaradi."}),
+  q({en:"Which method converts JSON text into an object?",ru:"Какой метод преобразует JSON-текст в объект?",uz:"JSON matnini objectga qaysi method aylantiradi?"},{en:["JSON.parse()","JSON.toObject()","JSON.read()","JSON.decode()"],ru:["JSON.parse()","JSON.toObject()","JSON.read()","JSON.decode()"],uz:["JSON.parse()","JSON.toObject()","JSON.read()","JSON.decode()"]},0,{en:"JSON.parse() parses JSON text.",ru:"JSON.parse() разбирает JSON-текст.",uz:"JSON.parse() JSON matnini objectga aylantiradi."}),
+  q({en:"Which keyword handles an alternative branch of an if statement?",ru:"Какое слово задаёт альтернативную ветку if?",uz:"if ning boshqa branchini qaysi keyword beradi?"},{en:["else","otherwise","elif","alternative"],ru:["else","otherwise","elif","alternative"],uz:["else","otherwise","elif","alternative"]},0,{en:"else defines the alternative branch.",ru:"else обрабатывает альтернативную ветку.",uz:"else boshqa shart bajarilmaganda ishlaydi."}),
+  q({en:"Which statement exits the nearest loop?",ru:"Какой оператор останавливает цикл?",uz:"Loopni qaysi statement to‘xtatadi?"},{en:["break","stop","exit-loop","end"],ru:["break","stop","exit-loop","end"],uz:["break","stop","exit-loop","end"]},0,{en:"break exits the nearest loop.",ru:"break прерывает цикл.",uz:"break loopdan chiqadi."}),
+  q({en:"Which array method checks if at least one element passes a test?",ru:"Какой метод проверяет, есть ли хотя бы один подходящий элемент?",uz:"Kamida bitta element shartga mosligini qaysi method tekshiradi?"},{en:["some()","any()","includesAny()","hasOne()"],ru:["some()","any()","includesAny()","hasOne()"],uz:["some()","any()","includesAny()","hasOne()"]},0,{en:"some() returns true if any element satisfies the test.",ru:"some() возвращает true, если хотя бы один элемент подходит.",uz:"some() kamida bitta element mos bo‘lsa true qaytaradi."}),
+  q({en:"Which keyword creates an asynchronous function?",ru:"Какое слово создаёт асинхронную функцию?",uz:"Asinxron funksiyani qaysi keyword yaratadi?"},{en:["async","await","promise","defer"],ru:["async","await","promise","defer"],uz:["async","await","promise","defer"]},0,{en:"async declares an asynchronous function.",ru:"async объявляет асинхронную функцию.",uz:"async asinxron funksiyani e’lon qiladi."}),
+  q({en:"Which keyword pauses execution until a Promise resolves?",ru:"Какое слово ждёт выполнения Promise?",uz:"Promise bajarilishini kutish uchun qaysi keyword ishlatiladi?"},{en:["await","async","then","resolve"],ru:["await","async","then","resolve"],uz:["await","async","then","resolve"]},0,{en:"await pauses an async function until the Promise settles.",ru:"await приостанавливает функцию до завершения Promise.",uz:"await Promise tugaguncha funksiyani to‘xtatadi."})
+],
+python:[
+  q({en:"How do you assign 10 to x?",ru:"Как присвоить 10 переменной x?",uz:"x ga 10 ni qanday berasiz?"},{en:["x = 10","let x = 10","int x = 10","x := 10"],ru:["x = 10","let x = 10","int x = 10","x := 10"],uz:["x = 10","let x = 10","int x = 10","x := 10"]},0,{en:"Python uses = for assignment.",ru:"Python использует = для присваивания.",uz:"Python qiymat berish uchun = ishlatadi."}),
+  q({en:"Which function prints text?",ru:"Какая функция выводит текст?",uz:"Matn chiqarish uchun qaysi funksiya ishlatiladi?"},{en:["print()","echo()","console.log()","write()"],ru:["print()","echo()","console.log()","write()"],uz:["print()","echo()","console.log()","write()"]},0,{en:"print() displays a value.",ru:"print() выводит значение.",uz:"print() qiymatni chiqaradi."}),
+  q({en:"Which keyword defines a function?",ru:"Какое ключевое слово определяет функцию?",uz:"Funksiya yaratish uchun qaysi keyword ishlatiladi?"},{en:["def","function","func","method"],ru:["def","function","func","method"],uz:["def","function","func","method"]},0,{en:"def starts a function definition.",ru:"def начинает определение функции.",uz:"def funksiya yaratishni boshlaydi."}),
+  q({en:"Which symbol starts a comment?",ru:"Какой символ начинает комментарий?",uz:"Comment qaysi belgi bilan boshlanadi?"},{en:["#","//","<!--","--"],ru:["#","//","<!--","--"],uz:["#","//","<!--","--"]},0,{en:"Python uses # for single-line comments.",ru:"Python использует # для комментариев.",uz:"Python comment uchun # ishlatadi."}),
+  q({en:"Which function gets the number of items?",ru:"Какая функция возвращает количество элементов?",uz:"Elementlar sonini qaysi funksiya qaytaradi?"},{en:["len()","count()","size()","length()"],ru:["len()","count()","size()","length()"],uz:["len()","count()","size()","length()"]},0,{en:"len() returns the length of a sequence.",ru:"len() возвращает длину последовательности.",uz:"len() sequence uzunligini qaytaradi."}),
+  q({en:"Which collection is ordered and mutable?",ru:"Какая коллекция упорядочена и изменяема?",uz:"Qaysi collection tartibli va o‘zgaruvchan?"},{en:["list","tuple","set","string"],ru:["list","tuple","set","string"],uz:["list","tuple","set","string"]},0,{en:"Lists are ordered and mutable.",ru:"Списки упорядочены и изменяемы.",uz:"List tartibli va o‘zgaruvchan."}),
+  q({en:"Which collection is immutable and ordered?",ru:"Какая коллекция неизменяема и упорядочена?",uz:"Qaysi collection o‘zgarmas va tartibli?"},{en:["tuple","list","set","dict"],ru:["tuple","list","set","dict"],uz:["tuple","list","set","dict"]},0,{en:"Tuples are immutable sequences.",ru:"Кортежи неизменяемы.",uz:"Tuple o‘zgarmas sequence hisoblanadi."}),
+  q({en:"Which keyword starts a loop over items?",ru:"Какое слово запускает цикл по элементам?",uz:"Elementlar bo‘yicha loopni qaysi keyword boshlaydi?"},{en:["for","loop","iterate","each"],ru:["for","loop","iterate","each"],uz:["for","loop","iterate","each"]},0,{en:"for iterates over an iterable.",ru:"for проходит по итерируемому объекту.",uz:"for iterable elementlari bo‘yicha aylanadi."}),
+  q({en:"Which collection stores key-value pairs?",ru:"Какая коллекция хранит пары ключ-значение?",uz:"Key-value juftliklarini qaysi collection saqlaydi?"},{en:["dict","map-list","object","pairs"],ru:["dict","map-list","object","pairs"],uz:["dict","map-list","object","pairs"]},0,{en:"dict stores key-value mappings.",ru:"dict хранит пары ключ-значение.",uz:"dict key-value mappinglarni saqlaydi."}),
+  q({en:"Which keyword imports a module?",ru:"Какое слово импортирует модуль?",uz:"Module import qilish uchun qaysi keyword ishlatiladi?"},{en:["import","include","require","using"],ru:["import","include","require","using"],uz:["import","include","require","using"]},0,{en:"import loads names from a module.",ru:"import загружает имена из модуля.",uz:"import modulni yuklash uchun ishlatiladi."}),
+  q({en:"Which keyword begins exception handling?",ru:"Какое слово начинает обработку исключений?",uz:"Exception handlingni qaysi keyword boshlaydi?"},{en:["try","catch","except","handle"],ru:["try","catch","except","handle"],uz:["try","catch","except","handle"]},0,{en:"try begins a block where exceptions may be caught.",ru:"try начинает блок обработки исключений.",uz:"try exception ushlanadigan blokni boshlaydi."}),
+  q({en:"Which keyword catches an exception in Python?",ru:"Какое слово ловит исключение в Python?",uz:"Pythonda exceptionni qaysi keyword ushlaydi?"},{en:["except","catch","rescue","error"],ru:["except","catch","rescue","error"],uz:["except","catch","rescue","error"]},0,{en:"except catches exceptions raised in a try block.",ru:"except ловит исключения из блока try.",uz:"except try blokidagi exceptionlarni ushlaydi."}),
+  q({en:"Which function creates a range of numbers?",ru:"Какая функция создаёт диапазон чисел?",uz:"Sonlar diapazonini qaysi funksiya yaratadi?"},{en:["range()","sequence()","numbers()","series()"],ru:["range()","sequence()","numbers()","series()"],uz:["range()","sequence()","numbers()","series()"]},0,{en:"range() produces an integer sequence.",ru:"range() создаёт последовательность целых чисел.",uz:"range() integer sequence yaratadi."}),
+  q({en:"Which keyword defines a class?",ru:"Какое слово определяет класс?",uz:"Class yaratish uchun qaysi keyword ishlatiladi?"},{en:["class","struct","object","define"],ru:["class","struct","object","define"],uz:["class","struct","object","define"]},0,{en:"class defines a new class.",ru:"class определяет новый класс.",uz:"class yangi classni belgilaydi."}),
+  q({en:"Which special method initializes a new object?",ru:"Какой специальный метод инициализирует объект?",uz:"Yangi obyektni qaysi maxsus method boshlaydi?"},{en:["__init__","__new__","__start__","__create__"],ru:["__init__","__new__","__start__","__create__"],uz:["__init__","__new__","__start__","__create__"]},0,{en:"__init__ initializes newly created objects.",ru:"__init__ инициализирует созданный объект.",uz:"__init__ yangi obyektni ishga tushiradi."})
+],
+java:[
+  q({en:"Which keyword defines a class?",ru:"Какое ключевое слово определяет класс?",uz:"Class yaratish uchun qaysi keyword ishlatiladi?"},{en:["class","Class","define","struct"],ru:["class","Class","define","struct"],uz:["class","Class","define","struct"]},0,{en:"Java uses the lowercase class keyword.",ru:"Java использует ключевое слово class.",uz:"Java class keywordidan foydalanadi."}),
+  q({en:"Which keyword creates an object?",ru:"Какое ключевое слово создаёт объект?",uz:"Obyekt yaratish uchun qaysi keyword ishlatiladi?"},{en:["new","create","object","make"],ru:["new","create","object","make"],uz:["new","create","object","make"]},0,{en:"new creates an object instance.",ru:"new создаёт экземпляр объекта.",uz:"new obyekt nusxasini yaratadi."}),
+  q({en:"Which method is the common program entry point?",ru:"Какой метод является стандартной точкой входа?",uz:"Dastur boshlanish nuqtasi qaysi method?"},{en:["main","start","run","begin"],ru:["main","start","run","begin"],uz:["main","start","run","begin"]},0,{en:"main is the conventional Java entry point.",ru:"main — стандартная точка входа Java.",uz:"main Java dasturining odatiy boshlanish nuqtasi."}),
+  q({en:"Which type stores whole numbers?",ru:"Какой тип хранит целые числа?",uz:"Butun sonlar uchun qaysi type ishlatiladi?"},{en:["int","integer","number","whole"],ru:["int","integer","number","whole"],uz:["int","integer","number","whole"]},0,{en:"int stores 32-bit signed integers.",ru:"int хранит целые числа.",uz:"int butun sonlarni saqlaydi."}),
+  q({en:"Which keyword prevents reassignment of a variable?",ru:"Какое слово запрещает повторное присваивание?",uz:"O‘zgaruvchiga qayta qiymat berishni qaysi keyword taqiqlaydi?"},{en:["final","const","fixed","static"],ru:["final","const","fixed","static"],uz:["final","const","fixed","static"]},0,{en:"final prevents reassignment after initialization.",ru:"final запрещает повторное присваивание.",uz:"final qayta qiymat berishni taqiqlaydi."}),
+  q({en:"Which keyword inherits from a class?",ru:"Какое слово используется для наследования класса?",uz:"Classdan inheritance olish uchun qaysi keyword?"},{en:["extends","inherits","implements","super"],ru:["extends","inherits","implements","super"],uz:["extends","inherits","implements","super"]},0,{en:"extends establishes class inheritance.",ru:"extends задаёт наследование класса.",uz:"extends class inheritance ni belgilaydi."}),
+  q({en:"Which keyword implements an interface?",ru:"Какое слово используется для реализации интерфейса?",uz:"Interface implement qilish uchun qaysi keyword?"},{en:["implements","extends","interface","uses"],ru:["implements","extends","interface","uses"],uz:["implements","extends","interface","uses"]},0,{en:"implements declares interface implementation.",ru:"implements указывает реализацию интерфейса.",uz:"implements interface amalga oshirilishini bildiradi."}),
+  q({en:"Which keyword refers to the current object?",ru:"Какое слово ссылается на текущий объект?",uz:"Joriy obyektga qaysi keyword murojaat qiladi?"},{en:["this","self","current","object"],ru:["this","self","current","object"],uz:["this","self","current","object"]},0,{en:"this refers to the current instance.",ru:"this ссылается на текущий экземпляр.",uz:"this joriy instancega murojaat qiladi."}),
+  q({en:"Which keyword refers to the parent class?",ru:"Какое слово ссылается на родительский класс?",uz:"Parent classga qaysi keyword murojaat qiladi?"},{en:["super","parent","base","this"],ru:["super","parent","base","this"],uz:["super","parent","base","this"]},0,{en:"super refers to the superclass.",ru:"super ссылается на родительский класс.",uz:"super parent classga murojaat qiladi."}),
+  q({en:"Which keyword declares an interface?",ru:"Какое слово объявляет интерфейс?",uz:"Interface yaratish uchun qaysi keyword?"},{en:["interface","contract","implements","abstract"],ru:["interface","contract","implements","abstract"],uz:["interface","contract","implements","abstract"]},0,{en:"interface declares a Java interface.",ru:"interface объявляет интерфейс.",uz:"interface Java interface sini e’lon qiladi."}),
+  q({en:"Which type stores decimal floating-point values?",ru:"Какой тип хранит числа с плавающей точкой?",uz:"Kasrli floating-point sonlarni qaysi type saqlaydi?"},{en:["double","decimal","float64","number"],ru:["double","decimal","float64","number"],uz:["double","decimal","float64","number"]},0,{en:"double stores double-precision floating-point values.",ru:"double хранит числа с плавающей точкой.",uz:"double floating-point sonlarni saqlaydi."}),
+  q({en:"Which keyword catches an exception thrown by try?",ru:"Какое слово ловит исключение из try?",uz:"try dan chiqqan exceptionni qaysi keyword ushlaydi?"},{en:["catch","handle","except","error"],ru:["catch","handle","except","error"],uz:["catch","handle","except","error"]},0,{en:"catch handles an exception thrown by try.",ru:"catch обрабатывает исключение из try.",uz:"catch try dan chiqqan exceptionni ushlaydi."}),
+  q({en:"Which collection interface represents an ordered sequence of elements?",ru:"Какой интерфейс представляет упорядоченный список элементов?",uz:"Tartibli elementlar ro‘yxatini qaysi interface bildiradi?"},{en:["List","Sequence","ArrayListOnly","CollectionList"],ru:["List","Sequence","ArrayListOnly","CollectionList"],uz:["List","Sequence","ArrayListOnly","CollectionList"]},0,{en:"List is the standard ordered collection interface.",ru:"List — стандартный интерфейс упорядоченной коллекции.",uz:"List tartibli collection interface hisoblanadi."}),
+  q({en:"Which access modifier restricts access to the same class only?",ru:"Какой модификатор ограничивает доступ только классом?",uz:"Accessni faqat class bilan cheklovchi modifier qaysi?"},{en:["private","internal","local","closed"],ru:["private","internal","local","closed"],uz:["private","internal","local","closed"]},0,{en:"private restricts direct access to the declaring class.",ru:"private ограничивает доступ классом.",uz:"private accessni faqat class ichida cheklaydi."}),
+  q({en:"Which keyword makes a member belong to the class rather than an instance?",ru:"Какое слово делает член статическим?",uz:"Memberni static qiluvchi keyword qaysi?"},{en:["static","class","shared","global"],ru:["static","class","shared","global"],uz:["static","class","shared","global"]},0,{en:"static makes a member belong to the class rather than an instance.",ru:"static делает член принадлежащим классу.",uz:"static memberni classga bog‘laydi."})
+]
+};
 
-/* BUTTON */
+/* Extra template-driven questions to reliably reach QUESTIONS_PER_COURSE per course,
+   each rendered in the currently selected UI language. Numbered so no two are identical. */
+const TEMPLATES = {
+html:[
+  {en:"Which HTML tag or attribute is used for: {topic}?",ru:"Какой HTML-тег или атрибут используется для: {topic}?",uz:"{topic} uchun qaysi HTML teg yoki atribut ishlatiladi?",
+   pairs:[["embedding audio","<audio>"],["embedding video","<video>"],["a line break","<br>"],["a thematic break","<hr>"],["a table row","<tr>"],["a table cell","<td>"],["a table header cell","<th>"],["a dropdown list","<select>"],["a dropdown option","<option>"],["a multiline text field","<textarea>"],["grouping form controls","<fieldset>"],["labeling a fieldset","<legend>"],["a required field","required"],["placeholder hint text","placeholder"],["an inline container","<span>"],["a block container","<div>"],["a footer section","<footer>"],["a header section","<header>"],["an article","<article>"],["a thematic section","<section>"],["a sidebar","<aside>"],["a figure with caption","<figure>"],["a figure's caption","<figcaption>"],["embedding another page","<iframe>"],["a details disclosure","<details>"],["a details summary","<summary>"],["a dialog box","<dialog>"],["progress toward a task","<progress>"],["a scalar measurement","<meter>"],["a definition list","<dl>"],["a definition term","<dt>"],["a definition description","<dd>"],["a long quotation","<blockquote>"],["a short quotation","<q>"],["computer code text","<code>"],["preformatted text","<pre>"],["inserted text","<ins>"],["deleted text","<del>"],["an abbreviation","<abbr>"],["a specific date or time","<time>"],["a contact address","<address>"],["a page's character encoding","charset"],["a responsive viewport","viewport"],["a document's language","lang"],["a unique element id","id"],["reusable CSS classes","class"],["inline CSS","style"],["opening a link in a new tab","target=\"_blank\""],["an image's alternative text","alt"],["an image's source file","src"]]}
+],
+css:[
+  {en:"Which CSS property or value controls: {topic}?",ru:"Какое CSS-свойство или значение управляет: {topic}?",uz:"{topic} ni qaysi CSS property yoki qiymat boshqaradi?",
+   pairs:[["element width","width"],["element height","height"],["font family","font-family"],["line spacing","line-height"],["letter spacing","letter-spacing"],["word spacing","word-spacing"],["text alignment","text-align"],["text decoration (underline etc.)","text-decoration"],["text transform (uppercase etc.)","text-transform"],["cursor appearance","cursor"],["element visibility","visibility"],["overflow handling","overflow"],["element position type","position"],["stacking order","z-index"],["box shadow","box-shadow"],["text shadow","text-shadow"],["border thickness","border-width"],["border color","border-color"],["border style","border-style"],["background image","background-image"],["background position","background-position"],["background size","background-size"],["a smooth transition","transition"],["a keyframe animation","animation"],["flexible box layout","display: flex"],["grid layout","display: grid"],["gap between flex/grid items","gap"],["horizontal flex direction","flex-direction: row"],["centering flex items","justify-content: center"],["aligning flex items on cross axis","align-items"],["a root-relative unit","rem"],["a parent-relative unit","em"],["a viewport width unit","vw"],["a viewport height unit","vh"],["media query breakpoints","@media"],["a pseudo-class for hover","':hover'"],["a pseudo-class for focus","':focus'"],["a pseudo-element for first letter","'::first-letter'"],["combining selectors by descendant","' ' (space)"],["combining selectors as direct child","'>'"],["importing another stylesheet","@import"],["custom CSS variables","--variable-name"],["reading a CSS variable","var()"],["rounding corners","border-radius"],["element opacity","opacity"],["hiding overflow content","overflow: hidden"],["fixed positioning","position: fixed"],["sticky positioning","position: sticky"],["absolute positioning","position: absolute"],["resetting default margins","margin: 0"]]}
+],
+javascript:[
+  {en:"Which JavaScript keyword, operator or method is used for: {topic}?",ru:"Какое ключевое слово, оператор или метод JavaScript используется для: {topic}?",uz:"{topic} uchun qaysi JavaScript keyword, operator yoki method ishlatiladi?",
+   pairs:[["declaring a block-scoped variable","let"],["declaring a constant","const"],["strict equality comparison","==="],["loose equality comparison","=="],["logical AND","&&"],["logical OR","||"],["logical NOT","!"],["the ternary conditional","? :"],["looping a fixed number of times","for"],["looping while a condition holds","while"],["exiting a loop early","break"],["skipping to next iteration","continue"],["defining an arrow function","=>"],["converting a string to a number","Number()"],["converting a value to a string","String()"],["rounding down a number","Math.floor()"],["rounding to nearest integer","Math.round()"],["a random number between 0 and 1","Math.random()"],["joining array items into a string","join()"],["splitting a string into an array","split()"],["removing whitespace from a string","trim()"],["converting text to uppercase","toUpperCase()"],["converting text to lowercase","toLowerCase()"],["checking if an array includes a value","includes()"],["finding an item's index","indexOf()"],["combining two arrays","concat()"],["creating a shallow copy of an array","slice()"],["removing or inserting array items","splice()"],["iterating an array without returning a new one","forEach()"],["reducing an array to one value","reduce()"],["parsing JSON text","JSON.parse()"],["converting a value to JSON text","JSON.stringify()"],["declaring an async function","async"],["waiting for a Promise to resolve","await"],["catching an error","catch"],["throwing a custom error","throw"],["checking a value's type","typeof"],["accessing an object's own keys","Object.keys()"],["accessing an object's values","Object.values()"],["copying properties between objects","Object.assign()"],["adding an event listener","addEventListener()"],["selecting an element by id","document.getElementById()"],["selecting elements by CSS selector","document.querySelectorAll()"],["setting a timer once","setTimeout()"],["setting a repeating timer","setInterval()"],["exporting from a module","export"],["importing into a module","import"],["spreading array items","..."],["destructuring an array","[a, b] ="],["destructuring an object","{a, b} ="],["a template literal","` `"]]}
+],
+python:[
+  {en:"Which Python keyword or function is used for: {topic}?",ru:"Какое ключевое слово или функция Python используется для: {topic}?",uz:"{topic} uchun qaysi Python keyword yoki funksiya ishlatiladi?",
+   pairs:[["looping a fixed number of times","for"],["looping while a condition holds","while"],["exiting a loop early","break"],["skipping to next iteration","continue"],["defining a lambda function","lambda"],["checking membership in a collection","in"],["checking identity","is"],["combining two conditions","and"],["either condition being true","or"],["negating a condition","not"],["getting the type of a value","type()"],["converting to an integer","int()"],["converting to a float","float()"],["converting to a string","str()"],["converting to a list","list()"],["sorting a list","sorted()"],["reversing a sequence","reversed()"],["getting the sum of a list","sum()"],["getting the maximum value","max()"],["getting the minimum value","min()"],["combining two iterables index-wise","zip()"],["adding an index to an iterable","enumerate()"],["reading user input","input()"],["opening a file","open()"],["defining a class method that runs on creation","__init__"],["representing an object as text","__str__"],["raising an exception","raise"],["always running after try/except","finally"],["defining a decorator","@"],["creating a generator","yield"],["a list comprehension","[x for x in y]"],["a dictionary comprehension","{k:v for k,v in y}"],["removing a key from a dict","del"],["checking a key exists in a dict",".get()"],["adding to the end of a list",".append()"],["removing the last list item",".pop()"],["joining strings with a separator","'sep'.join()"],["splitting a string","str.split()"],["formatting strings with variables","f-strings"],["importing a module","import"],["importing part of a module","from ... import"],["defining multiple return values","return a, b"],["unpacking a tuple","a, b = pair"],["checking Boolean truth of a value","bool()"],["measuring collection length","len()"],["creating a set of unique values","set()"],["creating an immutable sequence","tuple()"],["deep-copying an object","copy.deepcopy()"],["formatting numbers with round()","round()"],["converting to a dictionary","dict()"],["defining an abstract base class helper","ABC"]]}
+],
+java:[
+  {en:"Which Java keyword or concept is used for: {topic}?",ru:"Какое ключевое слово или понятие Java используется для: {topic}?",uz:"{topic} uchun qaysi Java keyword yoki tushuncha ishlatiladi?",
+   pairs:[["looping a fixed number of times","for"],["looping while a condition holds","while"],["exiting a loop early","break"],["skipping to next iteration","continue"],["declaring a public access level","public"],["declaring a private access level","private"],["declaring a protected access level","protected"],["preventing further subclassing","final"],["declaring an abstract method","abstract"],["declaring a static member","static"],["catching an exception","catch"],["always running after try/catch","finally"],["throwing a custom exception","throw"],["declaring that a method may throw","throws"],["referring to the current instance","this"],["referring to the parent class","super"],["creating a new object","new"],["comparing object equality by value",".equals()"],["converting an object to text",".toString()"],["storing a dynamic list of items","ArrayList"],["storing key-value pairs","HashMap"],["storing unique values only","HashSet"],["declaring a generic type parameter","<T>"],["implementing multiple behaviors via a contract","interface"],["defining a constant class-level value","static final"],["converting a String to an int","Integer.parseInt()"],["converting an int to a String","String.valueOf()"],["reading console input","Scanner"],["printing without a newline","System.out.print()"],["printing with a newline","System.out.println()"],["the program's entry point method","public static void main"],["checking an object's class at runtime","instanceof"],["casting a variable to another type","(Type)"],["creating an enumeration","enum"],["defining a constructor","ClassName()"],["annotating an overridden method","@Override"],["boxing a primitive int","Integer"],["boxing a primitive double","Double"],["storing true/false","boolean"],["storing a single character","char"],["storing large whole numbers","long"],["storing decimal numbers","double"],["declaring an array","int[]"],["iterating with an enhanced for-loop","for (Type x : collection)"],["sorting a list","Collections.sort()"],["comparing two Strings for equality","String.equals()"],["making a class non-instantiable directly","abstract class"],["defining package-level visibility","(no modifier)"],["importing a class from another package","import"],["defining a package","package"]]}
+]
+};
 
-fullscreenBtn.addEventListener(
-    "click",
-    async function() {
+function buildCourse(langKey){
+  const core = CORE[langKey];
+  const bank = core.map(item => ({
+    en:{ q:item.q.en, options:item.options.en, explain:item.explain.en },
+    ru:{ q:item.q.ru, options:item.options.ru, explain:item.explain.ru },
+    uz:{ q:item.q.uz, options:item.options.uz, explain:item.explain.uz },
+    correct:item.correct
+  }));
 
-        if (isFullscreen()) {
+  const template = TEMPLATES[langKey][0];
+  const pairs = template.pairs;
+  let n = 1;
+  while(bank.length < QUESTIONS_PER_COURSE){
+    const [topic, answer] = pairs[(bank.length) % pairs.length];
+    const distractors = shuffle(pairs.filter(p=>p[1]!==answer)).slice(0,3).map(p=>p[1]);
+    const options = shuffle([answer, ...distractors]);
+    const correctIndex = options.indexOf(answer);
+    const num = n++;
+    bank.push({
+      en:{ q:`${template.en.replace("{topic}",topic)} (#${num})`, options, explain:`"${answer}" is correct for: ${topic}.` },
+      ru:{ q:`${template.ru.replace("{topic}",topic)} (№${num})`, options, explain:`Правильный ответ — "${answer}" для: ${topic}.` },
+      uz:{ q:`${template.uz.replace("{topic}",topic)} (№${num})`, options, explain:`"${answer}" to‘g‘ri javob: ${topic}.` },
+      correct: correctIndex
+    });
+  }
+  return bank.slice(0, QUESTIONS_PER_COURSE);
+}
 
-            await exitFullscreen();
+const QUESTIONS = {};
+Object.keys(LANGS).forEach(key => { QUESTIONS[key] = buildCourse(key); });
 
-        } else {
+function qLocal(item){
+  const loc = item[state.uiLang] || item.en;
+  return { q:loc.q, options:loc.options, explain:loc.explain, correct:item.correct };
+}
 
-            await enterFullscreen();
+/* =========================================================
+   USER PROGRESS
+========================================================= */
+function userProgress(){
+  const email = state.currentUser?.email;
+  if(!email) return null;
+  if(!state.progress[email]){
+    state.progress[email] = { xp:0, streak:1, lessons:0, correct:0, answered:0, lastLang:"html",
+      langXp:{ html:0, css:0, javascript:0, python:0, java:0 } };
+    saveState();
+  }
+  return state.progress[email];
+}
 
-        }
+/* =========================================================
+   AUTH
+========================================================= */
+let turnstileOk = false;
+window.onTurnstileOk = function(){ turnstileOk = true; updateSignupButton(); };
+window.onTurnstileExpired = function(){ turnstileOk = false; updateSignupButton(); };
+function updateSignupButton(){
+  const btn = $("btn-signup");
+  if(btn) btn.disabled = !turnstileOk;
+}
 
-    }
-);
+function showAuthTab(tab){
+  $("auth-error").textContent = "";
+  $("login-box").classList.toggle("hidden", tab!=="login");
+  $("signup-box").classList.toggle("hidden", tab!=="signup");
+  $("verify-box").classList.add("hidden");
+  $("tab-login").classList.toggle("active", tab==="login");
+  $("tab-signup").classList.toggle("active", tab==="signup");
+}
+$("tab-login").onclick = () => showAuthTab("login");
+$("tab-signup").onclick = () => showAuthTab("signup");
 
+$("btn-signup").onclick = () => {
+  if(!turnstileOk){ $("auth-error").textContent = t("needTurnstile"); return; }
 
-/* CHANGE */
+  const username = $("signup-username").value.trim();
+  const email = $("signup-email").value.trim().toLowerCase();
+  const password = $("signup-password").value;
 
-document.addEventListener(
-    "fullscreenchange",
-    function() {
+  if(!username || !email || !password){ $("auth-error").textContent = t("needFill"); return; }
+  if(password.length < 8){ $("auth-error").textContent = t("shortPassword"); return; }
+  if(state.users.some(u=>u.email===email)){ $("auth-error").textContent = t("accountExists"); return; }
 
-        if (!isFullscreen()) {
-            unlockOrientation();
-        }
+  const code = Math.floor(100000 + Math.random()*900000).toString();
+  state.pendingSignup = { username, email, password, code };
+  saveState();
 
-    }
-);
+  $("signup-box").classList.add("hidden");
+  $("verify-box").classList.remove("hidden");
 
-document.addEventListener(
-    "webkitfullscreenchange",
-    function() {
+  if(EMAILJS_ENABLED && window.emailjs){
+    emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, { to_email: email, code: code })
+      .then(()=>{ $("demo-code").textContent = "••••••"; toast(t("verificationSent")); })
+      .catch(()=>{ $("demo-code").textContent = code; toast(t("verificationCreated")); });
+  } else {
+    $("demo-code").textContent = code;
+    toast(t("verificationCreated"));
+  }
+};
 
-        if (!isFullscreen()) {
-            unlockOrientation();
-        }
+$("btn-verify").onclick = () => {
+  const code = $("verify-code").value.trim();
+  if(!state.pendingSignup || code !== state.pendingSignup.code){
+    $("auth-error").textContent = t("invalidCode");
+    return;
+  }
+  const { username, email, password } = state.pendingSignup;
+  state.users.push({ username, email, password });
+  state.currentUser = { username, email };
+  state.pendingSignup = null;
+  saveState();
+  toast(t("verified"));
+  initApp();
+};
 
-    }
-);
+$("btn-login").onclick = () => {
+  const email = $("login-email").value.trim().toLowerCase();
+  const password = $("login-password").value;
+  const user = state.users.find(u=>u.email===email && u.password===password);
+  if(!user){ $("auth-error").textContent = t("invalidLogin"); return; }
+  state.currentUser = { username:user.username, email:user.email };
+  saveState();
+  toast(t("loggedIn"));
+  initApp();
+};
 
+$("btn-logout").onclick = () => {
+  state.currentUser = null;
+  saveState();
+  toast(t("loggedOut"));
+  renderScreen();
+};
 
-/* KEYBOARD */
+/* =========================================================
+   NAVIGATION
+========================================================= */
+function showView(name){
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  const view = $("view-"+name);
+  if(view) view.classList.add("active");
+  document.querySelectorAll(".nav button").forEach(button=>{
+    button.classList.toggle("active", button.dataset.view===name);
+  });
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+document.querySelectorAll(".nav button").forEach(button=>{
+  button.onclick = () => {
+    const view = button.dataset.view;
+    if(view==="languages") renderLanguages();
+    if(view==="profile") updateProfile();
+    showView(view);
+  };
+});
 
-document.addEventListener(
-    "keydown",
-    function(event) {
+/* =========================================================
+   DASHBOARD
+========================================================= */
+function updateStatsHeader(){
+  const p = userProgress();
+  if(!p) return;
+  $("top-streak").textContent = p.streak;
+  $("top-xp").textContent = p.xp;
+}
+function updateDashboard(){
+  const p = userProgress();
+  if(!p) return;
+  $("dash-name").textContent = state.currentUser.username;
+  $("dash-xp").textContent = p.xp;
+  $("dash-lessons").textContent = p.lessons;
+  const accuracy = p.answered>0 ? Math.round(p.correct/p.answered*100) : 0;
+  $("dash-accuracy").textContent = accuracy+"%";
+  const lang = LANGS[p.lastLang] ? p.lastLang : "html";
+  $("continue-label").textContent = LANGS[lang].name;
+  $("continue-icon").className = LANGS[lang].icon;
+  const xp = p.langXp[lang] || 0;
+  const percent = Math.min(100, xp);
+  $("continue-progress").style.width = percent+"%";
+  $("continue-progress-text").textContent = percent+"%";
+}
+$("btn-continue").onclick = () => { const p=userProgress(); startQuiz(p?.lastLang||"html"); };
 
-        if (
-            event.key.toLowerCase() === "f"
-        ) {
+/* =========================================================
+   LANGUAGES
+========================================================= */
+function renderLanguages(){
+  const grid = $("lang-grid");
+  grid.innerHTML = "";
+  Object.keys(LANGS).forEach(key=>{
+    const lang = LANGS[key];
+    const card = document.createElement("div");
+    card.className = "lang-card";
+    card.innerHTML = `
+      <div class="lang-icon"><i class="${lang.icon}"></i></div>
+      <div class="lang-name">${lang.name}</div>
+      <div class="lang-count">${QUESTIONS[key].length}+ ${t("questionsSuffix")}</div>
+      <div class="lang-arrow">${t("continueBtn")} <i class="fas fa-arrow-right"></i></div>
+    `;
+    card.onclick = () => startQuiz(key);
+    grid.appendChild(card);
+  });
+}
 
-            if (isFullscreen()) {
-                exitFullscreen();
-            } else {
-                enterFullscreen();
-            }
+/* =========================================================
+   PROFILE
+========================================================= */
+function updateProfile(){
+  const p = userProgress();
+  if(!p) return;
+  $("profile-name").textContent = state.currentUser.username;
+  $("profile-email").textContent = state.currentUser.email;
+  $("profile-xp").textContent = p.xp;
+  $("profile-streak").textContent = p.streak;
+  $("profile-lessons").textContent = p.lessons;
+}
 
-        }
+/* =========================================================
+   QUIZ ENGINE
+========================================================= */
+let quizState = { lang:"html", questions:[], index:0, lives:5, correctCount:0, answeredCount:0, locked:false };
 
-    }
-);
+function startQuiz(lang){
+  const p = userProgress();
+  if(p){ p.lastLang = lang; saveState(); }
+  const bank = QUESTIONS[lang] || [];
+  if(bank.length < QUESTIONS_PER_COURSE){
+    toast(`${LANGS[lang].name} ${t("insufficientQ")}`);
+    return;
+  }
+  quizState = { lang, questions:shuffle(bank), index:0, lives:5, correctCount:0, answeredCount:0, locked:false };
+  showView("quiz");
+  renderQuestion();
+}
 
+function renderLives(){
+  $("quiz-lives").innerHTML = "";
+  for(let i=0;i<5;i++){
+    const icon = document.createElement("i");
+    icon.className = i<quizState.lives ? "fas fa-heart" : "far fa-heart";
+    $("quiz-lives").appendChild(icon);
+  }
+}
+
+function renderQuestion(){
+  quizState.locked = false;
+  const qData = qLocal(quizState.questions[quizState.index]);
+  const total = quizState.questions.length;
+
+  $("quiz-lang").innerHTML = `<i class="${LANGS[quizState.lang].icon}"></i> ${LANGS[quizState.lang].name}`;
+  $("quiz-count").textContent = `${quizState.index+1} / ${total}`;
+  $("quiz-progress").style.width = (quizState.index/total*100)+"%";
+  renderLives();
+
+  $("mascot-icon").innerHTML = `<i class="${LANGS[quizState.lang].icon}"></i>`;
+  $("mascot-bubble").textContent = t("ready");
+  $("question-text").textContent = qData.q;
+
+  $("feedback").className = "feedback hidden";
+  $("feedback-title").textContent = "";
+  $("feedback-text").textContent = "";
+
+  const container = $("answers");
+  container.innerHTML = "";
+  qData.options.forEach((option, index)=>{
+    const button = document.createElement("button");
+    button.className = "answer";
+    button.innerHTML = `<span class="answer-number">${String.fromCharCode(65+index)}</span><span>${escapeHTML(option)}</span>`;
+    button.onclick = () => handleAnswer(index);
+    container.appendChild(button);
+  });
+}
+
+function handleAnswer(selected){
+  if(quizState.locked) return;
+  quizState.locked = true;
+
+  const qData = qLocal(quizState.questions[quizState.index]);
+  const buttons = [...document.querySelectorAll(".answer")];
+  const correct = selected === qData.correct;
+  quizState.answeredCount++;
+  buttons.forEach(b=>b.classList.add("disabled"));
+
+  if(correct){
+    quizState.correctCount++;
+    buttons[selected].classList.add("correct");
+    $("mascot-bubble").textContent = t("correct");
+    showFeedback(true, qData.explain);
+  } else {
+    quizState.lives--;
+    buttons[selected].classList.add("wrong");
+    if(buttons[qData.correct]) buttons[qData.correct].classList.add("correct");
+    renderLives();
+    $("mascot-bubble").textContent = t("wrong");
+    showFeedback(false, qData.explain);
+  }
+}
+
+function showFeedback(isCorrect, explanation){
+  const feedback = $("feedback");
+  feedback.className = "feedback " + (isCorrect ? "good" : "bad");
+  $("feedback-title").textContent = isCorrect ? t("correct") : t("wrong");
+  $("feedback-text").textContent = explanation;
+  $("btn-next").innerHTML = quizState.lives<=0
+    ? `<i class="fas fa-heart-crack"></i> ${t("outOfLives")}`
+    : `<i class="fas fa-arrow-right"></i> ${t("continueBtnShort")}`;
+}
+
+$("btn-next").onclick = () => {
+  if(quizState.lives<=0){ showView("gameover"); return; }
+  quizState.index++;
+  if(quizState.index >= quizState.questions.length){ finishQuiz(); return; }
+  renderQuestion();
+};
+
+function finishQuiz(){
+  const p = userProgress();
+  const earnedXP = quizState.correctCount * 10;
+  if(p){
+    p.xp += earnedXP;
+    p.lessons++;
+    p.correct += quizState.correctCount;
+    p.answered += quizState.answeredCount;
+    p.langXp[quizState.lang] = (p.langXp[quizState.lang]||0) + earnedXP;
+    saveState();
+  }
+  updateStatsHeader(); updateDashboard(); updateProfile();
+  const accuracy = quizState.answeredCount>0 ? Math.round(quizState.correctCount/quizState.answeredCount*100) : 0;
+  $("result-xp").textContent = `+${earnedXP} XP`;
+  $("result-correct").textContent = `${quizState.correctCount}/${quizState.answeredCount}`;
+  $("result-accuracy").textContent = accuracy+"%";
+  $("result-total-xp").textContent = p?.xp || 0;
+  showView("results");
+}
+
+$("btn-back").onclick = () => { renderLanguages(); showView("languages"); };
+$("btn-play-again").onclick = () => startQuiz(quizState.lang);
+$("btn-try-again").onclick = () => startQuiz(quizState.lang);
+$("btn-change-lang").onclick = () => { renderLanguages(); showView("languages"); };
+$("btn-back-lang").onclick = () => { renderLanguages(); showView("languages"); };
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+$("ui-language").onchange = e => {
+  state.uiLang = e.target.value;
+  saveState();
+  applyI18n();
+  updateDashboard();
+  updateProfile();
+  if($("view-languages").classList.contains("active")) renderLanguages();
+  if($("view-quiz").classList.contains("active")) renderQuestion();
+  toast(t("langChanged"));
+};
+
+function applyTheme(){
+  document.body.classList.toggle("dark", state.theme==="dark");
+  $("theme-toggle").innerHTML = state.theme==="dark"
+    ? `<i class="fas fa-sun"></i> ${t("theme")}`
+    : `<i class="fas fa-moon"></i> ${t("theme")}`;
+}
+$("theme-toggle").onclick = () => {
+  state.theme = state.theme==="dark" ? "light" : "dark";
+  saveState();
+  applyTheme();
+};
+
+$("btn-reset").onclick = () => {
+  const email = state.currentUser?.email;
+  if(!email) return;
+  if(!confirm("Reset all progress?")) return;
+  delete state.progress[email];
+  saveState();
+  updateStatsHeader(); updateDashboard(); updateProfile();
+  toast(t("resetDone"));
+};
+
+/* =========================================================
+   ABOUT (from auth screen, before login)
+========================================================= */
+$("auth-about").onclick = () => {
+  $("auth-screen").classList.add("hidden");
+  $("app-screen").classList.remove("hidden");
+  showView("about");
+};
+
+/* =========================================================
+   KEYBOARD SUPPORT (A/B/C/D)
+========================================================= */
+document.addEventListener("keydown", event => {
+  if(!$("view-quiz").classList.contains("active")) return;
+  if(quizState.locked) return;
+  const map = { a:0, b:1, c:2, d:3 };
+  const key = event.key.toLowerCase();
+  if(map[key] !== undefined){
+    const buttons = document.querySelectorAll(".answer");
+    if(buttons[map[key]]) buttons[map[key]].click();
+  }
+});
+
+window.addEventListener("beforeunload", () => saveState());
+
+/* =========================================================
+   INIT
+========================================================= */
+function initApp(){
+  $("auth-screen").classList.add("hidden");
+  $("app-screen").classList.remove("hidden");
+  $("ui-language").value = state.uiLang;
+  applyI18n();
+  applyTheme();
+  updateStatsHeader();
+  updateDashboard();
+  updateProfile();
+  renderLanguages();
+  showView("dashboard");
+}
+
+function renderScreen(){
+  applyI18n();
+  if(state.currentUser){
+    initApp();
+  } else {
+    $("auth-screen").classList.remove("hidden");
+    $("app-screen").classList.add("hidden");
+    showAuthTab("login");
+  }
+}
+
+$("ui-language").value = state.uiLang;
+applyTheme();
+renderScreen();
+
+console.log("Teach vs Code loaded.");
+Object.keys(QUESTIONS).forEach(k => console.log(k, "questions:", QUESTIONS[k].length));
 </script>
-
 </body>
 </html>
