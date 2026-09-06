@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#15202b"/>
+      <stop offset="100%" stop-color="#0a0f14"/>
+    </radialGradient>
+
+    <!-- Headband Gradient -->
+    <linearGradient id="bandGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ff2a85"/>
+      <stop offset="50%" stop-color="#9a00ff"/>
+      <stop offset="100%" stop-color="#2a75ff"/>
+    </linearGradient>
+
+    <!-- Bottom Bar Gradient -->
+    <linearGradient id="barBorderGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ff007f"/>
+      <stop offset="100%" stop-color="#7928ca"/>
+    </linearGradient>
+
+    <!-- Beak & Feet Gradient -->
+    <linearGradient id="yellowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffea00"/>
+      <stop offset="100%" stop-color="#ff9900"/>
+    </linearGradient>
+
+    <!-- Antenna Bulb Glow -->
+    <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffe600" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#ffe600" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#ffe600" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Gem Glow -->
+    <radialGradient id="gemGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00ffff" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#00ffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background Layer -->
+  <rect width="500" height="500" rx="100" fill="url(#bgGrad)"/>
+
+  <!-- Grid Overlay -->
+  <path d="M 0 125 H 500 M 0 250 H 500 M 0 375 H 500 M 125 0 V 500 M 250 0 V 500 M 375 0 V 500" 
+        stroke="#ffffff" stroke-opacity="0.05" stroke-width="1.5"/>
+
+  <!-- Antenna & Yellow Bulb -->
+  <!-- Leaf Feather -->
+  <path d="M 270 90 Q 290 60 270 40 Q 255 70 270 90 Z" fill="#13a884"/>
+  <!-- Stem -->
+  <path d="M 250 90 L 250 50" stroke="#13a884" stroke-width="8" stroke-linecap="round"/>
+  <!-- Glow Circle -->
+  <circle cx="250" cy="28" r="35" fill="url(#glowGrad)"/>
+  <!-- Yellow Circle Base -->
+  <circle cx="250" cy="28" r="22" fill="#ffe600"/>
+  <circle cx="250" cy="28" r="22" fill="none" stroke="#fff59d" stroke-width="3"/>
+  <!-- Exclamation Mark -->
+  <path d="M 250 16 L 250 28" stroke="#222" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="250" cy="35" r="3" fill="#222"/>
+
+  <!-- Left Wing -->
+  <path d="M 110 240 C 40 240 40 370 110 370 C 140 370 150 330 150 300 C 150 260 130 240 110 240 Z" fill="#00c8a0"/>
+  <!-- Right Wing -->
+  <path d="M 390 240 C 460 240 460 370 390 370 C 360 370 350 330 350 300 C 350 260 370 240 390 240 Z" fill="#00c8a0"/>
+
+  <!-- Main Body -->
+  <rect x="110" y="80" width="280" height="320" rx="120" fill="#00dcb4"/>
+
+  <!-- White Belly -->
+  <rect x="145" y="165" width="210" height="215" rx="85" fill="#f0fdfa"/>
+
+  <!-- Blush Cheeks -->
+  <ellipse cx="145" cy="255" rx="18" ry="12" fill="#ff7da7" opacity="0.8"/>
+  <ellipse cx="355" cy="255" rx="18" ry="12" fill="#ff7da7" opacity="0.8"/>
+
+  <!-- Left Eye -->
+  <ellipse cx="195" cy="215" rx="42" ry="48" fill="#0f172a"/>
+  <!-- Eye Highlights -->
+  <circle cx="182" cy="195" r="16" fill="#ffffff"/>
+  <circle cx="205" cy="232" r="8" fill="#ffffff"/>
+
+  <!-- Right Eye -->
+  <ellipse cx="305" cy="215" rx="42" ry="48" fill="#0f172a"/>
+  <!-- Eye Highlights -->
+  <circle cx="292" cy="195" r="16" fill="#ffffff"/>
+  <circle cx="315" cy="232" r="8" fill="#ffffff"/>
+
+  <!-- Beak -->
+  <path d="M 220 230 Q 250 220 280 230 C 280 230 260 260 250 260 C 240 260 220 230 220 230 Z" fill="url(#yellowGrad)"/>
+  <path d="M 223 232 Q 250 242 277 232" fill="none" stroke="#e67e22" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Headband -->
+  <path d="M 103 160 C 103 160 250 145 397 160 C 403 160 405 140 397 135 C 250 120 103 135 97 140 C 95 145 97 160 103 160 Z" fill="url(#bandGrad)"/>
+  
+  <!-- Gem on Headband -->
+  <circle cx="250" cy="143" r="16" fill="url(#gemGlow)"/>
+  <circle cx="250" cy="143" r="10" fill="#00ffff"/>
+  <circle cx="250" cy="143" r="5" fill="#ffffff"/>
+
+  <!-- Feet -->
+  <!-- Left Foot -->
+  <path d="M 155 380 Q 165 360 180 380 Q 190 360 200 385 Q 175 425 155 380 Z" fill="url(#yellowGrad)"/>
+  <!-- Right Foot -->
+  <path d="M 300 385 Q 310 360 320 380 Q 335 360 345 380 Q 325 425 300 385 Z" fill="url(#yellowGrad)"/>
+
+  <!-- Bottom UI Capsule / Slider -->
+  <rect x="125" y="425" width="250" height="48" rx="24" fill="#090d12"/>
+  <rect x="125" y="425" width="250" height="48" rx="24" fill="none" stroke="url(#barBorderGrad)" stroke-width="4"/>
+  <!-- Glowing Dot inside Bar -->
+  <circle cx="160" cy="449" r="6" fill="#00ffcc"/>
+  <circle cx="160" cy="449" r="10" fill="#00ffcc" opacity="0.3"/>
+
+</svg>
