@@ -1,1 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>PIXELVERSE</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        :root {
+            --bg: #101013;
+            --p: #18181d;
+            --p2: #202027;
+            --b: #2d2d37;
+            --t: #ececf4;
+            --m: #8a8aa0;
+            --g: linear-gradient(135deg, #8b5cf6, #3b82f6)
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            font: 13px/1.4 Inter, "Segoe UI", system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--t);
+            overflow: hidden
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+            color: inherit
+        }
+
+        .hide {
+            display: none !important
+        }
+
+        .scr {
+            height: 100%;
+            position: relative
+        }
+
+        .btn {
+            background: var(--p2);
+            border: 1px solid var(--b);
+            border-radius: 9px;
+            padding: 7px 12px;
+            cursor: pointer;
+            transition: .15s;
+            white-space: nowrap
+        }
+
+        .btn:hover {
+            border-color: #7c6be0;
+            background: #292936
+        }
+
+        .pri {
+            background: var(--g);
+            border-color: transparent;
+            font-weight: 600
+        }
+
+        .pri:hover {
+            filter: brightness(1.12);
+            background: var(--g)
+        }
+
+        input,
+        select {
+            background: #14141a;
+            border: 1px solid var(--b);
+            border-radius: 8px;
+            padding: 7px 10px;
+            outline: 0;
+            width: 100%
+        }
+
+        input:focus,
+        select:focus,
+        .btn:focus-visible {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px #8b5cf633;
+            outline: 0
+        }
+
+        input[type=checkbox] {
+            width: auto;
+            accent-color: #8b5cf6
+        }
+
+        input[type=color] {
+            padding: 2px;
+            height: 34px;
+            width: 54px;
+            cursor: pointer
+        }
+
+        input[type=range] {
+            padding: 0;
+            accent-color: #8b5cf6
+        }
+
+        label {
+            display: block;
+            color: var(--m);
+            margin: 10px 0 4px
+        }
+
+        .chk {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin: 6px 0;
+            color: var(--t)
+        }
+
+        .logo {
+            font-weight: 900;
+            letter-spacing: .16em;
+            font-size: 20px;
+            background: var(--g);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent
+        }
+
+        .mk {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #8b5cf6;
+            box-shadow: 8px 0 #3b82f6, 0 8px #3b82f6, 8px 8px #c4b5fd;
+            margin: 0 22px 8px 0;
+            vertical-align: middle
+        }
+
+        #auth {
+            display: grid;
+            place-items: center;
+            background: radial-gradient(700px 500px at 15% 10%, #5b3fd455, transparent), radial-gradient(600px 500px at 90% 90%, #2563eb44, transparent), var(--bg);
+            overflow: auto
+        }
+
+        .card0 {
+            width: min(400px, 92vw);
+            background: #1a1a2199;
+            backdrop-filter: blur(18px);
+            border: 1px solid #ffffff1c;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 30px 80px #000a
+        }
+
+        .tabs {
+            display: flex;
+            background: #0e0e12;
+            border-radius: 11px;
+            padding: 4px;
+            margin: 18px 0 6px
+        }
+
+        .tabs button {
+            flex: 1;
+            border: 0;
+            background: 0;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--m)
+        }
+
+        .tabs .on {
+            background: var(--p2);
+            color: var(--t)
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .row>* {
+            flex: 1
+        }
+
+        .row .btn {
+            flex: none
+        }
+
+        .soc {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 10px
+        }
+
+        #dash {
+            overflow: auto;
+            padding: 0 6vw 40px
+        }
+
+        .dh {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 22px 0
+        }
+
+        .dh .sp,
+        .sp {
+            flex: 1
+        }
+
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 16px
+        }
+
+        .pc {
+            background: var(--p);
+            border: 1px solid var(--b);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: .2s
+        }
+
+        .pc:hover {
+            border-color: #7c6be0;
+            transform: translateY(-2px)
+        }
+
+        .th {
+            height: 140px;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            background: repeating-conic-gradient(#25252d 0 25%, #2e2e38 0 50%) 0 0/16px 16px
+        }
+
+        .th img {
+            image-rendering: pixelated;
+            max-width: 100%;
+            max-height: 100%
+        }
+
+        .pc .in {
+            padding: 12px
+        }
+
+        .pc small {
+            color: var(--m)
+        }
+
+        .pc .ac {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px
+        }
+
+        .pc .ac .btn {
+            padding: 4px 9px;
+            font-size: 12px
+        }
+
+        .empty {
+            grid-column: 1/-1;
+            text-align: center;
+            color: var(--m);
+            padding: 60px;
+            border: 1px dashed var(--b);
+            border-radius: 16px
+        }
+
+        #studio {
+            display: grid;
+            grid-template-rows: 52px 1fr 28px
+        }
+
+        .top {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 12px;
+            background: #15151ae6;
+            border-bottom: 1px solid var(--b);
+            overflow-x: auto
+        }
+
+        .top .btn {
+            padding: 6px 10px
+        }
+
+        .top input {
+            width: 170px
+        }
+
+        .main {
+            display: grid;
+            grid-template-columns: 56px 1fr 268px;
+            min-height: 0
+        }
+
+        #tools {
+            background: var(--p);
+            border-right: 1px solid var(--b);
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            overflow: auto
+        }
+
+        #tools button {
+            width: 40px;
+            height: 40px;
+            border-radius: 11px;
+            border: 0;
+            background: 0;
+            color: var(--m);
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            transition: .15s;
+            flex: none
+        }
+
+        #tools button:hover {
+            background: var(--p2);
+            color: var(--t)
+        }
+
+        #tools .on {
+            background: var(--g);
+            color: #fff;
+            box-shadow: 0 4px 14px #7c5cf655
+        }
+
+        #vp {
+            position: relative;
+            overflow: hidden;
+            background: #0c0c0f;
+            touch-action: none;
+            cursor: crosshair
+        }
+
+        #stage {
+            position: absolute;
+            left: 0;
+            top: 0;
+            box-shadow: 0 0 0 1px #ffffff22, 0 20px 60px #000a;
+            transform-origin: 0 0
+        }
+
+        #stage canvas,
+        #gr {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            image-rendering: pixelated;
+            pointer-events: none
+        }
+
+        #props {
+            background: var(--p);
+            border-left: 1px solid var(--b);
+            overflow: auto;
+            padding: 4px 14px 20px
+        }
+
+        #props section {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--b)
+        }
+
+        #props h4 {
+            font-weight: 600;
+            margin-bottom: 8px
+        }
+
+        #props h4 b {
+            color: #a78bfa
+        }
+
+        .sw {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin: 8px 0
+        }
+
+        .sw i {
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+            border: 1px solid #ffffff2a;
+            cursor: pointer
+        }
+
+        .sw i:hover {
+            transform: scale(1.18)
+        }
+
+        .ly {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 8px;
+            border-radius: 9px;
+            cursor: pointer;
+            border: 1px solid transparent
+        }
+
+        .ly:hover {
+            background: var(--p2)
+        }
+
+        .ly.on {
+            background: #8b5cf622;
+            border-color: #8b5cf688
+        }
+
+        .ly span {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap
+        }
+
+        .ly button {
+            background: 0;
+            border: 0;
+            cursor: pointer;
+            color: var(--m);
+            font-size: 15px
+        }
+
+        #sb {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            padding: 0 14px;
+            background: var(--p);
+            border-top: 1px solid var(--b);
+            color: var(--m);
+            font-size: 12px;
+            overflow: hidden;
+            white-space: nowrap
+        }
+
+        .ov {
+            position: fixed;
+            inset: 0;
+            background: #000b;
+            backdrop-filter: blur(6px);
+            display: grid;
+            place-items: center;
+            z-index: 50
+        }
+
+        .md {
+            width: min(420px, 92vw);
+            background: #1b1b22;
+            border: 1px solid #ffffff22;
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 30px 80px #000
+        }
+
+        .md h3 {
+            margin-bottom: 8px
+        }
+
+        .mb {
+            color: #c4c4d4
+        }
+
+        .mf {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 18px
+        }
+
+        #toasts {
+            position: fixed;
+            right: 16px;
+            bottom: 44px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 99
+        }
+
+        .toast {
+            background: #23232d;
+            border: 1px solid #8b5cf666;
+            border-left: 4px solid #8b5cf6;
+            padding: 10px 14px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px #000a;
+            animation: ti .25s
+        }
+
+        .toast.err {
+            border-color: #f43f5e66;
+            border-left-color: #f43f5e
+        }
+
+        @keyframes ti {
+            from {
+                opacity: 0;
+                transform: translateX(20px)
+            }
+        }
+
+        @media(max-width:820px) {
+            .main {
+                grid-template-columns: 52px 1fr;
+                grid-template-rows: 1fr 36vh
+            }
+
+            #props {
+                grid-column: 1/3;
+                border-left: 0;
+                border-top: 1px solid var(--b)
+            }
+        }
+    
+        @media(max-width:760px) {
+            #globalSearch { max-width:130px !important; }
+            #studioCoins { display:none; }
+            #aiRate { font-size:11px; padding:6px 8px; }
+        }
+</style>
+</head>
+
+<body>
+    <div id="auth" class="scr">
+        <div class="card0">
+            <div><i class="mk"></i><span class="logo">PixelVerse</span></div>
+            <p style="color:var(--m);margin-top:6px">Draw pixel art in your browser. Everything stays on this device.
+            </p>
+            <div class="tabs"><button id="t1" class="on">Sign in</button><button id="t2">Create account</button></div>
+            <div id="fu" class="hide"><label>Username</label><input id="au" autocomplete="username"></div>
+            <label id="le">Email or username</label><input id="ae" autocomplete="email"><label>Password</label><input
+                id="ap" type="password" autocomplete="current-password">
+            <div class="row" style="margin-top:8px"><label class="chk"><input type="checkbox" id="sp"> Show
+                    password</label><label class="chk"><input type="checkbox" id="rm" checked> Remember login</label>
+            </div>
+            <button class="btn pri" id="go" style="width:100%;margin-top:10px;padding:10px">Sign in</button>
+            <div class="soc"><button class="btn" id="gg">Google</button>
+            </div>
+        </div>
+    </div>
+    <div id="dash" class="scr hide">
+        <div class="dh"><i class="mk" style="margin:0 14px 8px 0"></i><span class="logo">PIXELVERSE</span><span
+                class="sp"></span><span id="un" style="color:var(--m)"></span><button class="btn" id="imp">Import
+                JSON</button><button class="btn" id="lo">Sign out</button><button class="btn pri" id="na">New
+                artwork</button></div>
+        <h3 style="margin:8px 0 14px">Recent projects</h3>
+        <div id="grid"></div>
+    </div>
+    <div id="studio" class="scr hide">
+        <header class="top"><button class="btn" id="bk">‹ Projects</button><input id="pn"
+                aria-label="Project name"><button class="btn" id="un1">Undo</button><button class="btn"
+                id="re1">Redo</button><span class="sp"></span><button class="btn" id="svb">Save</button><button
+                class="btn" id="imp2">Import JSON</button><button class="btn" id="exj">Export JSON</button><button
+                class="btn" id="exp">PNG</button><button class="btn pri" id="ext">Transparent PNG</button></header>
+        <div class="main">
+            <nav id="tools"></nav>
+            <div id="vp">
+                <div id="stage"><canvas id="cv"></canvas><canvas id="ov"></canvas>
+                    <div id="gr"></div>
+                </div>
+            </div>
+            <aside id="props">
+                <section>
+                    <h4>Color</h4>
+                    <div class="row"><input type="color" id="cp" style="flex:none"><input id="hex" maxlength="7"
+                            spellcheck="false"></div><label>History</label>
+                    <div class="sw" id="hist"></div><select id="pal"></select>
+                    <div class="sw" id="pw"></div><button class="btn" id="addc" style="width:100%">Save color to
+                        Custom</button>
+                </section>
+                <section>
+                    <h4>Brush size <b id="bsv">1</b> px</h4><input type="range" id="bs" min="1" max="16" value="1">
+                </section>
+                <section>
+                    <h4>Canvas</h4>
+                    <div class="row"><button class="btn" id="zo">−</button><b id="zl"
+                            style="text-align:center"></b><button class="btn" id="zi">+</button><button class="btn"
+                            id="ct">Center</button></div>
+                    <label class="chk"><input type="checkbox" id="gc" checked> Pixel grid</label><label
+                        class="chk"><input type="checkbox" id="kc" checked> Checkerboard</label>
+                    <div class="row"><label class="chk" style="margin:0"><input type="checkbox" id="bc"> Solid
+                            background</label><input type="color" id="bgc" value="#ffffff" style="flex:none"></div>
+                    <label>PNG export scale</label><select id="es">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>4</option>
+                        <option selected>8</option>
+                        <option>16</option>
+                    </select>
+                </section>
+                <section>
+                    <h4>Layers</h4>
+                    <div id="layers"></div>
+                    <div class="row" style="margin:8px 0"><button class="btn" id="la"
+                            title="Add layer">+</button><button class="btn" id="ld"
+                            title="Delete layer">Del</button><button class="btn" id="lu"
+                            title="Move up">↑</button><button class="btn" id="ldn" title="Move down">↓</button></div>
+                    <label>Layer opacity</label><input type="range" id="lop" min="0" max="100" value="100">
+                </section>
+            </aside>
+        </div>
+        <footer id="sb"><span id="s1"></span><span id="s2">x 0, y 0</span><span id="s3"></span><span
+                id="s4"></span><span class="sp"></span><span id="s5">Space + drag to pan · wheel to zoom</span></footer>
+    </div>
+    <div id="toasts"></div><input type="file" id="ff" accept=".json,application/json" class="hide">
+    <script>
+        const $ = s => document.querySelector(s), esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+        const LS = { g(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v } catch { return d } }, s(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return 1 } catch { toast('Browser storage is full. Export your project as JSON.', 'err') } } };
+        const uid = () => Math.random().toString(36).slice(2, 10), hash = s => { let h = 5381; for (const c of 'pv$' + s) h = (h * 33 ^ c.charCodeAt(0)) >>> 0; return h.toString(36) };
+        function toast(m, t) { const e = document.createElement('div'); e.className = 'toast ' + (t || ''); e.textContent = m; $('#toasts').append(e); setTimeout(() => e.remove(), 3400) }
+        function modal(title, html, btns = [['OK', 1, 1]]) { return new Promise(r => { const o = document.createElement('div'); o.className = 'ov'; o.innerHTML = `<div class="md" role="dialog"><h3>${title}</h3><div class="mb">${html}</div><div class="mf"></div></div>`; btns.forEach(([l, ok, pr]) => { const b = document.createElement('button'); b.className = 'btn' + (pr ? ' pri' : ''); b.textContent = l; b.onclick = () => { const v = [...o.querySelectorAll('input,select')].map(i => i.type == 'checkbox' ? i.checked : i.value); o.remove(); r(ok ? v : null) }; o.querySelector('.mf').append(b) }); document.body.append(o); const i = o.querySelector('input'); if (i) i.focus() }) }
+        const show = id => ['auth', 'dash', 'studio'].forEach(s => $('#' + s).classList.toggle('hide', s != id));
+        /* ---------- AUTH ---------- */
+        let U, mode = 1; const key = () => 'pv_p_' + U.id;
+        // Coins and AI reward history are stored per signed-in local account.
+        const coinKey = () => 'pv_coins_' + U.id;
+        const rewardKey = () => 'pv_ai_rewards_' + U.id;
+        function coins() { return LS.g(coinKey(), 0) || 0 }
+        function refreshCoins() {
+            if (!U) return;
+            const n = coins();
+            if ($('#coinCount')) $('#coinCount').textContent = n.toLocaleString();
+            if ($('#studioCoins')) $('#studioCoins').textContent = '🪙 ' + n.toLocaleString();
+        }
+
+        function setMode(m) { mode = m; $('#t1').classList.toggle('on', m == 1); $('#t2').classList.toggle('on', m == 2); $('#fu').classList.toggle('hide', m == 1); $('#le').textContent = m == 1 ? 'Email or username' : 'Email'; $('#go').textContent = m == 1 ? 'Sign in' : 'Create account' }
+        $('#t1').onclick = () => setMode(1); $('#t2').onclick = () => setMode(2);
+        $('#sp').onchange = e => $('#ap').type = e.target.checked ? 'text' : 'password';
+        $('#go').onclick = () => {
+            const users = LS.g('pv_users', {}), e = $('#ae').value.trim().toLowerCase(), p = $('#ap').value, n = $('#au').value.trim();
+            if (!e || !p) return toast('Enter your email and password.', 'err');
+            if (mode == 2) {
+                if (!/^\S+@\S+\.\S+$/.test(e)) return toast('Enter a valid email address.', 'err'); if (n.length < 2) return toast('Choose a username with at least 2 characters.', 'err'); if (p.length < 6) return toast('Password needs at least 6 characters.', 'err');
+                if (users[e] || Object.values(users).some(u => u.name.toLowerCase() == n.toLowerCase())) return toast('That email or username is already registered.', 'err');
+                users[e] = { id: uid(), name: n, email: e, h: hash(p) }; LS.s('pv_users', users); toast('Account created. Welcome, ' + n + '!'); enter(users[e])
+            }
+            else { const u = users[e] || Object.values(users).find(x => x.name.toLowerCase() == e); if (!u || u.h != hash(p)) return toast('Wrong email, username or password.', 'err'); enter(u) }
+        };
+        function enter(u) { if (!u || !u.id || u.id === 'guest') return toast('Please create an account or sign in.', 'err'); U = { id: u.id, name: u.name }; if ($('#rm').checked) LS.s('pv_sess', U); else sessionStorage.setItem('pv_sess', JSON.stringify(U)); $('#un').textContent = U.name; show('dash'); refreshCoins(); renderDash() }
+        $('#lo').onclick = () => { localStorage.removeItem('pv_sess'); sessionStorage.removeItem('pv_sess'); show('auth') };
+        const GOOGLE_CLIENT_ID = '85483636596-gut14ntiotibp32c6mmqdefdsol1jgpb.apps.googleusercontent.com';
+        function handleGoogleCredential(response) {
+            try {
+                const part = response.credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                const claims = JSON.parse(decodeURIComponent(Array.from(atob(part), c =>
+                    '%' + c.charCodeAt(0).toString(16).padStart(2, '0')).join('')));
+                if (!claims.sub) throw new Error('Missing Google account ID');
+                // Browser-side profile sign-in only. Verify the ID token on a server for production security.
+                enter({ id: 'google_' + claims.sub, name: claims.name || claims.email || 'Google user' });
+                toast('Signed in with Google. Your projects and coins are stored in this browser.');
+            } catch (err) {
+                console.error(err);
+                toast('Google sign-in failed. Check OAuth client settings.', 'err');
+            }
+        }
+        $('#gg').onclick = () => {
+            if (!window.google?.accounts?.id) return toast('Google sign-in is loading. Try again.', 'err');
+            const old = document.getElementById('google-login-overlay');
+            if (old) old.remove();
+            const overlay = document.createElement('div');
+            overlay.id = 'google-login-overlay';
+            overlay.className = 'ov';
+            overlay.innerHTML = `<div class="md" role="dialog" aria-modal="true"><h3>Continue with Google</h3><div class="mb"><p style="margin:0 0 16px;color:#a1a1aa">Choose your Google account.</p><div id="google-button-mount" style="display:flex;justify-content:center;min-height:44px"></div></div><div class="mf"><button type="button" class="btn" id="google-login-cancel">Cancel</button></div></div>`;
+            document.body.append(overlay);
+            document.getElementById('google-login-cancel').onclick = () => overlay.remove();
+            overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+            try {
+                google.accounts.id.initialize({
+                    client_id: GOOGLE_CLIENT_ID,
+                    callback: response => { overlay.remove(); handleGoogleCredential(response); },
+                    auto_select: false,
+                    cancel_on_tap_outside: true
+                });
+                google.accounts.id.renderButton(document.getElementById('google-button-mount'),
+                    { theme: 'filled_black', size: 'large', shape: 'pill', text: 'continue_with', width: 260 });
+            } catch (err) {
+                console.error(err);
+                overlay.remove();
+                toast('Google setup error. Check https://abuzzy.uz in Authorized JavaScript origins.', 'err');
+            }
+        };
+        /* ---------- TELEGRAM LOGIN ---------- */
+        // Telegram Login Widget for @PixelverseLoginBot.
+        // The widget returns signed user data; production must verify its hash server-side.
+        window.onPixelverseTelegramAuth = function (user) {
+            if (!user || !user.id) {
+                toast('Telegram did not return a valid profile.', 'err');
+                return;
+            }
+            // Browser-local profile session only. Do not use this as authorization
+            // for payments, private data, or privileged actions until server-verified.
+            const displayName = [user.first_name, user.last_name].filter(Boolean).join(' ')
+                || (user.username ? '@' + user.username : 'Telegram User');
+            enter({
+                id: 'telegram_' + String(user.id),
+                name: displayName,
+                telegramUsername: user.username || ''
+            });
+            toast('Telegram profile connected. Welcome, ' + displayName + '!');
+        };
+
+        $('#tg').onclick = () => {
+            const old = document.getElementById('telegram-login-overlay');
+            if (old) old.remove();
+
+            const overlay = document.createElement('div');
+            overlay.id = 'telegram-login-overlay';
+            overlay.className = 'ov';
+            overlay.innerHTML = `
+                <div class="md" role="dialog" aria-modal="true">
+                    <h3>Continue with Telegram</h3>
+                    <div class="mb">
+                        <p style="margin:0 0 16px;color:#a1a1aa">Sign in with your Telegram account.</p>
+                        <div id="telegram-widget-mount" style="display:flex;justify-content:center;min-height:44px"></div>
+                        <p style="font-size:11px;color:#888;margin-top:14px">Use the official Telegram login window. This single-file version stores the returned profile locally; secure server verification is required before using it for protected account actions.</p>
+                    </div>
+                    <div class="mf"><button type="button" class="btn" id="telegram-login-cancel">Cancel</button></div>
+                </div>`;
+            document.body.append(overlay);
+            document.getElementById('telegram-login-cancel').onclick = () => overlay.remove();
+            overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+            const mount = document.getElementById('telegram-widget-mount');
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://telegram.org/js/telegram-widget.js?22';
+            script.setAttribute('data-telegram-login', 'PixelverseLoginBot');
+            script.setAttribute('data-size', 'large');
+            script.setAttribute('data-radius', '12');
+            script.setAttribute('data-userpic', 'false');
+            script.setAttribute('data-request-access', 'write');
+            script.setAttribute('data-onauth', 'onPixelverseTelegramAuth(user)');
+            mount.appendChild(script);
+        };
+        /* ---------- DASHBOARD ---------- */
+        function renderDash() {
+            const st = LS.g(key(), {}), a = Object.values(st).sort((x, y) => y.updated - x.updated);
+            $('#grid').innerHTML = a.length ? a.map(p => `<div class="pc" data-id="${p.id}"><div class="th" data-a="open"><img alt="" src="${p.thumb || ''}"></div><div class="in"><b>${esc(p.name)}</b><br><small>${p.w}×${p.h} · ${new Date(p.updated).toLocaleString()}</small><div class="ac"><button class="btn" data-a="open">Open</button><button class="btn" data-a="ren">Rename</button><button class="btn" data-a="dup">Duplicate</button><button class="btn" data-a="del">Delete</button></div></div></div>`).join('') : '<div class="empty">No artwork yet. Choose “New artwork” to start drawing.</div>'
+            if (globalSearch) {
+                const q = globalSearch.value.trim().toLowerCase();
+                document.querySelectorAll('#grid .pc').forEach(card => {
+                    card.style.display = card.innerText.toLowerCase().includes(q) ? '' : 'none';
+                });
+            }
+
+        }
+        const globalSearch = document.getElementById('globalSearch');
+        if (globalSearch) globalSearch.addEventListener('input', () => {
+            const q = globalSearch.value.trim().toLowerCase();
+            document.querySelectorAll('#grid .pc').forEach(card => {
+                card.style.display = card.innerText.toLowerCase().includes(q) ? '' : 'none';
+            });
+        });
+                $('#grid').onclick = async e => {
+            const b = e.target.closest('[data-a]'); if (!b) return; const id = b.closest('.pc').dataset.id, st = LS.g(key(), {}), p = st[id], a = b.dataset.a;
+            if (a == 'open') openProject(p);
+            if (a == 'ren') { const r = await modal('Rename artwork', `<input value="${esc(p.name)}">`, [['Cancel', 0], ['Rename', 1, 1]]); if (r && r[0].trim()) { p.name = r[0].trim().slice(0, 60); LS.s(key(), st); renderDash() } }
+            if (a == 'dup') { const c = JSON.parse(JSON.stringify(p)); c.id = uid(); c.name = p.name + ' copy'; c.updated = Date.now(); st[c.id] = c; LS.s(key(), st); renderDash(); toast('Artwork duplicated') }
+            if (a == 'del' && await modal('Delete artwork?', `“${esc(p.name)}” will be removed permanently.`, [['Cancel', 0], ['Delete', 1, 1]])) { delete st[id]; LS.s(key(), st); renderDash(); toast('Artwork deleted') }
+        };
+        $('#na').onclick = async () => {
+            const r = await modal('New artwork', `<label>Name</label><input value="Untitled"><label>Canvas size</label><select>${[16, 32, 64, 128, 256].map(n => `<option value=${n} ${n == 32 ? 'selected' : ''}>${n} × ${n}</option>`).join('')}<option value=0>Custom size</option></select><label>Custom width × height (max 512)</label><div class="row"><input type="number" min="1" max="512" value="48"><input type="number" min="1" max="512" value="48"></div>`, [['Cancel', 0], ['Create', 1, 1]]);
+            if (!r) return; const c = n => Math.max(1, Math.min(512, parseInt(n) || 32)), s = +r[1], w = s || c(r[2]), h = s || c(r[3]);
+            openProject({ id: uid(), name: r[0].trim() || 'Untitled', w, h, updated: Date.now(), layers: [{ id: uid(), name: 'Layer 1', vis: true, op: 1, png: null }] })
+        };
+        function importFile(f) { const rd = new FileReader(); rd.onload = () => { try { const p = JSON.parse(rd.result); if (!Array.isArray(p.layers) || !(p.w > 0 && p.w <= 1024 && p.h > 0 && p.h <= 1024)) throw 0; p.id = uid(); p.name = (p.name || 'Imported') + ' (imported)'; p.updated = Date.now(); toast('Project imported'); openProject(p) } catch { toast('That file is not a valid PIXELVERSE project.', 'err') } }; rd.readAsText(f) }
+        $('#imp').onclick = $('#imp2').onclick = () => $('#ff').click(); $('#ff').onchange = e => { if (e.target.files[0]) importFile(e.target.files[0]); e.target.value = '' };
+        /* ---------- STUDIO STATE ---------- */
+        const TOOLS = [['pencil', 'Pencil (B)', '<path d="M4 20l1-4L16 5l3 3L8 19z"/>'], ['eraser', 'Eraser (E)', '<path d="M8 20h12M5 15l9-9 5 5-6 6H8z"/>'], ['bucket', 'Bucket fill (G)', '<path d="M5 11l6-6 8 8-6 6zM20 16c1 1.5 1 2.5 0 3-1-.5-1-1.5 0-3z"/>'], ['eyedrop', 'Eyedropper (I)', '<path d="M15 4l5 5M13 6l5 5-8 8H6v-4zM4 20l2-2"/>'], ['line', 'Line (L)', '<path d="M5 19L19 5"/>'], ['rect', 'Rectangle (U)', '<rect x="4" y="6" width="16" height="12"/>'], ['frect', 'Filled rectangle (Shift+U)', '<rect x="4" y="6" width="16" height="12" fill="currentColor"/>'], ['circle', 'Circle (O)', '<circle cx="12" cy="12" r="8"/>'], ['fcircle', 'Filled circle (Shift+O)', '<circle cx="12" cy="12" r="8" fill="currentColor"/>'], ['move', 'Move layer (M)', '<path d="M12 3v18M3 12h18M9 6l3-3 3 3M9 18l3 3 3-3M6 9l-3 3 3 3M18 9l3 3-3 3"/>'], ['hand', 'Pan (H or Space)', '<path d="M8 13V7a1.5 1.5 0 013 0v4V5a1.5 1.5 0 013 0v6V7a1.5 1.5 0 013 0v7c0 4-2 6-5 6s-4-1-6-4l-2-3a1.5 1.5 0 012-2z"/>']];
+        const ICON = d => `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+        $('#tools').innerHTML = TOOLS.map(t => `<button data-t="${t[0]}" title="${t[1]}" aria-label="${t[1]}">${ICON(t[2])}</button>`).join('') + `<button id="clr" title="Clear layer" aria-label="Clear layer" style="margin-top:auto">${ICON('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>')}</button>`;
+        let PR, W, H, layers = [], ai = 0, hist = [], hi = -1, tool = 'pencil', color = '#8b5cf6', bs = 1, z = 8, px = 0, py = 0, grid = true, chk = true, bg = null, space = false, saveT, lc = 1, down = false, A, B, snap, pan;
+        const cv = $('#cv'), mx = cv.getContext('2d', { willReadFrequently: true }), ov = $('#ov'), ox = ov.getContext('2d'), vp = $('#vp'), st = $('#stage');
+        const cur = () => layers[ai], mkL = (n, id) => { const c = document.createElement('canvas'); c.width = W; c.height = H; return { id: id || uid(), name: n, vis: true, op: 1, c, x: c.getContext('2d', { willReadFrequently: true }) } };
+        const loadL = m => new Promise(r => { const l = mkL(m.name, m.id); l.vis = m.vis !== false; l.op = m.op ?? 1; if (!m.png) return r(l); const i = new Image(); i.onload = () => { l.x.drawImage(i, 0, 0); r(l) }; i.onerror = () => r(l); i.src = m.png });
+        async function openProject(p) {
+            W = p.w; H = p.h; PR = p; bg = p.bg || null; layers = await Promise.all(p.layers.map(loadL)); if (!layers.length) layers = [mkL('Layer 1')]; ai = 0; lc = layers.length; hist = []; hi = -1;
+            for (const c of [cv, ov]) c.width = W, c.height = H; $('#pn').value = p.name; $('#bc').checked = !!bg; if (bg) $('#bgc').value = bg; show('studio'); refreshCoins(); commit(1); requestAnimationFrame(fit)
+        }
+        function snapshot() { return layers.map(l => ({ id: l.id, name: l.name, vis: l.vis, op: l.op, d: l.x.getImageData(0, 0, W, H) })) }
+        function restore(s) { layers = s.map(e => { const l = mkL(e.name, e.id); l.vis = e.vis; l.op = e.op; l.x.putImageData(e.d, 0, 0); return l }); ai = Math.min(ai, layers.length - 1) }
+        function commit(ns) { hist = hist.slice(0, hi + 1); hist.push(snapshot()); if (hist.length > 60) hist.shift(); hi = hist.length - 1; refresh(); if (!ns) queueSave() }
+        function undo() { if (hi > 0) { restore(hist[--hi]); refresh(); queueSave() } } function redo() { if (hi < hist.length - 1) { restore(hist[++hi]); refresh(); queueSave() } }
+        function refresh() { render(); drawLayers() }
+        function render() { mx.clearRect(0, 0, W, H); for (const l of layers) if (l.vis) { mx.globalAlpha = l.op; mx.drawImage(l.c, 0, 0) } mx.globalAlpha = 1 }
+        function thumb() { const c = document.createElement('canvas'), k = 96 / Math.max(W, H); c.width = Math.max(1, Math.round(W * k)); c.height = Math.max(1, Math.round(H * k)); const x = c.getContext('2d'); x.imageSmoothingEnabled = false; if (bg) { x.fillStyle = bg; x.fillRect(0, 0, c.width, c.height) } x.drawImage(cv, 0, 0, c.width, c.height); return c.toDataURL() }
+        function serialize() { return { v: 1, id: PR.id, name: PR.name, w: W, h: H, bg, updated: Date.now(), thumb: thumb(), layers: layers.map(l => ({ id: l.id, name: l.name, vis: l.vis, op: l.op, png: l.c.toDataURL() })) } }
+        function saveProject(silent) { if (!PR || !U) return; PR = serialize(); const s = LS.g(key(), {}); s[PR.id] = PR; if (LS.s(key(), s)) { $('#s4').textContent = 'Saved ' + new Date().toLocaleTimeString(); if (!silent) toast('Project saved') } }
+        // Abuzzy AI: local artwork quality analysis (no external AI service/API).
+        // Rewards are one-time per project to prevent repeatedly farming coins.
+        function runAbuzzyAI() {
+            if (!U || !PR) return toast('Open an artwork first.', 'err');
+            saveProject(1);
+            const pixels = cv.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, W, H).data;
+            let filled = 0, edges = 0;
+            const palette = new Set();
+            const alphaAt = (x, y) => pixels[(y * W + x) * 4 + 3];
+            for (let y = 0; y < H; y++) {
+                for (let x = 0; x < W; x++) {
+                    const i = (y * W + x) * 4;
+                    if (pixels[i + 3] > 16) {
+                        filled++;
+                        palette.add((pixels[i] >> 3) + ',' + (pixels[i + 1] >> 3) + ',' + (pixels[i + 2] >> 3));
+                        if (x > 0 && alphaAt(x - 1, y) <= 16 || x < W - 1 && alphaAt(x + 1, y) <= 16 ||
+                            y > 0 && alphaAt(x, y - 1) <= 16 || y < H - 1 && alphaAt(x, y + 1) <= 16) edges++;
+                    }
+                }
+            }
+            const total = W * H;
+            const fillRatio = filled / total;
+            const colorCount = palette.size;
+            const coverageScore = Math.min(30, Math.round(Math.min(fillRatio / 0.35, 1) * 30));
+            const paletteScore = Math.min(25, Math.round(Math.min(colorCount / 12, 1) * 25));
+            const detailScore = Math.min(25, Math.round(Math.min((edges / Math.max(filled, 1)) / 0.8, 1) * 25));
+            const sizeScore = W >= 16 && H >= 16 ? 10 : 5;
+            const completionScore = filled > 0 ? 10 : 0;
+            const score = Math.min(100, coverageScore + paletteScore + detailScore + sizeScore + completionScore);
+            const rating = score >= 85 ? 'Masterpiece' : score >= 70 ? 'Excellent' : score >= 50 ? 'Good start' : score >= 25 ? 'Needs more detail' : 'Just getting started';
+            const rewardMap = LS.g(rewardKey(), {});
+            const alreadyRewarded = !!rewardMap[PR.id];
+            const reward = alreadyRewarded || filled === 0 ? 0 : Math.max(3, Math.round(score / 5));
+            if (reward > 0) {
+                rewardMap[PR.id] = { score, reward, at: Date.now() };
+                LS.s(rewardKey(), rewardMap);
+                LS.s(coinKey(), coins() + reward);
+            }
+            refreshCoins();
+            const advice = [];
+            if (filled === 0) advice.push('Draw something on the canvas before rating.');
+            else {
+                if (fillRatio < 0.08) advice.push('Try adding more filled areas or a background.');
+                if (colorCount < 4) advice.push('Try a small palette with 4–8 complementary colors.');
+                if (edges / Math.max(filled, 1) < 0.12) advice.push('Add a few shapes, outlines or small details.');
+                if (!advice.length) advice.push('Nice work. Try adding highlights and a clear focal point.');
+            }
+            modal('✦ Abuzzy AI Art Rating',
+                `<div style="text-align:center;padding:8px 0">
+                    <div style="font-size:42px;font-weight:800;background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;color:transparent">${score}/100</div>
+                    <div style="font-size:18px;font-weight:700;margin:4px 0 12px">${rating}</div>
+                    <div style="display:flex;justify-content:center;gap:18px;flex-wrap:wrap;color:#a1a1aa">
+                        <span>🟪 ${filled.toLocaleString()} pixels</span><span>🎨 ${colorCount} colors</span><span>📐 ${W}×${H}</span>
+                    </div>
+                    <div style="margin:16px 0;padding:12px;border:1px solid #383848;border-radius:12px;background:#20202a">
+                        ${reward ? `🪙 <b>+${reward} coins earned!</b>` : alreadyRewarded ? '🪙 This artwork has already received its one-time coin reward.' : '🪙 No coins awarded yet — add some pixels and rate again.'}
+                    </div>
+                    <div style="text-align:left;color:#c7c7d2"><b>Abuzzy AI suggestions</b><ul style="padding-left:20px;margin-top:8px">${advice.map(x => `<li style="margin:5px 0">${x}</li>`).join('')}</ul></div>
+                    <p style="font-size:11px;color:#888;margin-top:12px">Abuzzy AI analyzes pixel coverage, palette diversity, edges and canvas size directly in your browser. Coins are local to this browser account; this is not a remote generative AI service.</p>
+                </div>`);
+        }
+        const aiRateButton = document.getElementById('aiRate');
+        if (aiRateButton) aiRateButton.addEventListener('click', runAbuzzyAI);
+        function queueSave() { clearTimeout(saveT); $('#s4').textContent = 'Unsaved changes…'; saveT = setTimeout(() => saveProject(1), 800) }
+        const dl = (u, n) => { const a = document.createElement('a'); a.href = u; a.download = n; a.click() };
+        function exportPNG(tr) { const s = +$('#es').value, c = document.createElement('canvas'); c.width = W * s; c.height = H * s; const x = c.getContext('2d'); x.imageSmoothingEnabled = false; if (!tr && bg) { x.fillStyle = bg; x.fillRect(0, 0, c.width, c.height) } for (const l of layers) if (l.vis) { x.globalAlpha = l.op; x.drawImage(l.c, 0, 0, c.width, c.height) } dl(c.toDataURL('image/png'), PR.name + (tr ? '-transparent' : '') + '.png'); toast(tr ? 'Transparent PNG downloaded' : 'PNG downloaded') }
+        /* ---------- VIEW ---------- */
+        function applyView() {
+            const w = W * z, h = H * z; st.style.width = w + 'px'; st.style.height = h + 'px'; st.style.transform = `translate(${px}px,${py}px)`; const c = Math.max(z, 4);
+            st.style.background = bg ? bg : chk ? `repeating-conic-gradient(#2a2a33 0 25%,#383844 0 50%) 0 0/${c * 2}px ${c * 2}px` : '#1b1b21';
+            $('#gr').style.cssText = grid && z >= 5 ? `background-image:linear-gradient(to right,#ffffff24 1px,transparent 1px),linear-gradient(to bottom,#ffffff24 1px,transparent 1px);background-size:${z}px ${z}px` : '';
+            $('#zl').textContent = Math.round(z * 100) + '%'; $('#s3').textContent = `${W}×${H} px · ${Math.round(z * 100)}%`
+        }
+        function center() { px = Math.round((vp.clientWidth - W * z) / 2); py = Math.round((vp.clientHeight - H * z) / 2); applyView() }
+        function fit() { z = Math.max(1, Math.floor(Math.min(vp.clientWidth * .85 / W, vp.clientHeight * .85 / H))); center() }
+        function zoomTo(n, cx = vp.clientWidth / 2, cy = vp.clientHeight / 2) { const o = z; z = Math.max(1, Math.min(64, n)); const k = z / o; px = cx - (cx - px) * k; py = cy - (cy - py) * k; applyView() }
+        const zIn = (x, y) => zoomTo(Math.max(z + 1, Math.round(z * 1.25)), x, y), zOut = (x, y) => zoomTo(Math.min(z - 1, Math.round(z / 1.25)), x, y);
+        $('#zi').onclick = () => zIn(); $('#zo').onclick = () => zOut(); $('#ct').onclick = center;
+        $('#gc').onchange = e => { grid = e.target.checked; applyView() }; $('#kc').onchange = e => { chk = e.target.checked; applyView() };
+        $('#bc').onchange = $('#bgc').oninput = () => { bg = $('#bc').checked ? $('#bgc').value : null; applyView(); queueSave() };
+        vp.addEventListener('wheel', e => { e.preventDefault(); const r = vp.getBoundingClientRect(); (e.deltaY < 0 ? zIn : zOut)(e.clientX - r.left, e.clientY - r.top) }, { passive: false });
+        addEventListener('resize', () => PR && applyView());
+        /* ---------- DRAWING ---------- */
+        const pt = e => { const r = st.getBoundingClientRect(); return { x: Math.floor((e.clientX - r.left) / z), y: Math.floor((e.clientY - r.top) / z) } }, inb = p => p.x >= 0 && p.y >= 0 && p.x < W && p.y < H;
+        function dot(c, x, y, s, er) { const o = s >> 1; if (er) c.clearRect(x - o, y - o, s, s); else c.fillRect(x - o, y - o, s, s) }
+        function bres(a, b, f) { let x = a.x, y = a.y; const dx = Math.abs(b.x - x), dy = -Math.abs(b.y - y), sx = x < b.x ? 1 : -1, sy = y < b.y ? 1 : -1; let e = dx + dy; for (; ;) { f(x, y); if (x == b.x && y == b.y) break; const e2 = 2 * e; if (e2 >= dy) { e += dy; x += sx } if (e2 <= dx) { e += dx; y += sy } } }
+        function shape(c, t, a, b) {
+            c.fillStyle = color; const f = (x, y) => dot(c, x, y, bs);
+            if (t == 'line') bres(a, b, f);
+            else if (t == 'rect' || t == 'frect') {
+                const x0 = Math.min(a.x, b.x), x1 = Math.max(a.x, b.x), y0 = Math.min(a.y, b.y), y1 = Math.max(a.y, b.y);
+                if (t == 'frect') c.fillRect(x0, y0, x1 - x0 + 1, y1 - y0 + 1); else { bres({ x: x0, y: y0 }, { x: x1, y: y0 }, f); bres({ x: x1, y: y0 }, { x: x1, y: y1 }, f); bres({ x: x1, y: y1 }, { x: x0, y: y1 }, f); bres({ x: x0, y: y1 }, { x: x0, y: y0 }, f) }
+            }
+            else {
+                const x0 = Math.min(a.x, b.x), x1 = Math.max(a.x, b.x), y0 = Math.min(a.y, b.y), y1 = Math.max(a.y, b.y), cx = (x0 + x1 + 1) / 2, cy = (y0 + y1 + 1) / 2, rx = (x1 - x0 + 1) / 2, ry = (y1 - y0 + 1) / 2;
+                const In = (x, y) => ((x + .5 - cx) / rx) ** 2 + ((y + .5 - cy) / ry) ** 2 <= 1;
+                for (let y = y0; y <= y1; y++)for (let x = x0; x <= x1; x++)if (In(x, y)) { if (t == 'fcircle') c.fillRect(x, y, 1, 1); else if (!(In(x - 1, y) && In(x + 1, y) && In(x, y - 1) && In(x, y + 1))) f(x, y) }
+            }
+        }
+        function bucket(p) { const l = cur(), id = l.x.getImageData(0, 0, W, H), u = new Uint32Array(id.data.buffer), n = parseInt(color.slice(1), 16), f = ((255 << 24) | ((n & 255) << 16) | (n & 65280) | (n >> 16)) >>> 0, t = u[p.y * W + p.x]; if (t === f) return; const s = [p.x + p.y * W]; while (s.length) { const i = s.pop(); if (u[i] !== t) continue; u[i] = f; const x = i % W; if (x > 0) s.push(i - 1); if (x < W - 1) s.push(i + 1); if (i >= W) s.push(i - W); if (i < W * H - W) s.push(i + W) } l.x.putImageData(id, 0, 0) }
+        function pick(p) { const d = mx.getImageData(p.x, p.y, 1, 1).data; if (!d[3]) return toast('That pixel is transparent.', 'err'); setColor('#' + [d[0], d[1], d[2]].map(v => v.toString(16).padStart(2, '0')).join('')) }
+        const isShape = t => ['line', 'rect', 'frect', 'circle', 'fcircle'].includes(t);
+        vp.onpointerdown = e => {
+            vp.setPointerCapture(e.pointerId);
+            if (e.button == 1 || space || tool == 'hand') { pan = { x: e.clientX - px, y: e.clientY - py }; vp.style.cursor = 'grabbing'; return }
+            if (e.button) return; const L = cur(), p = pt(e); if (!L.vis) return toast('This layer is hidden. Show it to draw.', 'err');
+            if (tool == 'eyedrop') { if (inb(p)) pick(p); return }
+            down = true; A = B = p; const c = L.x; c.fillStyle = color;
+            if (tool != 'move' && tool != 'eraser') addHist(color);
+            if (tool == 'bucket') { down = false; if (inb(p)) { bucket(p); commit() } }
+            else if (tool == 'pencil' || tool == 'eraser') { dot(c, p.x, p.y, bs, tool == 'eraser'); render() }
+            else if (tool == 'move') { snap = document.createElement('canvas'); snap.width = W; snap.height = H; snap.getContext('2d').drawImage(L.c, 0, 0) }
+            else if (isShape(tool)) shape(ox, tool, A, p)
+        };
+        vp.onpointermove = e => {
+            if (pan) { px = e.clientX - pan.x; py = e.clientY - pan.y; applyView(); return } const p = pt(e); $('#s2').textContent = inb(p) ? `x ${p.x}, y ${p.y}` : 'outside canvas'; if (!down) return; const c = cur().x;
+            if (tool == 'pencil' || tool == 'eraser') { c.fillStyle = color; bres(B, p, (x, y) => dot(c, x, y, bs, tool == 'eraser')); B = p; render() }
+            else if (tool == 'move') { c.clearRect(0, 0, W, H); c.drawImage(snap, p.x - A.x, p.y - A.y); render() }
+            else if (isShape(tool)) { ox.clearRect(0, 0, W, H); shape(ox, tool, A, p) }
+        };
+        vp.onpointerup = vp.onpointercancel = e => {
+            if (pan) { pan = null; vp.style.cursor = space || tool == 'hand' ? 'grab' : 'crosshair'; return } if (!down) return; down = false;
+            if (isShape(tool)) { ox.clearRect(0, 0, W, H); shape(cur().x, tool, A, pt(e)) } commit()
+        };
+        $('#clr').onclick = () => { const L = cur(); L.x.clearRect(0, 0, W, H); commit(); toast('Layer cleared. Press Ctrl+Z to undo.') };
+        function setTool(t) { tool = t; document.querySelectorAll('#tools [data-t]').forEach(b => b.classList.toggle('on', b.dataset.t == t)); $('#s1').textContent = TOOLS.find(x => x[0] == t)[1]; vp.style.cursor = t == 'hand' ? 'grab' : 'crosshair' }
+        $('#tools').onclick = e => { const b = e.target.closest('[data-t]'); if (b) setTool(b.dataset.t) }; setTool('pencil');
+        /* ---------- COLORS ---------- */
+        const PAL = { 'Pico-8': '000000 1d2b53 7e2553 008751 ab5236 5f574f c2c3c7 fff1e8 ff004d ffa300 ffec27 00e436 29adff 83769c ff77a8 ffccaa', 'Game Boy': '0f380f 306230 8bac0f 9bbc0f', 'Sunset': '2b0f54 6a1b9a c2185b ef5350 ff7043 ffb74d fff176', 'Pastel': 'ffd1dc ffe4b5 fdfd96 b5ead7 a0e7e5 c7ceea e2b6f2', 'Grayscale': '000000 222222 444444 666666 888888 aaaaaa cccccc eeeeee ffffff', 'Custom': '' };
+        let ch = LS.g('pv_hist', []), cust = LS.g('pv_custom', []);
+        const sw = (a, id) => $(id).innerHTML = a.map(c => `<i style="background:${c}" data-c="${c}" title="${c}"></i>`).join('') || '<small style="color:var(--m)">Empty</small>';
+        $('#pal').innerHTML = Object.keys(PAL).map(k => `<option>${k}</option>`).join('');
+        const palList = () => $('#pal').value == 'Custom' ? cust : PAL[$('#pal').value].split(' ').map(c => '#' + c);
+        const showPal = () => sw(palList(), '#pw'); $('#pal').onchange = showPal; showPal(); sw(ch, '#hist');
+        function addHist(c) { if (ch[0] == c) return; ch = [c, ...ch.filter(x => x != c)].slice(0, 14); LS.s('pv_hist', ch); sw(ch, '#hist') }
+        function setColor(c) { color = c.toLowerCase(); $('#cp').value = color; $('#hex').value = color }
+        $('#cp').oninput = e => setColor(e.target.value); $('#hex').oninput = e => { let v = e.target.value.trim(); if (v[0] != '#') v = '#' + v; if (/^#[0-9a-f]{6}$/i.test(v)) { color = v.toLowerCase(); $('#cp').value = color } };
+        $('#props').onclick = e => { const i = e.target.closest('[data-c]'); if (i) setColor(i.dataset.c) };
+        $('#addc').onclick = () => { if (!cust.includes(color)) { cust.push(color); LS.s('pv_custom', cust) } $('#pal').value = 'Custom'; showPal(); toast('Color saved to Custom palette') };
+        $('#bs').oninput = e => { bs = +e.target.value; $('#bsv').textContent = bs }; setColor(color);
+        /* ---------- LAYERS ---------- */
+        function drawLayers() {
+            const L = $('#layers'); L.innerHTML = ''; layers.map((l, i) => i).reverse().forEach(i => {
+                const l = layers[i], d = document.createElement('div'); d.className = 'ly' + (i == ai ? ' on' : ''); d.innerHTML = `<button title="Show or hide">${l.vis ? '◉' : '○'}</button><span title="Double-click to rename">${esc(l.name)}</span><small style="color:var(--m)">${Math.round(l.op * 100)}%</small>`;
+                d.onclick = e => { if (e.target.tagName == 'BUTTON') { l.vis = !l.vis; commit() } else { ai = i; drawLayers() } };
+                d.ondblclick = async e => { if (e.target.tagName == 'BUTTON') return; const r = await modal('Rename layer', `<input value="${esc(l.name)}">`, [['Cancel', 0], ['Rename', 1, 1]]); if (r && r[0].trim()) { l.name = r[0].trim().slice(0, 40); commit() } }; L.append(d)
+            });
+            $('#lop').value = Math.round(cur().op * 100); $('#s5').textContent = 'Layer: ' + cur().name + ' · Space + drag to pan · wheel to zoom'
+        }
+        $('#la').onclick = () => { layers.splice(ai + 1, 0, mkL('Layer ' + (++lc))); ai++; commit() };
+        $('#ld').onclick = () => { if (layers.length < 2) return toast('A project needs at least one layer.', 'err'); layers.splice(ai, 1); ai = Math.max(0, ai - 1); commit() };
+        $('#lu').onclick = () => { if (ai < layers.length - 1) { [layers[ai], layers[ai + 1]] = [layers[ai + 1], layers[ai]]; ai++; commit() } };
+        $('#ldn').onclick = () => { if (ai > 0) { [layers[ai], layers[ai - 1]] = [layers[ai - 1], layers[ai]]; ai--; commit() } };
+        $('#lop').oninput = e => { cur().op = e.target.value / 100; render() }; $('#lop').onchange = () => commit();
+        /* ---------- TOP BAR & KEYS ---------- */
+        $('#un1').onclick = undo; $('#re1').onclick = redo; $('#svb').onclick = () => saveProject();
+        $('#exj').onclick = () => { const p = serialize(); dl(URL.createObjectURL(new Blob([JSON.stringify(p)], { type: 'application/json' })), PR.name + '.pixelverse.json'); toast('Project exported as JSON') };
+        $('#exp').onclick = () => exportPNG(0); $('#ext').onclick = () => exportPNG(1);
+        $('#bk').onclick = () => { clearTimeout(saveT); saveProject(1); show('dash'); renderDash() };
+        $('#pn').oninput = e => { PR.name = e.target.value.slice(0, 60) || 'Untitled'; queueSave() };
+        addEventListener('keydown', e => {
+            if ($('#studio').classList.contains('hide') || /INPUT|SELECT/.test(e.target.tagName) && e.target.type != 'checkbox' && e.target.type != 'range') return;
+            const k = e.key.toLowerCase(), m = e.ctrlKey || e.metaKey;
+            if (m && k == 'z') { e.preventDefault(); e.shiftKey ? redo() : undo() } else if (m && k == 'y') { e.preventDefault(); redo() } else if (m && k == 's') { e.preventDefault(); saveProject() }
+            else if (m) return; else if (k == ' ') { e.preventDefault(); space = true; vp.style.cursor = 'grab' }
+            else if (k == '+' || k == '=') { zIn() } else if (k == '-') { zOut() } else if (k == '0') center();
+            else if (k == 'u') setTool(e.shiftKey ? 'frect' : 'rect'); else if (k == 'o') setTool(e.shiftKey ? 'fcircle' : 'circle');
+            else { const t = { b: 'pencil', e: 'eraser', g: 'bucket', i: 'eyedrop', l: 'line', m: 'move', h: 'hand' }[k]; if (t) setTool(t) }
+        });
+        addEventListener('keyup', e => { if (e.key == ' ') { space = false; vp.style.cursor = tool == 'hand' ? 'grab' : 'crosshair' } });
+        addEventListener('beforeunload', () => { if (PR && !$('#studio').classList.contains('hide')) saveProject(1) });
+        /* ---------- BOOT ---------- */
+        {
+            let s = LS.g('pv_sess', null); if (!s) try { s = JSON.parse(sessionStorage.getItem('pv_sess')) } catch { }
+            if (s && s.id && s.id !== 'guest') { U = s; $('#un').textContent = U.name; show('dash'); renderDash() } else { localStorage.removeItem('pv_sess'); show('auth') }
+        }
+    </script>
+</body>
+
+</html>
